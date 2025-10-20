@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36518.9 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusTix.Domain", "NexusTix.Domain\NexusTix.Domain.csproj", "{816AB6BF-00FA-48B6-8BE9-EDBB17FACF9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusTix.Persistence", "NexusTix.Persistence\NexusTix.Persistence.csproj", "{D64088A8-03BF-48E1-A1DE-E8A0E4B56400}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusTix.Application", "NexusTix.Application\NexusTix.Application.csproj", "{2A2D1B68-0551-474B-927F-7803E303C5FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusTix.WebAPI", "NexusTix.WebAPI\NexusTix.WebAPI.csproj", "{F58E540C-38E8-450A-910E-E401B4F0F705}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{816AB6BF-00FA-48B6-8BE9-EDBB17FACF9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{816AB6BF-00FA-48B6-8BE9-EDBB17FACF9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{816AB6BF-00FA-48B6-8BE9-EDBB17FACF9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{816AB6BF-00FA-48B6-8BE9-EDBB17FACF9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D64088A8-03BF-48E1-A1DE-E8A0E4B56400}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D64088A8-03BF-48E1-A1DE-E8A0E4B56400}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D64088A8-03BF-48E1-A1DE-E8A0E4B56400}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D64088A8-03BF-48E1-A1DE-E8A0E4B56400}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A2D1B68-0551-474B-927F-7803E303C5FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A2D1B68-0551-474B-927F-7803E303C5FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A2D1B68-0551-474B-927F-7803E303C5FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A2D1B68-0551-474B-927F-7803E303C5FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F58E540C-38E8-450A-910E-E401B4F0F705}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F58E540C-38E8-450A-910E-E401B4F0F705}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F58E540C-38E8-450A-910E-E401B4F0F705}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F58E540C-38E8-450A-910E-E401B4F0F705}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {84917103-7F5C-49EB-A547-547AC537907C}
+	EndGlobalSection
+EndGlobal
