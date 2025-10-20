@@ -19,4 +19,9 @@
     <ProjectReference Include="..\NexusTix.Domain\NexusTix.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Concretes\" />
+    <Folder Include="Abstracts\" />
+  </ItemGroup>
+
 </Project>
