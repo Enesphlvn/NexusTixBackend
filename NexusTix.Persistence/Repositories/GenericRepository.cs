@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NexusTix.Domain.Entities.Common;
+using NexusTix.Persistence.Context;
 using System.Linq.Expressions;
 
-namespace NexusTix.Persistence
+namespace NexusTix.Persistence.Repositories
 {
     public class GenericRepository<T, TId> : IGenericRepository<T, TId> where T : BaseEntity<TId>
     {

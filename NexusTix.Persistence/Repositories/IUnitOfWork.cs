@@ -1,4 +1,4 @@
-﻿namespace NexusTix.Persistence
+﻿namespace NexusTix.Persistence.Repositories
 {
     public interface IUnitOfWork
     {

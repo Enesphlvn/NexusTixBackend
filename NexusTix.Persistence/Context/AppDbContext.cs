@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using NexusTix.Domain.Entities;
 
-namespace NexusTix.Persistence
+namespace NexusTix.Persistence.Context
 {
     public class AppDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {

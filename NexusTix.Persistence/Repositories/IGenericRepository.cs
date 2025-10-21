@@ -1,7 +1,7 @@
 ﻿using NexusTix.Domain.Entities.Common;
 using System.Linq.Expressions;
 
-namespace NexusTix.Persistence
+namespace NexusTix.Persistence.Repositories
 {
     public interface IGenericRepository<T, TId> where T : BaseEntity<TId>
     {

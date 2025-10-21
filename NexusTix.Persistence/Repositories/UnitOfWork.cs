@@ -1,4 +1,6 @@
-﻿namespace NexusTix.Persistence
+﻿using NexusTix.Persistence.Context;
+
+namespace NexusTix.Persistence.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
