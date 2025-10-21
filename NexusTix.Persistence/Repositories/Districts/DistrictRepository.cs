@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NexusTix.Domain.Entities;
 using NexusTix.Persistence.Context;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NexusTix.Persistence.Repositories.Districts
 {
