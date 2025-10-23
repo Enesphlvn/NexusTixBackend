@@ -8,13 +8,13 @@ namespace NexusTix.Persistence.Repositories.Districts
     {
         public void Configure(EntityTypeBuilder<District> builder)
         {
-            builder.HasKey(x => x.Id);
+            builder.HasKey(d => d.Id);
 
-            builder.Property(x => x.Name)
+            builder.Property(d => d.Name)
                 .IsRequired()
                 .HasMaxLength(100);
 
-            builder.HasMany(x => x.Venues)
+            builder.HasMany(d => d.Venues)
                 .WithOne(v => v.District)
                 .HasForeignKey(v => v.DistrictId)
                 .OnDelete(DeleteBehavior.Restrict);
