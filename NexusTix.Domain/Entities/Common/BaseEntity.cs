@@ -1,6 +1,6 @@
 ﻿namespace NexusTix.Domain.Entities.Common
 {
-    public class BaseEntity<T>
+    public class BaseEntity<T> : IEntity<T>
     {
         public T Id { get; set; } = default!;
         public DateTimeOffset Created { get; set; }

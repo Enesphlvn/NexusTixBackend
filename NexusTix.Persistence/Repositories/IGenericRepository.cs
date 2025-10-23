@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace NexusTix.Persistence.Repositories
 {
-    public interface IGenericRepository<T, TId> where T : BaseEntity<TId>
+    public interface IGenericRepository<T, TId> where T : class, IEntity<TId>
     {
         Task<bool> AnyAsync(TId id);
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);

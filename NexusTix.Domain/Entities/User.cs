@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using NexusTix.Domain.Entities.Common;
 
 namespace NexusTix.Domain.Entities
 {
-    public class User : IdentityUser<int>
+    public class User : IdentityUser<int>, IEntity<int>
     {
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;

@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace NexusTix.Persistence.Repositories
 {
-    public class GenericRepository<T, TId> : IGenericRepository<T, TId> where T : BaseEntity<TId>
+    public class GenericRepository<T, TId> : IGenericRepository<T, TId> where T : class, IEntity<TId>
     {
         private readonly AppDbContext _context;
         private readonly DbSet<T> _dbSet;
@@ -23,7 +23,7 @@ namespace NexusTix.Persistence.Repositories
 
         public async Task<bool> AnyAsync(TId id)
         {
-            return await _dbSet.AnyAsync(e => e.Id.Equals(id));
+            return await _dbSet.AnyAsync(e => e.Id!.Equals(id));
         }
 
         public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
