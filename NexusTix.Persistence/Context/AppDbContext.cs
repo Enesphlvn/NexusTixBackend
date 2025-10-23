@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using NexusTix.Domain.Entities;
+using System.Reflection;
 
 namespace NexusTix.Persistence.Context
 {
@@ -20,6 +21,8 @@ namespace NexusTix.Persistence.Context
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
             base.OnModelCreating(builder);
 
             builder.Entity<City>().HasQueryFilter(e => e.IsActive);

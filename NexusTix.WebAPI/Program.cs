@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using NexusTix.Domain.Entities;
 using NexusTix.Persistence.Context;
+using NexusTix.Persistence.Extensions;
 
 namespace NexusTix.WebAPI
 {
@@ -30,6 +30,8 @@ namespace NexusTix.WebAPI
             })
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
+
+            builder.Services.AddRepositoryServices();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
