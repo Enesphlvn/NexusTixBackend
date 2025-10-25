@@ -51,20 +51,18 @@ namespace NexusTix.Persistence.Repositories
             return await _dbSet.FindAsync(id);
         }
 
-        public async Task<bool> PassiveAsync(TId id)
+        public async Task PassiveAsync(TId id)
         {
             var entity = await _dbSet.FindAsync(id);
 
             if (entity == null)
             {
-                return false;
+                return;
             }
 
             entity.IsActive = false;
 
             _dbSet.Update(entity);
-
-            return true;
         }
 
         public void Update(T entity)

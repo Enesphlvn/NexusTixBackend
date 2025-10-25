@@ -14,6 +14,6 @@ namespace NexusTix.Persistence.Repositories
         Task AddAsync(T entity);
         void Update(T entity);
         void Delete(T entity);
-        Task<bool> PassiveAsync(TId id);
+        Task PassiveAsync(TId id);
     }
 }
