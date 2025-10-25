@@ -12,6 +12,7 @@ namespace NexusTix.Application.Features.Cities
         {
             CreateMap<CreateCityRequest, City>();
             CreateMap<UpdateCityRequest, City>();
+
             CreateMap<City, CityResponse>();
             CreateMap<City, CityWithDistrictsResponse>();
             CreateMap<City, CityWithVenuesResponse>();
