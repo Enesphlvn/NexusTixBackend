@@ -13,9 +13,6 @@ namespace NexusTix.Application.Features.Cities.Update
                 .NotEmpty().WithMessage("Şehir adı boş bırakılamaz.")
                 .MaximumLength(15).WithMessage("Şehir adı 15 karakterden uzun olamaz.")
                 .MinimumLength(3).WithMessage("Şehir adı 3 karakterden kısa olamaz.");
-
-            RuleFor(x => x.IsActive)
-                .NotNull().WithMessage("IsActive alanı null olamaz.");
         }
     }
 }

@@ -19,8 +19,6 @@
 
   <ItemGroup>
     <Folder Include="Extensions\" />
-    <Folder Include="Features\Districts\Create\" />
-    <Folder Include="Features\Districts\Update\" />
     <Folder Include="Features\Venues\Create\" />
     <Folder Include="Features\Venues\Update\" />
   </ItemGroup>

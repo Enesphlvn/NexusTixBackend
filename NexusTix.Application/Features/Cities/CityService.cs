@@ -34,7 +34,8 @@ namespace NexusTix.Application.Features.Cities
             await _unitOfWork.SaveChangesAsync();
 
             var cityDto = _mapper.Map<CityResponse>(newCity);
-            return ServiceResult<CityResponse>.Success(cityDto, HttpStatusCode.Created);
+
+            return ServiceResult<CityResponse>.SuccessAsCreated(cityDto, $"api/cities/{newCity.Id}");
         }
 
         public async Task<ServiceResult> DeleteAsync(int id)
