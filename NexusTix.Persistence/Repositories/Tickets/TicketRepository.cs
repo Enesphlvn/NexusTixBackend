@@ -29,6 +29,11 @@ namespace NexusTix.Persistence.Repositories.Tickets
             return await _context.Tickets.Include(x => x.User).Where(x => x.EventId == eventId).AsNoTracking().ToListAsync();
         }
 
+        public async Task<IEnumerable<Ticket>> GetTicketsByUserAsync(int userId)
+        {
+            return await _context.Tickets.Include(x => x.Event).AsNoTracking().Where(x => x.UserId == userId).ToListAsync();
+        }
+
         public async Task<IEnumerable<Ticket>> GetTicketsWithDetailAsync()
         {
             return await _context.Tickets.Include(x => x.Event).Include(x => x.User).AsNoTracking().ToListAsync();
@@ -37,6 +42,11 @@ namespace NexusTix.Persistence.Repositories.Tickets
         public async Task<Ticket?> GetTicketWithDetailAsync(int id)
         {
             return await _context.Tickets.Include(x => x.Event).Include(x => x.User).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<bool> HasUserTicketForEventAsync(int userId, int eventId)
+        {
+            return await _context.Tickets.AsNoTracking().AnyAsync(x => x.UserId == userId && x.EventId == eventId);
         }
     }
 }

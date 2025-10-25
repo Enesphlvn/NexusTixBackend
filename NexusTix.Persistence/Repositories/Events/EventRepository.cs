@@ -28,6 +28,11 @@ namespace NexusTix.Persistence.Repositories.Events
             return await _context.Events.Where(x => x.Price >= minPrice && x.Price <= maxPrice).AsNoTracking().ToListAsync();
         }
 
+        public async Task<IEnumerable<Event>> GetEventsByUserTicketsAsync(int userId)
+        {
+            return await _context.Events.Include(x => x.Tickets).AsNoTracking().Where(x => x.Tickets.Any(x => x.UserId == userId)).ToListAsync();
+        }
+
         public async Task<IEnumerable<Event>> GetEventsByVenueAsync(int venueId)
         {
             return await _context.Events.Include(x => x.Venue).Where(x => x.VenueId == venueId).AsNoTracking().ToListAsync();
