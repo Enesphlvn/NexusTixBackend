@@ -7,7 +7,7 @@ namespace NexusTix.Application.Features.Cities.Update
         public UpdateCityRequestValidator()
         {
             RuleFor(x => x.Id)
-                .GreaterThan(0).WithMessage("Şehir Id'si sıfırdan büyük olmalı");
+                .GreaterThan(0).WithMessage("Şehir Id'si sıfırdan büyük olmalıdır.");
 
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Şehir adı boş bırakılamaz.")
