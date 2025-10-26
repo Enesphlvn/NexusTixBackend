@@ -78,7 +78,6 @@ namespace NexusTix.Application.Features.Cities
         public async Task<ServiceResult<IEnumerable<CityAggregateResponse>>> GetCitiesAggregateAsync()
         {
             var cities = await _unitOfWork.Cities.GetCitiesAggregateAsync();
-
             var citiesAsDto = _mapper.Map<IEnumerable<CityAggregateResponse>>(cities);
 
             return ServiceResult<IEnumerable<CityAggregateResponse>>.Success(citiesAsDto);
