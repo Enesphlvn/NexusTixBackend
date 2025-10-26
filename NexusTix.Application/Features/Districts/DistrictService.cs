@@ -83,6 +83,29 @@ namespace NexusTix.Application.Features.Districts
             return ServiceResult<DistrictResponse>.Success(districtAsDto);
         }
 
+        public async Task<ServiceResult<DistrictAggregateResponse>> GetDistrictAggregateAsync(int id)
+        {
+            var district = await _unitOfWork.Districts.GetDistrictAggregateAsync(id);
+
+            if (district == null)
+            {
+                return ServiceResult<DistrictAggregateResponse>.Fail($"ID'si {id} olan ilçe bulunamadı.", HttpStatusCode.NotFound);
+            }
+
+            var districtAsDto = _mapper.Map<DistrictAggregateResponse>(district);
+
+            return ServiceResult<DistrictAggregateResponse>.Success(districtAsDto);
+        }
+
+        public async Task<ServiceResult<IEnumerable<DistrictAggregateResponse>>> GetDistrictsAggregateAsync()
+        {
+            var districts = await _unitOfWork.Districts.GetDistrictsAggregateAsync();
+
+            var districtsAsDto = _mapper.Map<IEnumerable<DistrictAggregateResponse>>(districts);
+
+            return ServiceResult<IEnumerable<DistrictAggregateResponse>>.Success(districtsAsDto);
+        }
+
         public async Task<ServiceResult<IEnumerable<DistrictWithVenuesResponse>>> GetDistrictsWithVenuesAsync()
         {
             var districts = await _unitOfWork.Districts.GetDistrictsWithVenuesAsync();

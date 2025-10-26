@@ -12,6 +12,8 @@ namespace NexusTix.Application.Features.Districts
 
         Task<ServiceResult<DistrictWithVenuesResponse>> GetDistrictWithVenuesAsync(int id);
         Task<ServiceResult<IEnumerable<DistrictWithVenuesResponse>>> GetDistrictsWithVenuesAsync();
+        Task<ServiceResult<DistrictAggregateResponse>> GetDistrictAggregateAsync(int id);
+        Task<ServiceResult<IEnumerable<DistrictAggregateResponse>>> GetDistrictsAggregateAsync();
 
         Task<ServiceResult<DistrictResponse>> CreateAsync(CreateDistrictRequest request);
         Task<ServiceResult> UpdateAsync(UpdateDistrictRequest request);
