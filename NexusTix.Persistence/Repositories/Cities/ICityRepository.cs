@@ -8,7 +8,7 @@ namespace NexusTix.Persistence.Repositories.Cities
         Task<IEnumerable<City>> GetCitiesWithDistrictsAsync();
         Task<City?> GetCityWithVenuesAsync(int id);
         Task<IEnumerable<City>> GetCitiesWithVenuesAsync();
-        Task<City?> GetCityWithDistrictsAndVenuesAsync(int id);
-        Task<IEnumerable<City>> GetCitiesWithDistrictsAndVenuesAsync();
+        Task<City?> GetCityAggregateAsync(int id);
+        Task<IEnumerable<City>> GetCitiesAggregateAsync();
     }
 }

@@ -13,6 +13,16 @@ namespace NexusTix.Persistence.Repositories.Districts
             _context = context;
         }
 
+        public async Task<District?> GetDistrictAggregateAsync(int id)
+        {
+            return await _context.Districts.Include(x => x.City).Include(x => x.Venues).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<IEnumerable<District>> GetDistrictsAggregateAsync()
+        {
+            return await _context.Districts.Include(x => x.City).Include(x => x.Venues).AsNoTracking().ToListAsync();
+        }
+
         public async Task<IEnumerable<District>> GetDistrictsWithVenuesAsync()
         {
             return await _context.Districts.Include(x => x.Venues).AsNoTracking().ToListAsync();

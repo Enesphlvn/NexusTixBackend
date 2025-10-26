@@ -75,13 +75,13 @@ namespace NexusTix.Application.Features.Cities
             return ServiceResult<CityResponse>.Success(cityAsDto);
         }
 
-        public async Task<ServiceResult<IEnumerable<CityWithDistrictsAndVenuesResponse>>> GetCitiesWithDistrictsAndVenuesAsync()
+        public async Task<ServiceResult<IEnumerable<CityAggregateResponse>>> GetCitiesAggregateAsync()
         {
-            var cities = await _unitOfWork.Cities.GetCitiesWithDistrictsAndVenuesAsync();
+            var cities = await _unitOfWork.Cities.GetCitiesAggregateAsync();
 
-            var citiesAsDto = _mapper.Map<IEnumerable<CityWithDistrictsAndVenuesResponse>>(cities);
+            var citiesAsDto = _mapper.Map<IEnumerable<CityAggregateResponse>>(cities);
 
-            return ServiceResult<IEnumerable<CityWithDistrictsAndVenuesResponse>>.Success(citiesAsDto);
+            return ServiceResult<IEnumerable<CityAggregateResponse>>.Success(citiesAsDto);
         }
 
         public async Task<ServiceResult<IEnumerable<CityWithDistrictsResponse>>> GetCitiesWithDistrictsAsync()
@@ -102,18 +102,18 @@ namespace NexusTix.Application.Features.Cities
             return ServiceResult<IEnumerable<CityWithVenuesResponse>>.Success(citiesAsDto);
         }
 
-        public async Task<ServiceResult<CityWithDistrictsAndVenuesResponse>> GetCityWithDistrictsAndVenuesAsync(int id)
+        public async Task<ServiceResult<CityAggregateResponse>> GetCityAggregateAsync(int id)
         {
-            var city = await _unitOfWork.Cities.GetCityWithDistrictsAndVenuesAsync(id);
+            var city = await _unitOfWork.Cities.GetCityAggregateAsync(id);
 
             if (city == null)
             {
-                return ServiceResult<CityWithDistrictsAndVenuesResponse>.Fail($"ID'si {id} olan şehir bulunamadı.", HttpStatusCode.NotFound);
+                return ServiceResult<CityAggregateResponse>.Fail($"ID'si {id} olan şehir bulunamadı.", HttpStatusCode.NotFound);
             }
 
-            var cityAsDto = _mapper.Map<CityWithDistrictsAndVenuesResponse>(city);
+            var cityAsDto = _mapper.Map<CityAggregateResponse>(city);
 
-            return ServiceResult<CityWithDistrictsAndVenuesResponse>.Success(cityAsDto);
+            return ServiceResult<CityAggregateResponse>.Success(cityAsDto);
         }
 
         public async Task<ServiceResult<CityWithDistrictsResponse>> GetCityWithDistrictsAsync(int id)
