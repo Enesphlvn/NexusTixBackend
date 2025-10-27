@@ -1,8 +1,19 @@
-﻿namespace NexusTix.Domain.Exceptions
+﻿using System.Net;
+
+namespace NexusTix.Domain.Exceptions
 {
     public class BusinessException : Exception
     {
-        public BusinessException(string message) : base(message) { }
-        public BusinessException(string message, Exception innerException) : base(message, innerException) { }
+        public HttpStatusCode StatusCode { get; }
+
+        public BusinessException(string message, HttpStatusCode statusCode = HttpStatusCode.BadRequest) : base(message)
+        {
+            StatusCode = statusCode;
+        }
+
+        public BusinessException(string message, Exception innerException, HttpStatusCode statusCode = HttpStatusCode.BadRequest) : base(message, innerException)
+        {
+            StatusCode = statusCode;
+        }
     }
 }

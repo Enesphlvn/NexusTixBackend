@@ -1,5 +1,6 @@
 ﻿using NexusTix.Domain.Exceptions;
 using NexusTix.Persistence.Repositories;
+using System.Net;
 
 namespace NexusTix.Application.Features.Venues.Rules
 {
@@ -17,7 +18,7 @@ namespace NexusTix.Application.Features.Venues.Rules
             var exists = await _unitOfWork.Districts.AnyAsync(districtId);
             if (!exists)
             {
-                throw new BusinessException($"ID'si {districtId} olan ilçe bulunamadı.");
+                throw new BusinessException($"ID'si {districtId} olan ilçe bulunamadı.", HttpStatusCode.BadRequest);
             }
         }
 
@@ -26,7 +27,7 @@ namespace NexusTix.Application.Features.Venues.Rules
             var exists = await _unitOfWork.Venues.AnyAsync(venueId);
             if (!exists)
             {
-                throw new BusinessException($"ID'si {venueId} olan mekan bulunamadı.");
+                throw new BusinessException($"ID'si {venueId} olan mekan bulunamadı.", HttpStatusCode.NotFound);
             }
         }
 
@@ -35,7 +36,7 @@ namespace NexusTix.Application.Features.Venues.Rules
             var exists = await _unitOfWork.Venues.AnyAsync(x => x.Name.ToLower() == venueName.ToLower());
             if (exists)
             {
-                throw new BusinessException($"Mekan adı: {venueName}. Bu isimde başka bir mekan mevcut");
+                throw new BusinessException($"Mekan adı: {venueName}. Bu isimde başka bir mekan mevcut", HttpStatusCode.Conflict);
             }
         }
 
@@ -44,7 +45,7 @@ namespace NexusTix.Application.Features.Venues.Rules
             var exists = await _unitOfWork.Venues.AnyAsync(x => x.Name.ToLower() == venueName.ToLower() && x.Id != venueId);
             if (exists)
             {
-                throw new BusinessException("Aynı isimde başka bir mekan mevcut.");
+                throw new BusinessException("Aynı isimde başka bir mekan mevcut.", HttpStatusCode.Conflict);
             }
         }
     }

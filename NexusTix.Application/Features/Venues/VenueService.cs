@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using NexusTix.Application.Features.Venues.Create;
 using NexusTix.Application.Features.Venues.Dto;
+using NexusTix.Application.Features.Venues.Rules;
 using NexusTix.Application.Features.Venues.Update;
 using NexusTix.Domain.Entities;
+using NexusTix.Domain.Exceptions;
 using NexusTix.Persistence.Repositories;
 using System.Net;
 
@@ -12,36 +14,33 @@ namespace NexusTix.Application.Features.Venues
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IVenueBusinessRules _venueRules;
 
-        public VenueService(IUnitOfWork unitOfWork, IMapper mapper)
+        public VenueService(IUnitOfWork unitOfWork, IMapper mapper, IVenueBusinessRules venueRules)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _venueRules = venueRules;
         }
 
         public async Task<ServiceResult<VenueResponse>> CreateAsync(CreateVenueRequest request)
         {
-            var exists = await _unitOfWork.Venues.AnyAsync(x => x.Name.ToLower() == request.Name.ToLower());
-
-            if (exists)
+            try
             {
-                return ServiceResult<VenueResponse>.Fail($"Mekan adı: {request.Name}. Bu isimde başka bir mekan mevcut", HttpStatusCode.Conflict);
+                await _venueRules.CheckIfVenueNameExistsWhenCreating(request.Name);
+                await _venueRules.CheckIfDistrictExists(request.DistrictId);
+
+                var newVenue = _mapper.Map<Venue>(request);
+                await _unitOfWork.Venues.AddAsync(newVenue);
+                await _unitOfWork.SaveChangesAsync();
+
+                var venueAsDto = _mapper.Map<VenueResponse>(newVenue);
+                return ServiceResult<VenueResponse>.SuccessAsCreated(venueAsDto, $"api/venues/{newVenue.Id}");
             }
-
-            var districtExists = await _unitOfWork.Districts.AnyAsync(request.DistrictId);
-
-            if (!districtExists)
+            catch (BusinessException ex)
             {
-                return ServiceResult<VenueResponse>.Fail($"ID'si {request.DistrictId} olan ilçe bulunamadı.", HttpStatusCode.BadRequest);
+                return ServiceResult<VenueResponse>.Fail(ex.Message, HttpStatusCode.Conflict);
             }
-
-            var newVenue = _mapper.Map<Venue>(request);
-            await _unitOfWork.Venues.AddAsync(newVenue);
-            await _unitOfWork.SaveChangesAsync();
-
-            var venueAsDto = _mapper.Map<VenueResponse>(newVenue);
-
-            return ServiceResult<VenueResponse>.SuccessAsCreated(venueAsDto, $"api/venues/{newVenue.Id}");
         }
 
         public async Task<ServiceResult> DeleteAsync(int id)
