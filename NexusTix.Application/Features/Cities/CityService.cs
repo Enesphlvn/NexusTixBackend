@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using NexusTix.Application.Features.Cities.Create;
 using NexusTix.Application.Features.Cities.Dto;
+using NexusTix.Application.Features.Cities.Rules;
 using NexusTix.Application.Features.Cities.Update;
 using NexusTix.Domain.Entities;
+using NexusTix.Domain.Exceptions;
 using NexusTix.Persistence.Repositories;
 using System.Net;
 
@@ -12,45 +14,53 @@ namespace NexusTix.Application.Features.Cities
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ICityBusinessRules _cityRules;
 
-        public CityService(IUnitOfWork unitOfWork, IMapper mapper)
+        public CityService(IUnitOfWork unitOfWork, IMapper mapper, ICityBusinessRules cityRules)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _cityRules = cityRules;
         }
 
         public async Task<ServiceResult<CityResponse>> CreateAsync(CreateCityRequest request)
         {
-            var exists = await _unitOfWork.Cities.AnyAsync(x => x.Name.ToLower() == request.Name.ToLower());
-
-            if (exists)
+            try
             {
-                return ServiceResult<CityResponse>.Fail($"Şehir adı: {request.Name}. Bu isimde başka bir şehir mevcut", HttpStatusCode.Conflict);
+                await _cityRules.CheckIfCityNameExistsWhenCreating(request.Name);
+
+                var newCity = _mapper.Map<City>(request);
+
+                await _unitOfWork.Cities.AddAsync(newCity);
+                await _unitOfWork.SaveChangesAsync();
+
+                var cityDto = _mapper.Map<CityResponse>(newCity);
+
+                return ServiceResult<CityResponse>.SuccessAsCreated(cityDto, $"api/cities/{newCity.Id}");
             }
-
-            var newCity = _mapper.Map<City>(request);
-
-            await _unitOfWork.Cities.AddAsync(newCity);
-            await _unitOfWork.SaveChangesAsync();
-
-            var cityDto = _mapper.Map<CityResponse>(newCity);
-
-            return ServiceResult<CityResponse>.SuccessAsCreated(cityDto, $"api/cities/{newCity.Id}");
+            catch (BusinessException ex)
+            {
+                return ServiceResult<CityResponse>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult> DeleteAsync(int id)
         {
-            var city = await _unitOfWork.Cities.GetByIdAsync(id);
-
-            if (city == null)
+            try
             {
-                return ServiceResult.Fail($"ID'si {id} olan şehir bulunamadı.", HttpStatusCode.NotFound);
+                await _cityRules.CheckIfCityExists(id);
+
+                var city = await _unitOfWork.Cities.GetByIdAsync(id);
+
+                _unitOfWork.Cities.Delete(city!);
+                await _unitOfWork.SaveChangesAsync();
+
+                return ServiceResult.Success(HttpStatusCode.NoContent);
             }
-
-            _unitOfWork.Cities.Delete(city);
-            await _unitOfWork.SaveChangesAsync();
-
-            return ServiceResult.Success(HttpStatusCode.NoContent);
+            catch (BusinessException ex)
+            {
+                return ServiceResult.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult<IEnumerable<CityResponse>>> GetAllCitiesAsync()
@@ -63,16 +73,20 @@ namespace NexusTix.Application.Features.Cities
 
         public async Task<ServiceResult<CityResponse>> GetByIdAsync(int id)
         {
-            var city = await _unitOfWork.Cities.GetByIdAsync(id);
-
-            if (city == null)
+            try
             {
-                return ServiceResult<CityResponse>.Fail($"ID'si {id} olan şehir bulunamadı.", HttpStatusCode.NotFound);
+                await _cityRules.CheckIfCityExists(id);
+
+                var city = await _unitOfWork.Cities.GetByIdAsync(id);
+
+                var cityAsDto = _mapper.Map<CityResponse>(city);
+
+                return ServiceResult<CityResponse>.Success(cityAsDto);
             }
-
-            var cityAsDto = _mapper.Map<CityResponse>(city);
-
-            return ServiceResult<CityResponse>.Success(cityAsDto);
+            catch (BusinessException ex)
+            {
+                return ServiceResult<CityResponse>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult<IEnumerable<CityAggregateResponse>>> GetCitiesAggregateAsync()
@@ -103,44 +117,56 @@ namespace NexusTix.Application.Features.Cities
 
         public async Task<ServiceResult<CityAggregateResponse>> GetCityAggregateAsync(int id)
         {
-            var city = await _unitOfWork.Cities.GetCityAggregateAsync(id);
-
-            if (city == null)
+            try
             {
-                return ServiceResult<CityAggregateResponse>.Fail($"ID'si {id} olan şehir bulunamadı.", HttpStatusCode.NotFound);
+                await _cityRules.CheckIfCityExists(id);
+
+                var city = await _unitOfWork.Cities.GetCityAggregateAsync(id);
+
+                var cityAsDto = _mapper.Map<CityAggregateResponse>(city);
+
+                return ServiceResult<CityAggregateResponse>.Success(cityAsDto);
             }
-
-            var cityAsDto = _mapper.Map<CityAggregateResponse>(city);
-
-            return ServiceResult<CityAggregateResponse>.Success(cityAsDto);
+            catch (BusinessException ex)
+            {
+                return ServiceResult<CityAggregateResponse>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult<CityWithDistrictsResponse>> GetCityWithDistrictsAsync(int id)
         {
-            var city = await _unitOfWork.Cities.GetCityWithDistrictsAsync(id);
-
-            if (city == null)
+            try
             {
-                return ServiceResult<CityWithDistrictsResponse>.Fail($"ID'si {id} olan şehir bulunamadı.", HttpStatusCode.NotFound);
+                await _cityRules.CheckIfCityExists(id);
+
+                var city = await _unitOfWork.Cities.GetCityWithDistrictsAsync(id);
+
+                var cityAsDto = _mapper.Map<CityWithDistrictsResponse>(city);
+
+                return ServiceResult<CityWithDistrictsResponse>.Success(cityAsDto);
             }
-
-            var cityAsDto = _mapper.Map<CityWithDistrictsResponse>(city);
-
-            return ServiceResult<CityWithDistrictsResponse>.Success(cityAsDto);
+            catch (BusinessException ex)
+            {
+                return ServiceResult<CityWithDistrictsResponse>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult<CityWithVenuesResponse>> GetCityWithVenuesAsync(int id)
         {
-            var city = await _unitOfWork.Cities.GetCityWithVenuesAsync(id);
-
-            if (city == null)
+            try
             {
-                return ServiceResult<CityWithVenuesResponse>.Fail($"ID'si {id} olan şehir bulunamadı.", HttpStatusCode.NotFound);
+                await _cityRules.CheckIfCityExists(id);
+
+                var city = await _unitOfWork.Cities.GetCityWithVenuesAsync(id);
+
+                var cityAsDto = _mapper.Map<CityWithVenuesResponse>(city);
+
+                return ServiceResult<CityWithVenuesResponse>.Success(cityAsDto);
             }
-
-            var cityAsDto = _mapper.Map<CityWithVenuesResponse>(city);
-
-            return ServiceResult<CityWithVenuesResponse>.Success(cityAsDto);
+            catch (BusinessException ex)
+            {
+                return ServiceResult<CityWithVenuesResponse>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult<IEnumerable<CityResponse>>> GetPagedAllCitiesAsync(int pageNumber, int pageSize)
@@ -159,41 +185,41 @@ namespace NexusTix.Application.Features.Cities
 
         public async Task<ServiceResult> PassiveAsync(int id)
         {
-            var city = await _unitOfWork.Cities.GetByIdAsync(id);
-
-            if (city == null)
+            try
             {
-                return ServiceResult.Fail($"ID'si {id} olan şehir bulunamadı.", HttpStatusCode.NotFound);
+                await _cityRules.CheckIfCityExists(id);
+
+                await _unitOfWork.Cities.PassiveAsync(id);
+                await _unitOfWork.SaveChangesAsync();
+
+                return ServiceResult.Success(HttpStatusCode.NoContent);
             }
-
-            await _unitOfWork.Cities.PassiveAsync(id);
-            await _unitOfWork.SaveChangesAsync();
-
-            return ServiceResult.Success(HttpStatusCode.NoContent);
+            catch (BusinessException ex)
+            {
+                return ServiceResult.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult> UpdateAsync(UpdateCityRequest request)
         {
-            var isDuplicateCity = await _unitOfWork.Cities.AnyAsync(x => x.Name.ToLower() == request.Name.ToLower() && x.Id != request.Id);
-
-            if (isDuplicateCity)
+            try
             {
-                return ServiceResult.Fail("Aynı isimde başka bir şehir mevcut.", HttpStatusCode.Conflict);
+                await _cityRules.CheckIfCityNameExistsWhenUpdating(request.Id, request.Name);
+                await _cityRules.CheckIfCityExists(request.Id);
+
+                var city = await _unitOfWork.Cities.GetByIdAsync(request.Id);
+
+                _mapper.Map(request, city);
+
+                _unitOfWork.Cities.Update(city!);
+                await _unitOfWork.SaveChangesAsync();
+
+                return ServiceResult.Success(HttpStatusCode.NoContent);
             }
-
-            var city = await _unitOfWork.Cities.GetByIdAsync(request.Id);
-
-            if (city == null)
+            catch (BusinessException ex)
             {
-                return ServiceResult.Fail($"ID'si {request.Id} olan şehir bulunamadı.", HttpStatusCode.NotFound);
+                return ServiceResult.Fail(ex.Message, ex.StatusCode);
             }
-
-            _mapper.Map(request, city);
-
-            _unitOfWork.Cities.Update(city);
-            await _unitOfWork.SaveChangesAsync();
-
-            return ServiceResult.Success(HttpStatusCode.NoContent);
         }
     }
 }

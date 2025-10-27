@@ -45,7 +45,7 @@ namespace NexusTix.Application.Features.Venues.Rules
             var exists = await _unitOfWork.Venues.AnyAsync(x => x.Name.ToLower() == venueName.ToLower() && x.Id != venueId);
             if (exists)
             {
-                throw new BusinessException("Aynı isimde başka bir mekan mevcut.", HttpStatusCode.Conflict);
+                throw new BusinessException($"Mekan adı: {venueName}. Bu isimde başka bir mekan mevcut.", HttpStatusCode.Conflict);
             }
         }
     }
