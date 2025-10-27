@@ -39,23 +39,26 @@ namespace NexusTix.Application.Features.Venues
             }
             catch (BusinessException ex)
             {
-                return ServiceResult<VenueResponse>.Fail(ex.Message, HttpStatusCode.Conflict);
+                return ServiceResult<VenueResponse>.Fail(ex.Message, ex.StatusCode);
             }
         }
 
         public async Task<ServiceResult> DeleteAsync(int id)
         {
-            var venue = await _unitOfWork.Venues.GetByIdAsync(id);
-
-            if (venue == null)
+            try
             {
-                return ServiceResult.Fail($"ID'si {id} olan mekan bulunamadı.", HttpStatusCode.NotFound);
+                await _venueRules.CheckIfVenueExists(id);
+
+                var venue = await _unitOfWork.Venues.GetByIdAsync(id);
+                _unitOfWork.Venues.Delete(venue!);
+                await _unitOfWork.SaveChangesAsync();
+
+                return ServiceResult.Success(HttpStatusCode.NoContent);
             }
-
-            _unitOfWork.Venues.Delete(venue);
-            await _unitOfWork.SaveChangesAsync();
-
-            return ServiceResult.Success(HttpStatusCode.NoContent);
+            catch (BusinessException ex)
+            {
+                return ServiceResult.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult<IEnumerable<VenueResponse>>> GetAllVenuesAsync()
@@ -68,16 +71,20 @@ namespace NexusTix.Application.Features.Venues
 
         public async Task<ServiceResult<VenueResponse>> GetByIdAsync(int id)
         {
-            var venue = await _unitOfWork.Venues.GetByIdAsync(id);
-
-            if (venue == null)
+            try
             {
-                return ServiceResult<VenueResponse>.Fail($"ID'si {id} olan mekan bulunamadı.", HttpStatusCode.NotFound);
+                await _venueRules.CheckIfVenueExists(id);
+
+                var venue = await _unitOfWork.Venues.GetByIdAsync(id);
+
+                var venueAsDto = _mapper.Map<VenueResponse>(venue);
+
+                return ServiceResult<VenueResponse>.Success(venueAsDto);
             }
-
-            var venueAsDto = _mapper.Map<VenueResponse>(venue);
-
-            return ServiceResult<VenueResponse>.Success(venueAsDto);
+            catch (BusinessException ex)
+            {
+                return ServiceResult<VenueResponse>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult<IEnumerable<VenueResponse>>> GetPagedAllVenuesAsync(int pageNumber, int pageSize)
@@ -95,16 +102,20 @@ namespace NexusTix.Application.Features.Venues
 
         public async Task<ServiceResult<VenueAggregateResponse>> GetVenueAggregateAsync(int id)
         {
-            var venue = await _unitOfWork.Venues.GetVenueAggregateAsync(id);
-
-            if (venue == null)
+            try
             {
-                return ServiceResult<VenueAggregateResponse>.Fail($"ID'si {id} olan mekan bulunamadı.", HttpStatusCode.NotFound);
+                await _venueRules.CheckIfVenueExists(id);
+
+                var venue = await _unitOfWork.Venues.GetVenueAggregateAsync(id);
+
+                var venueAsDto = _mapper.Map<VenueAggregateResponse>(venue);
+
+                return ServiceResult<VenueAggregateResponse>.Success(venueAsDto);
             }
-
-            var venueAsDto = _mapper.Map<VenueAggregateResponse>(venue);
-
-            return ServiceResult<VenueAggregateResponse>.Success(venueAsDto);
+            catch (BusinessException ex)
+            {
+                return ServiceResult<VenueAggregateResponse>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult<IEnumerable<VenueAggregateResponse>>> GetVenuesAggregateAsync()
@@ -125,59 +136,59 @@ namespace NexusTix.Application.Features.Venues
 
         public async Task<ServiceResult<VenueWithEventsResponse>> GetVenueWithEventsAsync(int id)
         {
-            var venue = await _unitOfWork.Venues.GetVenueWithEventsAsync(id);
-
-            if (venue == null)
+            try
             {
-                return ServiceResult<VenueWithEventsResponse>.Fail($"ID'si {id} olan mekan bulunamadı.", HttpStatusCode.NotFound);
+                await _venueRules.CheckIfVenueExists(id);
+
+                var venue = await _unitOfWork.Venues.GetVenueWithEventsAsync(id);
+                var venueAsDto = _mapper.Map<VenueWithEventsResponse>(venue);
+
+                return ServiceResult<VenueWithEventsResponse>.Success(venueAsDto);
             }
-
-            var venueAsDto = _mapper.Map<VenueWithEventsResponse>(venue);
-
-            return ServiceResult<VenueWithEventsResponse>.Success(venueAsDto);
+            catch (BusinessException ex)
+            {
+                return ServiceResult<VenueWithEventsResponse>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult> PassiveAsync(int id)
         {
-            var venue = await _unitOfWork.Venues.GetByIdAsync(id);
-
-            if (venue == null)
+            try
             {
-                return ServiceResult.Fail($"ID'si {id} olan mekan bulunamadı.", HttpStatusCode.NotFound);
+                await _venueRules.CheckIfVenueExists(id);
+
+                await _unitOfWork.Venues.PassiveAsync(id);
+                await _unitOfWork.SaveChangesAsync();
+
+                return ServiceResult.Success(HttpStatusCode.NoContent);
             }
-
-            await _unitOfWork.Venues.PassiveAsync(id);
-            await _unitOfWork.SaveChangesAsync();
-
-            return ServiceResult.Success(HttpStatusCode.NoContent);
+            catch (BusinessException ex)
+            {
+                return ServiceResult.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult> UpdateAsync(UpdateVenueRequest request)
         {
-            var isDuplicateVenue = await _unitOfWork.Venues.AnyAsync(x => x.Name.ToLower() == request.Name.ToLower() && x.Id != request.Id);
-            if (isDuplicateVenue)
+            try
             {
-                return ServiceResult.Fail("Aynı isimde başka bir mekan mevcut.", HttpStatusCode.Conflict);
-            }
+                await _venueRules.CheckIfVenueNameExistsWhenUpdating(request.Id, request.Name);
+                await _venueRules.CheckIfDistrictExists(request.DistrictId);
+                await _venueRules.CheckIfVenueExists(request.Id);
 
-            var districtExists = await _unitOfWork.Districts.AnyAsync(request.DistrictId);
-            if (!districtExists)
+                var venue = await _unitOfWork.Venues.GetByIdAsync(request.Id);
+
+                _mapper.Map(request, venue);
+
+                _unitOfWork.Venues.Update(venue!);
+                await _unitOfWork.SaveChangesAsync();
+
+                return ServiceResult.Success(HttpStatusCode.NoContent);
+            }
+            catch (BusinessException ex)
             {
-                return ServiceResult.Fail($"ID'si {request.DistrictId} olan ilçe bulunamadı.", HttpStatusCode.BadRequest);
+                return ServiceResult.Fail(ex.Message, ex.StatusCode);
             }
-
-            var venue = await _unitOfWork.Venues.GetByIdAsync(request.Id);
-            if (venue == null)
-            {
-                return ServiceResult.Fail($"ID'si {request.Id} olan mekan bulunamadı.", HttpStatusCode.NotFound);
-            }
-
-            _mapper.Map(request, venue);
-
-            _unitOfWork.Venues.Update(venue);
-            await _unitOfWork.SaveChangesAsync();
-
-            return ServiceResult.Success(HttpStatusCode.NoContent);
         }
     }
 }
