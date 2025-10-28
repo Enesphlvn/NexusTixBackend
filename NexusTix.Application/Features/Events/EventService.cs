@@ -52,6 +52,8 @@ namespace NexusTix.Application.Features.Events
             try
             {
                 await _eventRules.CheckIfEventExists(id);
+                await _eventRules.CheckIfEventHasNoTickets(id);
+
                 var newEvent = await _unitOfWork.Events.GetByIdAsync(id);
 
                 _unitOfWork.Events.Delete(newEvent!);
@@ -128,10 +130,19 @@ namespace NexusTix.Application.Features.Events
 
         public async Task<ServiceResult<IEnumerable<EventResponse>>> GetEventsByDateRangeAsync(DateTimeOffset startDate, DateTimeOffset endDate)
         {
-            var events = await _unitOfWork.Events.GetEventsByDateRangeAsync(startDate, endDate);
-            var eventsAsDto = _mapper.Map<IEnumerable<EventResponse>>(events);
+            try
+            {
+                _eventRules.CheckIfDateRangeIsValid(startDate, endDate);
 
-            return ServiceResult<IEnumerable<EventResponse>>.Success(eventsAsDto);
+                var events = await _unitOfWork.Events.GetEventsByDateRangeAsync(startDate, endDate);
+                var eventsAsDto = _mapper.Map<IEnumerable<EventResponse>>(events);
+
+                return ServiceResult<IEnumerable<EventResponse>>.Success(eventsAsDto);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult<IEnumerable<EventResponse>>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult<IEnumerable<EventByEventTypeResponse>>> GetEventsByEventTypeAsync(int eventTypeId)
@@ -153,22 +164,42 @@ namespace NexusTix.Application.Features.Events
 
         public async Task<ServiceResult<IEnumerable<EventResponse>>> GetEventsByPriceRangeAsync(decimal minPrice, decimal maxPrice)
         {
-            var events = await _unitOfWork.Events.GetEventsByPriceRangeAsync(minPrice, maxPrice);
-            var eventsAsDto = _mapper.Map<IEnumerable<EventResponse>>(events);
+            try
+            {
+                _eventRules.CheckIfPriceRangeIsValid(minPrice, maxPrice);
 
-            return ServiceResult<IEnumerable<EventResponse>>.Success(eventsAsDto);
+                var events = await _unitOfWork.Events.GetEventsByPriceRangeAsync(minPrice, maxPrice);
+                var eventsAsDto = _mapper.Map<IEnumerable<EventResponse>>(events);
+
+                return ServiceResult<IEnumerable<EventResponse>>.Success(eventsAsDto);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult<IEnumerable<EventResponse>>.Fail(ex.Message, ex.StatusCode);
+            }
+
+
         }
 
         public async Task<ServiceResult<IEnumerable<EventByUserTicketsResponse>>> GetEventsByUserTicketsAsync(int userId)
         {
-            var events = await _unitOfWork.Events.GetEventsByUserTicketsAsync(userId);
-            var eventsAsDto = _mapper.Map<IEnumerable<EventByUserTicketsResponse>>(events);
-            if (!eventsAsDto.Any())
+            try
             {
-                return ServiceResult<IEnumerable<EventByUserTicketsResponse>>.Success(Enumerable.Empty<EventByUserTicketsResponse>());
-            }
+                await _eventRules.CheckIfUserExists(userId);
 
-            return ServiceResult<IEnumerable<EventByUserTicketsResponse>>.Success(eventsAsDto);
+                var events = await _unitOfWork.Events.GetEventsByUserTicketsAsync(userId);
+                var eventsAsDto = _mapper.Map<IEnumerable<EventByUserTicketsResponse>>(events);
+                if (!eventsAsDto.Any())
+                {
+                    return ServiceResult<IEnumerable<EventByUserTicketsResponse>>.Success([]);
+                }
+
+                return ServiceResult<IEnumerable<EventByUserTicketsResponse>>.Success(eventsAsDto);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult<IEnumerable<EventByUserTicketsResponse>>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult<IEnumerable<EventByVenueResponse>>> GetEventsByVenueAsync(int venueId)
@@ -190,10 +221,21 @@ namespace NexusTix.Application.Features.Events
 
         public async Task<ServiceResult<IEnumerable<EventByUserTicketsResponse>>> GetEventsWithHighestSalesAsync(int numberOfEvents)
         {
-            var events = await _unitOfWork.Events.GetEventsWithHighestSalesAsync(numberOfEvents);
-            var eventsAsDto = _mapper.Map<IEnumerable<EventByUserTicketsResponse>>(events);
+            try
+            {
+                _eventRules.CheckIfNumberOfEventsIsValid(numberOfEvents);
 
-            return ServiceResult<IEnumerable<EventByUserTicketsResponse>>.Success(eventsAsDto);
+                var events = await _unitOfWork.Events.GetEventsWithHighestSalesAsync(numberOfEvents);
+                var eventsAsDto = _mapper.Map<IEnumerable<EventByUserTicketsResponse>>(events);
+
+                return ServiceResult<IEnumerable<EventByUserTicketsResponse>>.Success(eventsAsDto);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult<IEnumerable<EventByUserTicketsResponse>>.Fail(ex.Message, ex.StatusCode);
+            }
+
+
         }
 
         public async Task<ServiceResult<IEnumerable<EventResponse>>> GetPagedAllEventsAsync(int pageNumber, int pageSize)

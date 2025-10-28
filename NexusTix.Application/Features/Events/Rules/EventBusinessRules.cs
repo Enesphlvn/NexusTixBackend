@@ -1,4 +1,5 @@
-﻿using NexusTix.Domain.Exceptions;
+﻿using NexusTix.Domain.Entities;
+using NexusTix.Domain.Exceptions;
 using NexusTix.Persistence.Repositories;
 using System.Net;
 
@@ -35,7 +36,7 @@ namespace NexusTix.Application.Features.Events.Rules
             var hasTickets = await _unitOfWork.Tickets.AnyAsync(x => x.EventId == eventId);
             if (hasTickets)
             {
-                throw new BusinessException($"ID'si {eventId} olan etkinliğe satılmış biletler mevcuttur. İşlem gerçekleştirilemez.", HttpStatusCode.Conflict);
+                throw new BusinessException($"ID'si {eventId} olan etkinliğe satılmış biletler mevcuttur! İşlem gerçekleştirilemez.", HttpStatusCode.Conflict);
             }
         }
 
@@ -66,11 +67,41 @@ namespace NexusTix.Application.Features.Events.Rules
             }
         }
 
+        public void CheckIfNumberOfEventsIsValid(int numberOfEvents)
+        {
+            if (numberOfEvents <= 0 || numberOfEvents > 100)
+            {
+                throw new BusinessException("İstenen etkinlik sayısı 1 ile 100 arasında olmalıdır.", HttpStatusCode.BadRequest);
+            }
+        }
+
         public void CheckIfPagingParametersAreValid(int pageNumber, int pageSize)
         {
             if (pageNumber <= 0 || pageSize <= 0)
             {
                 throw new BusinessException("Sayfa numarası veya boyutu sıfırdan büyük olmalıdır.", HttpStatusCode.BadRequest);
+            }
+        }
+
+        public void CheckIfPriceRangeIsValid(decimal minPrice, decimal maxPrice)
+        {
+            if (minPrice > maxPrice)
+            {
+                throw new BusinessException("Minimum fiyat, maksimum fiyattan büyük olamaz.", HttpStatusCode.BadRequest);
+            }
+
+            if (minPrice < 0)
+            {
+                throw new BusinessException("Fiyatlar negatif olamaz.", HttpStatusCode.BadRequest);
+            }
+        }
+
+        public async Task CheckIfUserExists(int userId)
+        {
+            var exists = await _unitOfWork.Users.AnyAsync(userId);
+            if (!exists)
+            {
+                throw new BusinessException($"ID'si {userId} olan kullanıcı bulunamadı.", HttpStatusCode.BadRequest);
             }
         }
 
