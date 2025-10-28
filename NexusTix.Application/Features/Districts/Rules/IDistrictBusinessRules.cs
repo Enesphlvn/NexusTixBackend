@@ -1,8 +1,8 @@
-﻿using NexusTix.Application.Common.Rules;
+﻿using NexusTix.Application.Common.BaseRules;
 
 namespace NexusTix.Application.Features.Districts.Rules
 {
-    public interface IDistrictBusinessRules : IPagingBusinessRules
+    public interface IDistrictBusinessRules : IBaseBusinessRules
     {
         Task CheckIfDistrictExists(int districtId);
         Task CheckIfCityExists(int cityId);

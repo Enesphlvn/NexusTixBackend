@@ -1,6 +1,6 @@
-﻿namespace NexusTix.Application.Common.Rules
+﻿namespace NexusTix.Application.Common.BaseRules
 {
-    public interface IPagingBusinessRules
+    public interface IBaseBusinessRules
     {
         void CheckIfPagingParametersAreValid(int pageNumber, int pageSize);
     }
