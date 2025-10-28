@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
-using NexusTix.Application.Features.Cities.Dto;
+using NexusTix.Application.Features.Cities.Responses;
 using NexusTix.Application.Features.Districts.Create;
-using NexusTix.Application.Features.Districts.Dto;
+using NexusTix.Application.Features.Districts.Responses;
+using NexusTix.Application.Features.Districts.Rules;
 using NexusTix.Application.Features.Districts.Update;
 using NexusTix.Domain.Entities;
+using NexusTix.Domain.Exceptions;
 using NexusTix.Persistence.Repositories;
 using System.Net;
 
@@ -13,52 +15,54 @@ namespace NexusTix.Application.Features.Districts
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IDistrictBusinessRules _districtRules;
 
-        public DistrictService(IUnitOfWork unitOfWork, IMapper mapper)
+        public DistrictService(IUnitOfWork unitOfWork, IMapper mapper, IDistrictBusinessRules districtRules)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _districtRules = districtRules;
         }
 
         public async Task<ServiceResult<DistrictResponse>> CreateAsync(CreateDistrictRequest request)
         {
-            var exists = await _unitOfWork.Districts.AnyAsync(x => x.Name.ToLower() == request.Name.ToLower());
-
-            if (exists)
+            try
             {
-                return ServiceResult<DistrictResponse>.Fail($"İlçe adı: {request.Name}. Bu isimde başka bir ilçe mevcut", HttpStatusCode.Conflict);
+                await _districtRules.CheckIfDistrictNameExistsWhenCreating(request.Name);
+                await _districtRules.CheckIfCityExists(request.CityId);
+
+                var newDistrict = _mapper.Map<District>(request);
+
+                await _unitOfWork.Districts.AddAsync(newDistrict);
+                await _unitOfWork.SaveChangesAsync();
+
+                var districtAsDto = _mapper.Map<DistrictResponse>(newDistrict);
+
+                return ServiceResult<DistrictResponse>.SuccessAsCreated(districtAsDto, $"api/districts/{newDistrict.Id}");
             }
-
-            var cityExists = await _unitOfWork.Cities.AnyAsync(request.CityId);
-
-            if (!cityExists)
+            catch (BusinessException ex)
             {
-                return ServiceResult<DistrictResponse>.Fail($"ID'si {request.CityId} olan şehir bulunamadı.", HttpStatusCode.BadRequest);
+                return ServiceResult<DistrictResponse>.Fail(ex.Message, ex.StatusCode);
             }
-
-            var newDistrict = _mapper.Map<District>(request);
-
-            await _unitOfWork.Districts.AddAsync(newDistrict);
-            await _unitOfWork.SaveChangesAsync();
-
-            var districtAsDto = _mapper.Map<DistrictResponse>(newDistrict);
-
-            return ServiceResult<DistrictResponse>.SuccessAsCreated(districtAsDto, $"api/districts/{newDistrict.Id}");
         }
 
         public async Task<ServiceResult> DeleteAsync(int id)
         {
-            var district = await _unitOfWork.Districts.GetByIdAsync(id);
-
-            if (district == null)
+            try
             {
-                return ServiceResult.Fail($"ID'si {id} olan ilçe bulunamadı.", HttpStatusCode.NotFound);
+                await _districtRules.CheckIfDistrictExists(id);
+
+                var district = await _unitOfWork.Districts.GetByIdAsync(id);
+
+                _unitOfWork.Districts.Delete(district!);
+                await _unitOfWork.SaveChangesAsync();
+
+                return ServiceResult.Success(HttpStatusCode.NoContent);
             }
-
-            _unitOfWork.Districts.Delete(district);
-            await _unitOfWork.SaveChangesAsync();
-
-            return ServiceResult.Success(HttpStatusCode.NoContent);
+            catch (BusinessException ex)
+            {
+                return ServiceResult.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult<IEnumerable<DistrictResponse>>> GetAllDistrictsAsync()
@@ -71,30 +75,38 @@ namespace NexusTix.Application.Features.Districts
 
         public async Task<ServiceResult<DistrictResponse>> GetByIdAsync(int id)
         {
-            var district = await _unitOfWork.Districts.GetByIdAsync(id);
-
-            if (district == null)
+            try
             {
-                return ServiceResult<DistrictResponse>.Fail($"ID'si {id} olan ilçe bulunamadı.", HttpStatusCode.NotFound);
+                await _districtRules.CheckIfDistrictExists(id);
+
+                var district = await _unitOfWork.Districts.GetByIdAsync(id);
+
+                var districtAsDto = _mapper.Map<DistrictResponse>(district);
+
+                return ServiceResult<DistrictResponse>.Success(districtAsDto);
             }
-
-            var districtAsDto = _mapper.Map<DistrictResponse>(district);
-
-            return ServiceResult<DistrictResponse>.Success(districtAsDto);
+            catch (BusinessException ex)
+            {
+                return ServiceResult<DistrictResponse>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult<DistrictAggregateResponse>> GetDistrictAggregateAsync(int id)
         {
-            var district = await _unitOfWork.Districts.GetDistrictAggregateAsync(id);
-
-            if (district == null)
+            try
             {
-                return ServiceResult<DistrictAggregateResponse>.Fail($"ID'si {id} olan ilçe bulunamadı.", HttpStatusCode.NotFound);
+                await _districtRules.CheckIfDistrictExists(id);
+
+                var district = await _unitOfWork.Districts.GetDistrictAggregateAsync(id);
+
+                var districtAsDto = _mapper.Map<DistrictAggregateResponse>(district);
+
+                return ServiceResult<DistrictAggregateResponse>.Success(districtAsDto);
             }
-
-            var districtAsDto = _mapper.Map<DistrictAggregateResponse>(district);
-
-            return ServiceResult<DistrictAggregateResponse>.Success(districtAsDto);
+            catch (BusinessException ex)
+            {
+                return ServiceResult<DistrictAggregateResponse>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult<IEnumerable<DistrictAggregateResponse>>> GetDistrictsAggregateAsync()
@@ -116,75 +128,77 @@ namespace NexusTix.Application.Features.Districts
 
         public async Task<ServiceResult<DistrictWithVenuesResponse>> GetDistrictWithVenuesAsync(int id)
         {
-            var district = await _unitOfWork.Districts.GetDistrictWithVenuesAsync(id);
-
-            if (district == null)
+            try
             {
-                return ServiceResult<DistrictWithVenuesResponse>.Fail($"ID'si {id} olan ilçe bulunamadı.", HttpStatusCode.NotFound);
+                await _districtRules.CheckIfDistrictExists(id);
+
+                var district = await _unitOfWork.Districts.GetDistrictWithVenuesAsync(id);
+
+                var districtAsDto = _mapper.Map<DistrictWithVenuesResponse>(district);
+
+                return ServiceResult<DistrictWithVenuesResponse>.Success(districtAsDto);
             }
-
-            var districtAsDto = _mapper.Map<DistrictWithVenuesResponse>(district);
-
-            return ServiceResult<DistrictWithVenuesResponse>.Success(districtAsDto);
+            catch (BusinessException ex)
+            {
+                return ServiceResult<DistrictWithVenuesResponse>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult<IEnumerable<DistrictResponse>>> GetPagedAllDistrictsAsync(int pageNumber, int pageSize)
         {
-            if (pageNumber <= 0 || pageSize <= 0)
+            try
             {
-                return ServiceResult<IEnumerable<DistrictResponse>>.Fail("Geçersiz sayı", HttpStatusCode.BadRequest);
+                _districtRules.CheckIfPagingParametersAreValid(pageNumber, pageSize);
+
+                var districts = await _unitOfWork.Districts.GetAllPagedAsync(pageNumber, pageSize);
+                var districtsAsDto = _mapper.Map<IEnumerable<DistrictResponse>>(districts);
+
+                return ServiceResult<IEnumerable<DistrictResponse>>.Success(districtsAsDto);
             }
-
-            var districts = await _unitOfWork.Districts.GetAllPagedAsync(pageNumber, pageSize);
-            var districtsAsDto = _mapper.Map<IEnumerable<DistrictResponse>>(districts);
-
-            return ServiceResult<IEnumerable<DistrictResponse>>.Success(districtsAsDto);
+            catch (BusinessException ex)
+            {
+                return ServiceResult<IEnumerable<DistrictResponse>>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult> PassiveAsync(int id)
         {
-            var district = await _unitOfWork.Districts.GetByIdAsync(id);
-
-            if (district == null)
+            try
             {
-                return ServiceResult.Fail($"ID'si {id} olan ilçe bulunamadı.", HttpStatusCode.NotFound);
+                await _districtRules.CheckIfDistrictExists(id);
+
+                await _unitOfWork.Districts.PassiveAsync(id);
+                await _unitOfWork.SaveChangesAsync();
+
+                return ServiceResult.Success(HttpStatusCode.NoContent);
             }
-
-            await _unitOfWork.Districts.PassiveAsync(id);
-            await _unitOfWork.SaveChangesAsync();
-
-            return ServiceResult.Success(HttpStatusCode.NoContent);
+            catch (BusinessException ex)
+            {
+                return ServiceResult.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult> UpdateAsync(UpdateDistrictRequest request)
         {
-            var isDublicateDistrict = await _unitOfWork.Districts.AnyAsync(x => x.Name.ToLower() == request.Name.ToLower() && x.Id != request.Id);
-
-            if (isDublicateDistrict)
+            try
             {
-                return ServiceResult.Fail("Aynı isimde başka bir ilçe mevcut.", HttpStatusCode.Conflict);
+                await _districtRules.CheckIfDistrictNameExistsWhenUpdating(request.Id, request.Name);
+                await _districtRules.CheckIfCityExists(request.CityId);
+                await _districtRules.CheckIfDistrictExists(request.Id);
+
+                var district = await _unitOfWork.Districts.GetByIdAsync(request.Id);
+
+                _mapper.Map(request, district);
+
+                _unitOfWork.Districts.Update(district!);
+                await _unitOfWork.SaveChangesAsync();
+
+                return ServiceResult.Success(HttpStatusCode.NoContent);
             }
-
-            var cityExists = await _unitOfWork.Cities.AnyAsync(request.CityId);
-
-            if (!cityExists)
+            catch (BusinessException ex)
             {
-                return ServiceResult.Fail($"ID'si {request.CityId} olan şehir bulunamadı.", HttpStatusCode.BadRequest);
+                return ServiceResult.Fail(ex.Message, ex.StatusCode);
             }
-
-            var district = await _unitOfWork.Districts.GetByIdAsync(request.Id);
-
-            if (district == null)
-            {
-                return ServiceResult.Fail($"ID'si {request.Id} olan ilçe bulunamadı.", HttpStatusCode.NotFound);
-            }
-
-            _mapper.Map(request, district);
-
-            _unitOfWork.Districts.Update(district);
-            await _unitOfWork.SaveChangesAsync();
-
-            return ServiceResult.Success(HttpStatusCode.NoContent);
         }
     }
 }

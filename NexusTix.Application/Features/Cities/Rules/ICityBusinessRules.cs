@@ -1,6 +1,8 @@
-﻿namespace NexusTix.Application.Features.Cities.Rules
+﻿using NexusTix.Application.Common.Rules;
+
+namespace NexusTix.Application.Features.Cities.Rules
 {
-    public interface ICityBusinessRules
+    public interface ICityBusinessRules : IPagingBusinessRules
     {
         Task CheckIfCityExists(int cityId);
         Task CheckIfCityNameExistsWhenCreating(string cityName);

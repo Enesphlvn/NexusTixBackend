@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using NexusTix.Application.Features.Districts.Create;
-using NexusTix.Application.Features.Districts.Dto;
+using NexusTix.Application.Features.Districts.Responses;
 using NexusTix.Application.Features.Districts.Update;
 using NexusTix.Domain.Entities;
 

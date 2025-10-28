@@ -1,5 +1,5 @@
 ﻿using NexusTix.Application.Features.Venues.Create;
-using NexusTix.Application.Features.Venues.Dto;
+using NexusTix.Application.Features.Venues.Responses;
 using NexusTix.Application.Features.Venues.Update;
 
 namespace NexusTix.Application.Features.Venues

@@ -19,8 +19,6 @@
 
   <ItemGroup>
     <Folder Include="Extensions\" />
-    <Folder Include="Features\Events\Create\" />
-    <Folder Include="Features\Events\Update\" />
     <Folder Include="Features\EventTypes\Create\" />
     <Folder Include="Features\EventTypes\Update\" />
     <Folder Include="Features\Tickets\Create\" />

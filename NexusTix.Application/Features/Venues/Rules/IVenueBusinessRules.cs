@@ -1,6 +1,8 @@
-﻿namespace NexusTix.Application.Features.Venues.Rules
+﻿using NexusTix.Application.Common.Rules;
+
+namespace NexusTix.Application.Features.Venues.Rules
 {
-    public interface IVenueBusinessRules
+    public interface IVenueBusinessRules : IPagingBusinessRules
     {
         Task CheckIfDistrictExists(int districtId);
         Task CheckIfVenueExists(int venueId);

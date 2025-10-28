@@ -1,5 +1,5 @@
 ﻿using NexusTix.Application.Features.Districts.Create;
-using NexusTix.Application.Features.Districts.Dto;
+using NexusTix.Application.Features.Districts.Responses;
 using NexusTix.Application.Features.Districts.Update;
 
 namespace NexusTix.Application.Features.Districts

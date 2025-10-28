@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using NexusTix.Application.Features.Venues.Create;
-using NexusTix.Application.Features.Venues.Dto;
+using NexusTix.Application.Features.Venues.Responses;
 using NexusTix.Application.Features.Venues.Rules;
 using NexusTix.Application.Features.Venues.Update;
 using NexusTix.Domain.Entities;
@@ -89,15 +89,19 @@ namespace NexusTix.Application.Features.Venues
 
         public async Task<ServiceResult<IEnumerable<VenueResponse>>> GetPagedAllVenuesAsync(int pageNumber, int pageSize)
         {
-            if (pageNumber <= 0 || pageSize <= 0)
+            try
             {
-                return ServiceResult<IEnumerable<VenueResponse>>.Fail("Sayfa numarası ve boyutu sıfırdan büyük olmalıdır.", HttpStatusCode.BadRequest);
+                _venueRules.CheckIfPagingParametersAreValid(pageNumber, pageSize);
+
+                var venues = await _unitOfWork.Venues.GetAllPagedAsync(pageNumber, pageSize);
+                var venuesAsDto = _mapper.Map<IEnumerable<VenueResponse>>(venues);
+
+                return ServiceResult<IEnumerable<VenueResponse>>.Success(venuesAsDto);
             }
-
-            var venues = await _unitOfWork.Venues.GetAllPagedAsync(pageNumber, pageSize);
-            var venuesAsDto = _mapper.Map<IEnumerable<VenueResponse>>(venues);
-
-            return ServiceResult<IEnumerable<VenueResponse>>.Success(venuesAsDto);
+            catch (BusinessException ex)
+            {
+                return ServiceResult<IEnumerable<VenueResponse>>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult<VenueAggregateResponse>> GetVenueAggregateAsync(int id)

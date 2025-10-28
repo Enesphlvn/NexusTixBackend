@@ -1,5 +1,5 @@
 ﻿using NexusTix.Application.Features.Cities.Create;
-using NexusTix.Application.Features.Cities.Dto;
+using NexusTix.Application.Features.Cities.Responses;
 using NexusTix.Application.Features.Cities.Update;
 
 namespace NexusTix.Application.Features.Cities

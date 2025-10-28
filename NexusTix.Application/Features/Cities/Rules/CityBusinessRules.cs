@@ -39,5 +39,13 @@ namespace NexusTix.Application.Features.Cities.Rules
                 throw new BusinessException($"Şehir adı: {cityName}. Bu isimde başka bir şehir mevcut.", HttpStatusCode.Conflict);
             }
         }
+
+        public void CheckIfPagingParametersAreValid(int pageNumber, int pageSize)
+        {
+            if (pageNumber <= 0 || pageSize <= 0)
+            {
+                throw new BusinessException("Sayfa numarası veya boyutu sıfırdan büyük olmalıdır.", HttpStatusCode.BadRequest);
+            }
+        }
     }
 }

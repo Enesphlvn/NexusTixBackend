@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using NexusTix.Application.Features.Cities.Create;
-using NexusTix.Application.Features.Cities.Dto;
+using NexusTix.Application.Features.Cities.Responses;
 using NexusTix.Application.Features.Cities.Rules;
 using NexusTix.Application.Features.Cities.Update;
 using NexusTix.Domain.Entities;
@@ -171,16 +171,20 @@ namespace NexusTix.Application.Features.Cities
 
         public async Task<ServiceResult<IEnumerable<CityResponse>>> GetPagedAllCitiesAsync(int pageNumber, int pageSize)
         {
-            if (pageNumber <= 0 || pageSize <= 0)
+            try
             {
-                return ServiceResult<IEnumerable<CityResponse>>.Fail("Geçersiz sayı", HttpStatusCode.BadRequest);
+                _cityRules.CheckIfPagingParametersAreValid(pageNumber, pageSize);
+
+                var cities = await _unitOfWork.Cities.GetAllPagedAsync(pageNumber, pageSize);
+
+                var citiesAsDto = _mapper.Map<IEnumerable<CityResponse>>(cities);
+
+                return ServiceResult<IEnumerable<CityResponse>>.Success(citiesAsDto);
             }
-
-            var cities = await _unitOfWork.Cities.GetAllPagedAsync(pageNumber, pageSize);
-
-            var citiesAsDto = _mapper.Map<IEnumerable<CityResponse>>(cities);
-
-            return ServiceResult<IEnumerable<CityResponse>>.Success(citiesAsDto);
+            catch (BusinessException ex)
+            {
+                return ServiceResult<IEnumerable<CityResponse>>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult> PassiveAsync(int id)
