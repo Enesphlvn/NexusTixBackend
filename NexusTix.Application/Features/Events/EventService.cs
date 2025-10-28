@@ -1,8 +1,12 @@
 ﻿using AutoMapper;
 using NexusTix.Application.Features.Events.Create;
 using NexusTix.Application.Features.Events.Responses;
+using NexusTix.Application.Features.Events.Rules;
 using NexusTix.Application.Features.Events.Update;
+using NexusTix.Domain.Entities;
+using NexusTix.Domain.Exceptions;
 using NexusTix.Persistence.Repositories;
+using System.Net;
 
 namespace NexusTix.Application.Features.Events
 {
@@ -10,86 +14,245 @@ namespace NexusTix.Application.Features.Events
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IEventBusinessRules _eventRules;
 
-        public EventService(IUnitOfWork unitOfWork, IMapper mapper)
+        public EventService(IUnitOfWork unitOfWork, IMapper mapper, IEventBusinessRules eventRules)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _eventRules = eventRules;
         }
 
-        public Task<ServiceResult<EventResponse>> CreateAsync(CreateEventRequest request)
+        public async Task<ServiceResult<EventResponse>> CreateAsync(CreateEventRequest request)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _eventRules.CheckIfEventNameExistsWhenCreating(request.Name);
+                await _eventRules.CheckIfEventTypeExists(request.EventTypeId);
+                await _eventRules.CheckIfVenueExists(request.VenueId);
+                await _eventRules.CheckIfVenueIsAvailableOnDateCreating(request.VenueId, request.Date);
+
+                var newEvent = _mapper.Map<Event>(request);
+
+                await _unitOfWork.Events.AddAsync(newEvent);
+                await _unitOfWork.SaveChangesAsync();
+
+                var eventAsDto = _mapper.Map<EventResponse>(newEvent);
+
+                return ServiceResult<EventResponse>.SuccessAsCreated(eventAsDto, $"api/events/{newEvent.Id}");
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult<EventResponse>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
-        public Task<ServiceResult> DeleteAsync(int id)
+        public async Task<ServiceResult> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _eventRules.CheckIfEventExists(id);
+                var newEvent = await _unitOfWork.Events.GetByIdAsync(id);
+
+                _unitOfWork.Events.Delete(newEvent!);
+                await _unitOfWork.SaveChangesAsync();
+
+                return ServiceResult.Success(HttpStatusCode.NoContent);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
-        public Task<ServiceResult<IEnumerable<EventResponse>>> GetAllEventsAsync()
+        public async Task<ServiceResult<IEnumerable<EventResponse>>> GetAllEventsAsync()
         {
-            throw new NotImplementedException();
+            var events = await _unitOfWork.Events.GetAllAsync();
+
+            var eventsAsDto = _mapper.Map<IEnumerable<EventResponse>>(events);
+
+            return ServiceResult<IEnumerable<EventResponse>>.Success(eventsAsDto);
         }
 
-        public Task<ServiceResult<EventResponse>> GetByIdAsync(int id)
+        public async Task<ServiceResult<EventResponse>> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _eventRules.CheckIfEventExists(id);
+
+                var newEvent = await _unitOfWork.Events.GetByIdAsync(id);
+
+                var eventAsDto = _mapper.Map<EventResponse>(newEvent);
+
+                return ServiceResult<EventResponse>.Success(eventAsDto);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult<EventResponse>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
-        public Task<ServiceResult<EventAggregateResponse>> GetEventAggregateAsync(int id)
+        public async Task<ServiceResult<EventAggregateResponse>> GetEventAggregateAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _eventRules.CheckIfEventExists(id);
+
+                var newEvent = await _unitOfWork.Events.GetEventAggregateAsync(id);
+
+                var eventAsDto = _mapper.Map<EventAggregateResponse>(newEvent);
+
+                return ServiceResult<EventAggregateResponse>.Success(eventAsDto);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult<EventAggregateResponse>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
-        public Task<ServiceResult<IEnumerable<EventAggregateResponse>>> GetEventsAggregateAsync()
+        public async Task<ServiceResult<IEnumerable<EventAggregateResponse>>> GetEventsAggregateAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var events = await _unitOfWork.Events.GetEventsAggregateAsync();
+
+                var eventsAsDto = _mapper.Map<IEnumerable<EventAggregateResponse>>(events);
+
+                return ServiceResult<IEnumerable<EventAggregateResponse>>.Success(eventsAsDto);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult<IEnumerable<EventAggregateResponse>>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
-        public Task<ServiceResult<IEnumerable<EventResponse>>> GetEventsByDateRangeAsync(DateTimeOffset startDate, DateTimeOffset endDate)
+        public async Task<ServiceResult<IEnumerable<EventResponse>>> GetEventsByDateRangeAsync(DateTimeOffset startDate, DateTimeOffset endDate)
         {
-            throw new NotImplementedException();
+            var events = await _unitOfWork.Events.GetEventsByDateRangeAsync(startDate, endDate);
+            var eventsAsDto = _mapper.Map<IEnumerable<EventResponse>>(events);
+
+            return ServiceResult<IEnumerable<EventResponse>>.Success(eventsAsDto);
         }
 
-        public Task<ServiceResult<IEnumerable<EventByEventTypeResponse>>> GetEventsByEventTypeAsync(int eventTypeId)
+        public async Task<ServiceResult<IEnumerable<EventByEventTypeResponse>>> GetEventsByEventTypeAsync(int eventTypeId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _eventRules.CheckIfEventTypeExists(eventTypeId);
+
+                var events = await _unitOfWork.Events.GetEventsByEventTypeAsync(eventTypeId);
+                var eventsAsDto = _mapper.Map<IEnumerable<EventByEventTypeResponse>>(events);
+
+                return ServiceResult<IEnumerable<EventByEventTypeResponse>>.Success(eventsAsDto);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult<IEnumerable<EventByEventTypeResponse>>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
-        public Task<ServiceResult<IEnumerable<EventResponse>>> GetEventsByPriceRangeAsync(decimal minPrice, decimal maxPrice)
+        public async Task<ServiceResult<IEnumerable<EventResponse>>> GetEventsByPriceRangeAsync(decimal minPrice, decimal maxPrice)
         {
-            throw new NotImplementedException();
+            var events = await _unitOfWork.Events.GetEventsByPriceRangeAsync(minPrice, maxPrice);
+            var eventsAsDto = _mapper.Map<IEnumerable<EventResponse>>(events);
+
+            return ServiceResult<IEnumerable<EventResponse>>.Success(eventsAsDto);
         }
 
-        public Task<ServiceResult<IEnumerable<EventByUserTicketsResponse>>> GetEventsByUserTicketsAsync(int userId)
+        public async Task<ServiceResult<IEnumerable<EventByUserTicketsResponse>>> GetEventsByUserTicketsAsync(int userId)
         {
-            throw new NotImplementedException();
+            var events = await _unitOfWork.Events.GetEventsByUserTicketsAsync(userId);
+            var eventsAsDto = _mapper.Map<IEnumerable<EventByUserTicketsResponse>>(events);
+            if (!eventsAsDto.Any())
+            {
+                return ServiceResult<IEnumerable<EventByUserTicketsResponse>>.Success(Enumerable.Empty<EventByUserTicketsResponse>());
+            }
+
+            return ServiceResult<IEnumerable<EventByUserTicketsResponse>>.Success(eventsAsDto);
         }
 
-        public Task<ServiceResult<IEnumerable<EventByVenueResponse>>> GetEventsByVenueAsync(int venueId)
+        public async Task<ServiceResult<IEnumerable<EventByVenueResponse>>> GetEventsByVenueAsync(int venueId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _eventRules.CheckIfVenueExists(venueId);
+
+                var events = await _unitOfWork.Events.GetEventsByVenueAsync(venueId);
+                var eventsAsDto = _mapper.Map<IEnumerable<EventByVenueResponse>>(events);
+
+                return ServiceResult<IEnumerable<EventByVenueResponse>>.Success(eventsAsDto);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult<IEnumerable<EventByVenueResponse>>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
-        public Task<ServiceResult<IEnumerable<EventByUserTicketsResponse>>> GetEventsWithHighestSalesAsync(int numberOfEvents)
+        public async Task<ServiceResult<IEnumerable<EventByUserTicketsResponse>>> GetEventsWithHighestSalesAsync(int numberOfEvents)
         {
-            throw new NotImplementedException();
+            var events = await _unitOfWork.Events.GetEventsWithHighestSalesAsync(numberOfEvents);
+            var eventsAsDto = _mapper.Map<IEnumerable<EventByUserTicketsResponse>>(events);
+
+            return ServiceResult<IEnumerable<EventByUserTicketsResponse>>.Success(eventsAsDto);
         }
 
-        public Task<ServiceResult<IEnumerable<EventResponse>>> GetPagedAllEventsAsync(int pageNumber, int pageSize)
+        public async Task<ServiceResult<IEnumerable<EventResponse>>> GetPagedAllEventsAsync(int pageNumber, int pageSize)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _eventRules.CheckIfPagingParametersAreValid(pageNumber, pageSize);
+
+                var events = await _unitOfWork.Events.GetAllPagedAsync(pageNumber, pageSize);
+                var eventsAsDto = _mapper.Map<IEnumerable<EventResponse>>(events);
+
+                return ServiceResult<IEnumerable<EventResponse>>.Success(eventsAsDto);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult<IEnumerable<EventResponse>>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
-        public Task<ServiceResult> PassiveAsync(int id)
+        public async Task<ServiceResult> PassiveAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _eventRules.CheckIfEventExists(id);
+
+                await _unitOfWork.Events.PassiveAsync(id);
+                await _unitOfWork.SaveChangesAsync();
+
+                return ServiceResult.Success(HttpStatusCode.NoContent);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
-        public Task<ServiceResult> UpdateAsync(UpdateEventRequest request)
+        public async Task<ServiceResult> UpdateAsync(UpdateEventRequest request)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _eventRules.CheckIfEventExists(request.Id);
+                await _eventRules.CheckIfEventNameExistsWhenUpdating(request.Id, request.Name);
+                await _eventRules.CheckIfEventTypeExists(request.EventTypeId);
+                await _eventRules.CheckIfVenueExists(request.VenueId);
+                await _eventRules.CheckIfVenueIsAvailableOnDateUpdating(request.Id, request.VenueId, request.Date);
+
+                var newEvent = await _unitOfWork.Events.GetByIdAsync(request.Id);
+
+                _mapper.Map(request, newEvent);
+
+                _unitOfWork.Events.Update(newEvent!);
+                await _unitOfWork.SaveChangesAsync();
+
+                return ServiceResult.Success(HttpStatusCode.NoContent);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult.Fail(ex.Message, ex.StatusCode);
+            }
         }
     }
 }
