@@ -90,6 +90,32 @@ namespace NexusTix.Application.Features.EventTypes
             }
         }
 
+        public async Task<ServiceResult<EventTypeAggregateResponse>> GetEventTypeAggregateAsync(int id)
+        {
+            try
+            {
+                await _eventTypeRules.CheckIfEventTypeExists(id);
+
+                var eventType = await _unitOfWork.EventTypes.GetEventTypeAggregateAsync(id);
+
+                var eventTypeAsDto = _mapper.Map<EventTypeAggregateResponse>(eventType);
+
+                return ServiceResult<EventTypeAggregateResponse>.Success(eventTypeAsDto);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult<EventTypeAggregateResponse>.Fail(ex.Message, ex.StatusCode);
+            }
+        }
+
+        public async Task<ServiceResult<IEnumerable<EventTypeAggregateResponse>>> GetEventTypesAggregateAsync()
+        {
+            var eventTypes = await _unitOfWork.EventTypes.GetEventTypesAggregateAsync();
+            var eventTypesAsDto = _mapper.Map<IEnumerable<EventTypeAggregateResponse>>(eventTypes);
+
+            return ServiceResult<IEnumerable<EventTypeAggregateResponse>>.Success(eventTypesAsDto);
+        }
+
         public async Task<ServiceResult<IEnumerable<EventTypeWithEventsResponse>>> GetEventTypesWithEventsAsync()
         {
             var eventTypes = await _unitOfWork.EventTypes.GetEventTypesWithEventsAsync();
