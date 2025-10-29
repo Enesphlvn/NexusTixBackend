@@ -1,4 +1,5 @@
-﻿using NexusTix.Application.Features.EventTypes.Create;
+﻿using NexusTix.Application.Features.Cities.Responses;
+using NexusTix.Application.Features.EventTypes.Create;
 using NexusTix.Application.Features.EventTypes.Responses;
 using NexusTix.Application.Features.EventTypes.Update;
 
@@ -12,6 +13,8 @@ namespace NexusTix.Application.Features.EventTypes
 
         Task<ServiceResult<EventTypeWithEventsResponse>> GetEventTypeWithEventsAsync(int id);
         Task<ServiceResult<IEnumerable<EventTypeWithEventsResponse>>> GetEventTypesWithEventsAsync();
+        Task<ServiceResult<EventTypeAggregateResponse>> GetEventTypeAggregateAsync(int id);
+        Task<ServiceResult<IEnumerable<EventTypeAggregateResponse>>> GetEventTypesAggregateAsync();
 
         Task<ServiceResult<EventTypeResponse>> CreateAsync(CreateEventTypeRequest request);
         Task<ServiceResult> UpdateAsync(UpdateEventTypeRequest request);

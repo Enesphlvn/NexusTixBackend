@@ -6,5 +6,7 @@ namespace NexusTix.Persistence.Repositories.EventTypes
     {
         Task<EventType?> GetEventTypeWithEventsAsync(int id);
         Task<IEnumerable<EventType>> GetEventTypesWithEventsAsync();
+        Task<EventType?> GetEventTypeAggregateAsync(int id);
+        Task<IEnumerable<EventType>> GetEventTypesAggregateAsync();
     }
 }
