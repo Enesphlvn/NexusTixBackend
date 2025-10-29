@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using NexusTix.Domain.Entities;
+using NexusTix.Domain.Entities.Common;
 using System.Reflection;
 
 namespace NexusTix.Persistence.Context
@@ -19,12 +20,39 @@ namespace NexusTix.Persistence.Context
         public DbSet<Event> Events { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
 
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var entries = ChangeTracker.Entries().Where(x =>
+                x.Entity is BaseEntity<int> || x.Entity is User
+            );
+
+            foreach (var entry in entries)
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Property("Created").CurrentValue = DateTimeOffset.UtcNow;
+                }
+                else if (entry.State == EntityState.Modified)
+                {
+                    entry.Property("Updated").CurrentValue = DateTimeOffset.UtcNow;
+                }
+
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Property("Created").IsModified = false;
+                }
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             base.OnModelCreating(builder);
 
+            builder.Entity<User>().HasQueryFilter(e => e.IsActive);
             builder.Entity<City>().HasQueryFilter(e => e.IsActive);
             builder.Entity<District>().HasQueryFilter(e => e.IsActive);
             builder.Entity<EventType>().HasQueryFilter(e => e.IsActive);
