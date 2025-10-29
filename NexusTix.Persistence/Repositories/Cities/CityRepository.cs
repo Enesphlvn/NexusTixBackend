@@ -15,7 +15,12 @@ namespace NexusTix.Persistence.Repositories.Cities
 
         public async Task<IEnumerable<City>> GetCitiesAggregateAsync()
         {
-            return await _context.Cities.Include(x => x.Districts).ThenInclude(x => x.Venues).AsNoTracking().ToListAsync();
+            return await _context.Cities
+                .Include(x => x.Districts).ThenInclude(x => x.Venues).ThenInclude(x => x.Events).ThenInclude(x => x.EventType)
+                .Include(x => x.Districts).ThenInclude(x => x.Venues).ThenInclude(x => x.Events).ThenInclude(x => x.Tickets)
+                .Include(c => c.Venues).ThenInclude(v => v.Events).ThenInclude(e => e.EventType)
+                .Include(c => c.Venues).ThenInclude(v => v.Events).ThenInclude(e => e.Tickets)
+                .AsNoTracking().ToListAsync();
         }
 
         public async Task<IEnumerable<City>> GetCitiesWithDistrictsAsync()
@@ -30,7 +35,12 @@ namespace NexusTix.Persistence.Repositories.Cities
 
         public async Task<City?> GetCityAggregateAsync(int id)
         {
-            return await _context.Cities.Include(x => x.Districts).ThenInclude(x => x.Venues).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Cities
+                .Include(x => x.Districts).ThenInclude(x => x.Venues).ThenInclude(x => x.Events).ThenInclude(x => x.EventType)
+                .Include(x => x.Districts).ThenInclude(x => x.Venues).ThenInclude(x => x.Events).ThenInclude(x => x.Tickets)
+                .Include(c => c.Venues).ThenInclude(v => v.Events).ThenInclude(e => e.EventType)
+                .Include(c => c.Venues).ThenInclude(v => v.Events).ThenInclude(e => e.Tickets)
+                .AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<City?> GetCityWithDistrictsAsync(int id)
