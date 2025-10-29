@@ -1,5 +1,4 @@
-﻿using NexusTix.Application.Features.Cities.Responses;
-using NexusTix.Application.Features.EventTypes.Create;
+﻿using NexusTix.Application.Features.EventTypes.Create;
 using NexusTix.Application.Features.EventTypes.Responses;
 using NexusTix.Application.Features.EventTypes.Update;
 

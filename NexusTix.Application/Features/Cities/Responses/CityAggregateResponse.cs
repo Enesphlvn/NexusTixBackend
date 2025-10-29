@@ -2,5 +2,5 @@
 
 namespace NexusTix.Application.Features.Cities.Responses
 {
-    public record CityAggregateResponse(int Id, string Name, IEnumerable<DistrictWithVenuesResponse> Districts);
+    public record CityAggregateResponse(int Id, string Name, IEnumerable<DistrictAggregateResponse> Districts);
 }

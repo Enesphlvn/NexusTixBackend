@@ -34,14 +34,22 @@ namespace NexusTix.Persistence.Repositories.Tickets
             return await _context.Tickets.Include(x => x.Event).AsNoTracking().Where(x => x.UserId == userId).ToListAsync();
         }
 
-        public async Task<IEnumerable<Ticket>> GetTicketsWithDetailAsync()
+        public async Task<IEnumerable<Ticket>> GetTicketsAggregateAsync()
         {
-            return await _context.Tickets.Include(x => x.Event).Include(x => x.User).AsNoTracking().ToListAsync();
+            return await _context.Tickets
+                .Include(x => x.User)
+                .Include(x => x.Event).ThenInclude(x => x.EventType)
+                .Include(x => x.Event).ThenInclude(x => x.Venue).ThenInclude(x => x.District).ThenInclude(x => x.City)
+                .AsNoTracking().ToListAsync();
         }
 
-        public async Task<Ticket?> GetTicketWithDetailAsync(int id)
+        public async Task<Ticket?> GetTicketAggregateAsync(int id)
         {
-            return await _context.Tickets.Include(x => x.Event).Include(x => x.User).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Tickets
+                .Include(x => x.User)
+                .Include(x => x.Event).ThenInclude(x => x.EventType)
+                .Include(x => x.Event).ThenInclude(x => x.Venue).ThenInclude(x => x.District).ThenInclude(x => x.City)
+                .AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<bool> HasUserTicketForEventAsync(int userId, int eventId)
