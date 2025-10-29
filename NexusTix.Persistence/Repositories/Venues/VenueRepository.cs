@@ -15,12 +15,20 @@ namespace NexusTix.Persistence.Repositories.Venues
 
         public async Task<Venue?> GetVenueAggregateAsync(int id)
         {
-            return await _context.Venues.Include(x => x.District).Include(x => x.Events).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Venues
+                .Include(x => x.District).ThenInclude(x => x.City)
+                .Include(x => x.Events).ThenInclude(x => x.EventType)
+                .Include(x => x.Events).ThenInclude(x => x.Tickets).ThenInclude(x => x.User)
+                .AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<IEnumerable<Venue>> GetVenuesAggregateAsync()
         {
-            return await _context.Venues.Include(x => x.District).Include(x => x.Events).AsNoTracking().ToListAsync();
+            return await _context.Venues
+                .Include(x => x.District).ThenInclude(x => x.City)
+                .Include(x => x.Events).ThenInclude(x => x.EventType)
+                .Include(x => x.Events).ThenInclude(x => x.Tickets).ThenInclude(x => x.User)
+                .AsNoTracking().ToListAsync();
         }
 
         public async Task<IEnumerable<Venue>> GetVenuesWithEventsAsync()

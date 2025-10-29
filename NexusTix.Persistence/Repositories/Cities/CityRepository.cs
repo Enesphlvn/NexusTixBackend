@@ -17,9 +17,9 @@ namespace NexusTix.Persistence.Repositories.Cities
         {
             return await _context.Cities
                 .Include(x => x.Districts).ThenInclude(x => x.Venues).ThenInclude(x => x.Events).ThenInclude(x => x.EventType)
-                .Include(x => x.Districts).ThenInclude(x => x.Venues).ThenInclude(x => x.Events).ThenInclude(x => x.Tickets)
+                .Include(x => x.Districts).ThenInclude(x => x.Venues).ThenInclude(x => x.Events).ThenInclude(x => x.Tickets).ThenInclude(x => x.User)
                 .Include(c => c.Venues).ThenInclude(v => v.Events).ThenInclude(e => e.EventType)
-                .Include(c => c.Venues).ThenInclude(v => v.Events).ThenInclude(e => e.Tickets)
+                .Include(c => c.Venues).ThenInclude(v => v.Events).ThenInclude(e => e.Tickets).ThenInclude(x => x.User)
                 .AsNoTracking().ToListAsync();
         }
 
@@ -37,9 +37,9 @@ namespace NexusTix.Persistence.Repositories.Cities
         {
             return await _context.Cities
                 .Include(x => x.Districts).ThenInclude(x => x.Venues).ThenInclude(x => x.Events).ThenInclude(x => x.EventType)
-                .Include(x => x.Districts).ThenInclude(x => x.Venues).ThenInclude(x => x.Events).ThenInclude(x => x.Tickets)
+                .Include(x => x.Districts).ThenInclude(x => x.Venues).ThenInclude(x => x.Events).ThenInclude(x => x.Tickets).ThenInclude(x => x.User)
                 .Include(c => c.Venues).ThenInclude(v => v.Events).ThenInclude(e => e.EventType)
-                .Include(c => c.Venues).ThenInclude(v => v.Events).ThenInclude(e => e.Tickets)
+                .Include(c => c.Venues).ThenInclude(v => v.Events).ThenInclude(e => e.Tickets).ThenInclude(x => x.User)
                 .AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
 
