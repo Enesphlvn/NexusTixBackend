@@ -21,11 +21,6 @@ namespace NexusTix.Persistence.Repositories.Users
                 .AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<User> GetuserbyEmailAsync(string email)
-        {
-            return (await _context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Email == email))!;
-        }
-
         public async Task<IEnumerable<User>> GetUsersAggregateAsync()
         {
             return await _context.Users
