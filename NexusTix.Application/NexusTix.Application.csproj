@@ -21,7 +21,6 @@
     <Folder Include="Extensions\" />
     <Folder Include="Features\Tickets\Create\" />
     <Folder Include="Features\Tickets\Update\" />
-    <Folder Include="Features\Users\Update\" />
   </ItemGroup>
 
 </Project>

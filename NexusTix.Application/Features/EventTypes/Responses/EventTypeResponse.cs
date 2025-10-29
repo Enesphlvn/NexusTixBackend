@@ -1,4 +1,3 @@
-﻿namespace NexusTix.Application.Features.EventTypes.Responses
-{
-    public record EventTypeResponse(int Id, string Name);
-}
+﻿namespace NexusTix.Application.Features.EventTypes.Responses;
+
+public record EventTypeResponse(int Id, string Name);
