@@ -15,12 +15,20 @@ namespace NexusTix.Persistence.Repositories.Districts
 
         public async Task<District?> GetDistrictAggregateAsync(int id)
         {
-            return await _context.Districts.Include(x => x.City).Include(x => x.Venues).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Districts
+                .Include(x => x.City)
+                .Include(x => x.Venues).ThenInclude(x => x.Events).ThenInclude(x => x.EventType)
+                .Include(x => x.Venues).ThenInclude(x => x.Events).ThenInclude(x => x.Tickets)
+                .AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<IEnumerable<District>> GetDistrictsAggregateAsync()
         {
-            return await _context.Districts.Include(x => x.City).Include(x => x.Venues).AsNoTracking().ToListAsync();
+            return await _context.Districts
+                .Include(x => x.City)
+                .Include(x => x.Venues).ThenInclude(x => x.Events).ThenInclude(x => x.EventType)
+                .Include(x => x.Venues).ThenInclude(x => x.Events).ThenInclude(x => x.Tickets)
+                .AsNoTracking().ToListAsync();
         }
 
         public async Task<IEnumerable<District>> GetDistrictsWithVenuesAsync()
