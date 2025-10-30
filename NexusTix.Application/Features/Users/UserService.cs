@@ -26,9 +26,35 @@ namespace NexusTix.Application.Features.Users
             _userManager = userManager;
         }
 
-        public Task<ServiceResult<UserResponse>> CreateAsync(CreateUserRequest request)
+        public async Task<ServiceResult<UserResponse>> CreateAsync(CreateUserRequest request)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _userRules.CheckIfEmailExistsWhenCreating(request.Email);
+
+                if (!string.IsNullOrEmpty(request.PhoneNumber))
+                {
+                    await _userRules.CheckIfPhoneNumberExists(request.PhoneNumber);
+                }
+
+                var newUser = _mapper.Map<User>(request);
+
+                var result = await _userManager.CreateAsync(newUser, request.Password);
+
+                if (!result.Succeeded)
+                {
+                    var errors = string.Join(", ", result.Errors.Select(x => x.Description));
+                    throw new BusinessException($"Kullanıcı oluşturulurken kimlik hatası: {errors}", HttpStatusCode.BadRequest);
+                }
+
+                var userAsDto = _mapper.Map<UserResponse>(newUser);
+
+                return ServiceResult<UserResponse>.SuccessAsCreated(userAsDto, $"api/users/{newUser.Id}");
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult<UserResponse>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public Task<ServiceResult> DeleteAsync(int id)

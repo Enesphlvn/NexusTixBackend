@@ -3,12 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using NexusTix.Domain.Entities;
 using NexusTix.Persistence.Context;
 using NexusTix.Persistence.Extensions;
+using NexusTix.Persistence.Seed;
 
 namespace NexusTix.WebAPI
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +53,8 @@ namespace NexusTix.WebAPI
 
 
             app.MapControllers();
+
+            await IdentitySeeder.SeedRolesAndSuperAdminAsync(app.Services);
 
             app.Run();
         }
