@@ -64,9 +64,18 @@ namespace NexusTix.Application.Features.Users.Rules
             }
         }
 
-        public async Task CheckIfPhoneNumberExists(string phoneNumber)
+        public async Task CheckIfPhoneNumberExistsWhenCreating(string phoneNumber)
         {
             var exists = await _unitOfWork.Users.AnyAsync(x => x.PhoneNumber == phoneNumber && x.IsActive);
+            if (exists)
+            {
+                throw new BusinessException($"Telefon numarası: {phoneNumber}. Bu numara zaten kullanımda", HttpStatusCode.Conflict);
+            }
+        }
+
+        public async Task CheckIfPhoneNumberExistsWhenUpdating(int userId, string phoneNumber)
+        {
+            var exists = await _unitOfWork.Users.AnyAsync(x => x.PhoneNumber == phoneNumber && x.IsActive && x.Id != userId);
             if (exists)
             {
                 throw new BusinessException($"Telefon numarası: {phoneNumber}. Bu numara zaten kullanımda", HttpStatusCode.Conflict);

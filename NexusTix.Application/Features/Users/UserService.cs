@@ -28,13 +28,15 @@ namespace NexusTix.Application.Features.Users
 
         public async Task<ServiceResult<UserResponse>> CreateAsync(CreateUserRequest request)
         {
+            const string DefaultRoleName = "User";
+
             try
             {
                 await _userRules.CheckIfEmailExistsWhenCreating(request.Email);
 
                 if (!string.IsNullOrEmpty(request.PhoneNumber))
                 {
-                    await _userRules.CheckIfPhoneNumberExists(request.PhoneNumber);
+                    await _userRules.CheckIfPhoneNumberExistsWhenCreating(request.PhoneNumber);
                 }
 
                 var newUser = _mapper.Map<User>(request);
@@ -47,6 +49,14 @@ namespace NexusTix.Application.Features.Users
                     throw new BusinessException($"Kullanıcı oluşturulurken kimlik hatası: {errors}", HttpStatusCode.BadRequest);
                 }
 
+                var roleResult = await _userManager.AddToRoleAsync(newUser, DefaultRoleName);
+
+                if (!roleResult.Succeeded)
+                {
+                    var roleErrors = string.Join(", ", roleResult.Errors.Select(x => x.Description));
+                    throw new BusinessException($"Kullanıcıya varsayılan rol: '{DefaultRoleName}' atanamadı. Hata: {roleErrors}", HttpStatusCode.InternalServerError);
+                }
+
                 var userAsDto = _mapper.Map<UserResponse>(newUser);
 
                 return ServiceResult<UserResponse>.SuccessAsCreated(userAsDto, $"api/users/{newUser.Id}");
@@ -57,9 +67,28 @@ namespace NexusTix.Application.Features.Users
             }
         }
 
-        public Task<ServiceResult> DeleteAsync(int id)
+        public async Task<ServiceResult> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _userRules.CheckIfUserExists(id);
+
+                var user = await _userManager.FindByIdAsync(id.ToString());
+
+                var result = await _userManager.DeleteAsync(user!);
+
+                if (!result.Succeeded)
+                {
+                    var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                    throw new BusinessException($"Kullanıcı silinirken kimlik hatası oluştu: {errors}", HttpStatusCode.InternalServerError);
+                }
+
+                return ServiceResult.Success(HttpStatusCode.NoContent);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult<IEnumerable<UserResponse>>> GetAllUsersAsync()
@@ -171,9 +200,34 @@ namespace NexusTix.Application.Features.Users
             }
         }
 
-        public Task<ServiceResult> UpdateAsync(UpdateUserRequest request)
+        public async Task<ServiceResult> UpdateAsync(UpdateUserRequest request)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _userRules.CheckIfUserExists(request.Id);
+
+                if (!string.IsNullOrEmpty(request.PhoneNumber))
+                {
+                    await _userRules.CheckIfPhoneNumberExistsWhenUpdating(request.Id, request.PhoneNumber);
+                }
+
+                var user = await _unitOfWork.Users.GetByIdAsync(request.Id);
+                _mapper.Map(request, user);
+
+                var result = await _userManager.UpdateAsync(user!);
+
+                if (!result.Succeeded)
+                {
+                    var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                    throw new BusinessException($"Kullanıcı güncellenirken kimlik hatası: {errors}", HttpStatusCode.InternalServerError);
+                }
+
+                return ServiceResult.Success(HttpStatusCode.NoContent);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public Task<ServiceResult> UpdateEmailAsync(UpdateUserEmailRequest request)
