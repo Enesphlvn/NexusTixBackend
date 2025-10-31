@@ -51,7 +51,6 @@ namespace NexusTix.WebAPI
 
             app.UseAuthorization();
 
-
             app.MapControllers();
 
             await IdentitySeeder.SeedRolesAndSuperAdminAsync(app.Services);

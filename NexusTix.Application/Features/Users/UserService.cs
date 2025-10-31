@@ -230,14 +230,58 @@ namespace NexusTix.Application.Features.Users
             }
         }
 
-        public Task<ServiceResult> UpdateEmailAsync(UpdateUserEmailRequest request)
+        public async Task<ServiceResult> UpdateEmailAsync(UpdateUserEmailRequest request)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _userRules.CheckIfUserExists(request.Id);
+                await _userRules.CheckIfEmailExistsWhenUpdating(request.Id, request.NewEmail);
+                await _userRules.CheckIfCurrentPasswordIsValid(request.Id, request.CurrentPassword);
+
+                var user = await _userManager.FindByIdAsync(request.Id.ToString());
+
+                var token = await _userManager.GenerateChangeEmailTokenAsync(user!, request.NewEmail);
+
+                var result = await _userManager.ChangeEmailAsync(user!, request.NewEmail, token);
+                if (!result.Succeeded)
+                {
+                    var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                    throw new BusinessException($"E-posta güncellenirken kimlik hatası: {errors}", HttpStatusCode.BadRequest);
+                }
+
+                return ServiceResult.Success(HttpStatusCode.NoContent);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
-        public Task<ServiceResult> UpdatePasswordAsync(UpdateUserPasswordRequest request)
+        public async Task<ServiceResult> UpdatePasswordAsync(UpdateUserPasswordRequest request)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _userRules.CheckIfUserExists(request.Id);
+
+                _userRules.CheckIfNewPasswordIsDifferent(request.CurrentPassword, request.NewPassword);
+
+                await _userRules.CheckIfCurrentPasswordIsValid(request.Id, request.CurrentPassword);
+
+                var user = await _userManager.FindByIdAsync(request.Id.ToString());
+
+                var result = await _userManager.ChangePasswordAsync(user!, request.CurrentPassword, request.NewPassword);
+                if (!result.Succeeded)
+                {
+                    var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                    throw new BusinessException($"Şifre güncellenirken kimlik hatası: {errors}", HttpStatusCode.BadRequest);
+                }
+
+                return ServiceResult.Success(HttpStatusCode.NoContent);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult.Fail(ex.Message, ex.StatusCode);
+            }
         }
     }
 }
