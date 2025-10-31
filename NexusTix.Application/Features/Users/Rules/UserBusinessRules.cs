@@ -10,11 +10,13 @@ namespace NexusTix.Application.Features.Users.Rules
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole<int>> _roleManager;
 
-        public UserBusinessRules(IUnitOfWork unitOfWork, UserManager<User> userManager)
+        public UserBusinessRules(IUnitOfWork unitOfWork, UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public async Task CheckIfCurrentPasswordIsValid(int userId, string currentPassword)
@@ -79,6 +81,15 @@ namespace NexusTix.Application.Features.Users.Rules
             if (exists)
             {
                 throw new BusinessException($"Telefon numarası: {phoneNumber}. Bu numara zaten kullanımda", HttpStatusCode.Conflict);
+            }
+        }
+
+        public async Task CheckIfRoleExists(string roleName)
+        {
+            var exists = await _roleManager.RoleExistsAsync(roleName);
+            if (!exists)
+            {
+                throw new BusinessException($"'{roleName}' adında bir rol bulunamadı.", HttpStatusCode.NotFound);
             }
         }
 

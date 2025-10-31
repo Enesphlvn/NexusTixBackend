@@ -19,6 +19,7 @@ namespace NexusTix.Application.Features.Users
         Task<ServiceResult> UpdateAsync(UpdateUserRequest request);
         Task<ServiceResult> UpdateEmailAsync(UpdateUserEmailRequest request);
         Task<ServiceResult> UpdatePasswordAsync(UpdateUserPasswordRequest request);
+        Task<ServiceResult> UpdateRoleAsync(UpdateUserRoleRequest request);
         Task<ServiceResult> DeleteAsync(int id);
         Task<ServiceResult> PassiveAsync(int id);
     }

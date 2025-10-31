@@ -283,5 +283,39 @@ namespace NexusTix.Application.Features.Users
                 return ServiceResult.Fail(ex.Message, ex.StatusCode);
             }
         }
+
+        public async Task<ServiceResult> UpdateRoleAsync(UpdateUserRoleRequest request)
+        {
+            try
+            {
+                await _userRules.CheckIfUserExists(request.Id);
+                await _userRules.CheckIfRoleExists(request.NewRoleName);
+
+                var user = await _userManager.FindByIdAsync(request.Id.ToString());
+
+                var currentRoles = await _userManager.GetRolesAsync(user!);
+
+                var removeResult = await _userManager.RemoveFromRolesAsync(user!, currentRoles);
+                if (!removeResult.Succeeded)
+                {
+                    var errors = string.Join(", ", removeResult.Errors.Select(e => e.Description));
+                    throw new BusinessException($"Kullanıcının mevcut rolleri kaldırılırken hata oluştu: {errors}", HttpStatusCode.InternalServerError);
+                }
+
+                var addResult = await _userManager.AddToRoleAsync(user!, request.NewRoleName);
+
+                if (!addResult.Succeeded)
+                {
+                    var errors = string.Join(", ", addResult.Errors.Select(e => e.Description));
+                    throw new BusinessException($"Kullanıcıya yeni rol ('{request.NewRoleName}') atanırken hata oluştu: {errors}", HttpStatusCode.InternalServerError);
+                }
+
+                return ServiceResult.Success(HttpStatusCode.NoContent);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult.Fail(ex.Message, ex.StatusCode);
+            }
+        }
     }
 }

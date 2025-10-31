@@ -5,6 +5,7 @@ namespace NexusTix.Application.Features.Users.Rules
     public interface IUserBusinessRules : IBaseBusinessRules
     {
         Task CheckIfUserExists(int userId);
+        Task CheckIfRoleExists(string roleName);
         Task CheckIfEmailExistsWhenCreating(string email);
         Task CheckIfEmailExistsWhenUpdating(int userId, string email);
         Task CheckIfPhoneNumberExistsWhenCreating(string phoneNumber);
