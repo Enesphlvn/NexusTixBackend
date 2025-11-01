@@ -48,6 +48,7 @@ namespace NexusTix.Application.Features.Venues
             try
             {
                 await _venueRules.CheckIfVenueExists(id);
+                await _venueRules.CheckIfVenueHasNoEvents(id);
 
                 var venue = await _unitOfWork.Venues.GetByIdAsync(id);
                 _unitOfWork.Venues.Delete(venue!);

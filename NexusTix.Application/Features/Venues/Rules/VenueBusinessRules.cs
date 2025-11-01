@@ -1,4 +1,5 @@
-﻿using NexusTix.Domain.Exceptions;
+﻿using Microsoft.Extensions.Logging;
+using NexusTix.Domain.Exceptions;
 using NexusTix.Persistence.Repositories;
 using System.Net;
 
@@ -36,6 +37,15 @@ namespace NexusTix.Application.Features.Venues.Rules
             if (!exists)
             {
                 throw new BusinessException($"ID'si {venueId} olan mekan bulunamadı.", HttpStatusCode.NotFound);
+            }
+        }
+
+        public async Task CheckIfVenueHasNoEvents(int venueId)
+        {
+            var hasEvents = await _unitOfWork.Events.AnyAsync(x => x.VenueId == venueId);
+            if (hasEvents)
+            {
+                throw new BusinessException($"ID'si {venueId} olan mekana bağlı etkinlikler mevcuttur! İşlem gerçekleştirilemez.", HttpStatusCode.Conflict);
             }
         }
 
