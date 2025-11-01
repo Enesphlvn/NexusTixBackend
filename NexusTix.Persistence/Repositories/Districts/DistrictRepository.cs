@@ -6,11 +6,8 @@ namespace NexusTix.Persistence.Repositories.Districts
 {
     public class DistrictRepository : GenericRepository<District, int>, IDistrictRepository
     {
-        private readonly AppDbContext _context;
-
         public DistrictRepository(AppDbContext context) : base(context)
         {
-            _context = context;
         }
 
         public async Task<District?> GetDistrictAggregateAsync(int id)

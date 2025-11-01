@@ -6,11 +6,8 @@ namespace NexusTix.Persistence.Repositories.Cities
 {
     public class CityRepository : GenericRepository<City, int>, ICityRepository
     {
-        private readonly AppDbContext _context;
-
         public CityRepository(AppDbContext context) : base(context)
         {
-            _context = context;
         }
 
         public async Task<IEnumerable<City>> GetCitiesAggregateAsync()

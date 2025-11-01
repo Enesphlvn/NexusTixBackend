@@ -6,11 +6,8 @@ namespace NexusTix.Persistence.Repositories.Venues
 {
     public class VenueRepository : GenericRepository<Venue, int>, IVenueRepository
     {
-        private readonly AppDbContext _context;
-
         public VenueRepository(AppDbContext context) : base(context)
         {
-            _context = context;
         }
 
         public async Task<Venue?> GetVenueAggregateAsync(int id)

@@ -6,11 +6,8 @@ namespace NexusTix.Persistence.Repositories.EventTypes
 {
     public class EventTypeRepository : GenericRepository<EventType, int>, IEventTypeRepository
     {
-        private readonly AppDbContext _context;
-
         public EventTypeRepository(AppDbContext context) : base(context)
         {
-            _context = context;
         }
 
         public async Task<EventType?> GetEventTypeAggregateAsync(int id)

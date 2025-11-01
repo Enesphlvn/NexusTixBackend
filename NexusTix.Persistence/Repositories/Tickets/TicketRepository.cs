@@ -6,11 +6,8 @@ namespace NexusTix.Persistence.Repositories.Tickets
 {
     public class TicketRepository : GenericRepository<Ticket, int>, ITicketRepository
     {
-        private readonly AppDbContext _context;
-
         public TicketRepository(AppDbContext context) : base(context)
         {
-            _context = context;
         }
 
         public async Task<int> GetTicketCountByEventAsync(int eventId)

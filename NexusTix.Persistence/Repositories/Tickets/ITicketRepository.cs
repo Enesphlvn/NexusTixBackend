@@ -11,6 +11,5 @@ namespace NexusTix.Persistence.Repositories.Tickets
         Task<IEnumerable<Ticket>> GetTicketsAggregateAsync();
         Task<int> GetTicketCountByEventAsync(int eventId);
         Task<IEnumerable<Ticket>> GetTicketsByDateRangeAsync(DateTimeOffset startDate, DateTimeOffset endDate);
-
     }
 }

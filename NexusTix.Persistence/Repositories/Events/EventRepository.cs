@@ -6,11 +6,8 @@ namespace NexusTix.Persistence.Repositories.Events
 {
     public class EventRepository : GenericRepository<Event, int>, IEventRepository
     {
-        private readonly AppDbContext _context;
-
         public EventRepository(AppDbContext context) : base(context)
         {
-            _context = context;
         }
 
         public async Task<IEnumerable<Event>> GetEventsByDateRangeAsync(DateTimeOffset startDate, DateTimeOffset endDate)

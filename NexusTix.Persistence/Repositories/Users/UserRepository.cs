@@ -6,11 +6,8 @@ namespace NexusTix.Persistence.Repositories.Users
 {
     public class UserRepository : GenericRepository<User, int>, IUserRepository
     {
-        private readonly AppDbContext _context;
-
         public UserRepository(AppDbContext context) : base(context)
         {
-            _context = context;
         }
 
         public async Task<User?> GetUserAggregateAsync(int id)
