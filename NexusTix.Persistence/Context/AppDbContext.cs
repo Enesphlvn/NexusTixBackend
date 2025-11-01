@@ -23,7 +23,7 @@ namespace NexusTix.Persistence.Context
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             var entries = ChangeTracker.Entries().Where(x =>
-                x.Entity is BaseEntity<int> || x.Entity is User
+                x.Entity is IEntity<int> && (x.State == EntityState.Added || x.State == EntityState.Modified)
             );
 
             foreach (var entry in entries)
@@ -31,14 +31,12 @@ namespace NexusTix.Persistence.Context
                 if (entry.State == EntityState.Added)
                 {
                     entry.Property("Created").CurrentValue = DateTimeOffset.UtcNow;
-                }
-                else if (entry.State == EntityState.Modified)
-                {
-                    entry.Property("Updated").CurrentValue = DateTimeOffset.UtcNow;
+                    entry.Property("Created").IsModified = false;
                 }
 
-                if (entry.State == EntityState.Added)
+                if (entry.State == EntityState.Modified)
                 {
+                    entry.Property("Updated").CurrentValue = DateTimeOffset.UtcNow;
                     entry.Property("Created").IsModified = false;
                 }
             }
@@ -49,7 +47,6 @@ namespace NexusTix.Persistence.Context
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
             base.OnModelCreating(builder);
 
             builder.Entity<User>().HasQueryFilter(e => e.IsActive);
