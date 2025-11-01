@@ -43,7 +43,7 @@ namespace NexusTix.Persistence.Repositories
 
         public async Task<IEnumerable<T>> GetAllPagedAsync(int pageNumber, int pageSize)
         {
-            return await _dbSet.AsNoTracking().Skip((pageNumber - 1) * pageSize).ToListAsync();
+            return await _dbSet.AsNoTracking().Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
         }
 
         public async Task<T?> GetByIdAsync(TId id)
