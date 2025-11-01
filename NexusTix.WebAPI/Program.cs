@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using NexusTix.Application.Extensions;
 using NexusTix.Domain.Entities;
 using NexusTix.Persistence.Context;
 using NexusTix.Persistence.Extensions;
@@ -14,11 +15,11 @@ namespace NexusTix.WebAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers();
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+            // -- Persistence katmaný kayýtlarý --
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
@@ -34,6 +35,10 @@ namespace NexusTix.WebAPI
 
             builder.Services.AddRepositoryServices();
 
+            // -- Application katmaný kayýtlarý --
+            builder.Services.AddApplicationServices();
+
+            // -- API katmaný kayýtlarý --
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
