@@ -11,6 +11,7 @@ namespace NexusTix.Application.Features.Users.Rules
         Task CheckIfPhoneNumberExistsWhenCreating(string phoneNumber);
         Task CheckIfPhoneNumberExistsWhenUpdating(int userId, string phoneNumber);
         Task CheckIfCurrentPasswordIsValid(int userId, string currentPassword);
+        Task CheckIfUserHasNoTickets(int userId);
         void CheckIfNewPasswordIsDifferent(string currentPassword, string newPassword);
     }
 }

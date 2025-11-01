@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using NexusTix.Domain.Entities;
 using NexusTix.Domain.Exceptions;
 using NexusTix.Persistence.Repositories;
@@ -99,6 +100,15 @@ namespace NexusTix.Application.Features.Users.Rules
             if (user == null)
             {
                 throw new BusinessException($"ID'si {userId} olan kullanıcı bulunamadı.", HttpStatusCode.NotFound);
+            }
+        }
+
+        public async Task CheckIfUserHasNoTickets(int userId)
+        {
+            var hasTickets = await _unitOfWork.Tickets.AnyAsync(x => x.UserId == userId);
+            if (hasTickets)
+            {
+                throw new BusinessException($"ID'si {userId} olan kullanıcının bilet veya biletleri mevcuttur! İşlem gerçekleştirilemez.", HttpStatusCode.Conflict);
             }
         }
     }

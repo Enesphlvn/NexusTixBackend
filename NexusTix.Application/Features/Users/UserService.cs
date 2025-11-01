@@ -72,6 +72,7 @@ namespace NexusTix.Application.Features.Users
             try
             {
                 await _userRules.CheckIfUserExists(id);
+                await _userRules.CheckIfUserHasNoTickets(id);
 
                 var user = await _userManager.FindByIdAsync(id.ToString());
 
