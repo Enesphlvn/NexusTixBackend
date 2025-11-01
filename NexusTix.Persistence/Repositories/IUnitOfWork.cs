@@ -8,7 +8,7 @@ using NexusTix.Persistence.Repositories.Venues;
 
 namespace NexusTix.Persistence.Repositories
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
         ICityRepository Cities { get; }
         IDistrictRepository Districts { get; }

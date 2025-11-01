@@ -12,6 +12,7 @@ namespace NexusTix.Persistence.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _context;
+
         private ICityRepository? _cityRepository;
         private IDistrictRepository? _districtRepository;
         private IEventRepository? _eventRepository;
@@ -84,6 +85,12 @@ namespace NexusTix.Persistence.Repositories
         public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }
