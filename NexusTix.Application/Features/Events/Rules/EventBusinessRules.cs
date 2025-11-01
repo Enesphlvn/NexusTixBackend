@@ -1,5 +1,4 @@
-﻿using NexusTix.Domain.Entities;
-using NexusTix.Domain.Exceptions;
+﻿using NexusTix.Domain.Exceptions;
 using NexusTix.Persistence.Repositories;
 using System.Net;
 
