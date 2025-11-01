@@ -7,7 +7,7 @@ namespace NexusTix.Application.Features.Tickets.CheckIn
         public CheckInTicketRequestValidator()
         {
             RuleFor(x => x.QRCodeGuid)
-                .NotEmpty().WithMessage("QR Kod alanı boş bırakılamaz.");
+                .NotEmpty().WithMessage("QR Kod alanı boş bırakılamaz."); 
         }
     }
 }
