@@ -1,6 +1,8 @@
-﻿namespace NexusTix.Application.Features.Tickets.Rules
+﻿using NexusTix.Application.Common.BaseRules;
+
+namespace NexusTix.Application.Features.Tickets.Rules
 {
-    public interface ITicketBusinessRules
+    public interface ITicketBusinessRules : IBaseBusinessRules
     {
         Task CheckIfEventExists(int eventId);
         Task CheckIfUserExists(int userId);

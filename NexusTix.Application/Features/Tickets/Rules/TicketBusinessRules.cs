@@ -43,6 +43,14 @@ namespace NexusTix.Application.Features.Tickets.Rules
             }
         }
 
+        public void CheckIfPagingParametersAreValid(int pageNumber, int pageSize)
+        {
+            if (pageNumber <= 0 || pageSize <= 0)
+            {
+                throw new BusinessException("Sayfa numarası veya boyutu sıfırdan büyük olmalıdır.", HttpStatusCode.BadRequest);
+            }
+        }
+
         public async Task CheckIfTicketExistsByQrCode(Guid qrCode)
         {
             var exists = await _unitOfWork.Tickets.AnyAsync(x => x.QRCodeGuid == qrCode);
