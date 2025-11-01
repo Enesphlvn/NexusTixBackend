@@ -74,5 +74,10 @@ namespace NexusTix.Persistence.Repositories
         {
             return _dbSet.Where(predicate).AsNoTracking();
         }
+
+        public IQueryable<T> WhereTracked(Expression<Func<T, bool>> predicate)
+        {
+            return _dbSet.Where(predicate);
+        }
     }
 }

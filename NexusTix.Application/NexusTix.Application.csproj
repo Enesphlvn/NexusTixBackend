@@ -17,8 +17,4 @@
     <ProjectReference Include="..\NexusTix.Persistence\NexusTix.Persistence.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-  </ItemGroup>
-
 </Project>

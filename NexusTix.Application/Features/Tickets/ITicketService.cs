@@ -18,7 +18,7 @@ namespace NexusTix.Application.Features.Tickets
         Task<ServiceResult<bool>> HasUserTicketForEventAsync(int userId, int eventId);
         Task<ServiceResult<int>> GetTicketCountByEventAsync(int eventId);
 
-        Task<ServiceResult<TicketResponse>> CreateAsync(CreateTicketRequest request);
+        Task<ServiceResult<TicketResponse>> CreateAsync(CreateTicketRequest request, int userId);
         Task<ServiceResult> CheckInAsync(CheckInTicketRequest request);
         Task<ServiceResult> DeleteAsync(int id);
         Task<ServiceResult> PassiveAsync(int id);

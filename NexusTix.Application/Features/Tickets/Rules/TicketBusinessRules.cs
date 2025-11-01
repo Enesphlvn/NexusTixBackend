@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using NexusTix.Domain.Exceptions;
 using NexusTix.Persistence.Repositories;
 using System.Net;
@@ -12,6 +13,14 @@ namespace NexusTix.Application.Features.Tickets.Rules
         public TicketBusinessRules(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+        }
+
+        public void CheckIfDateRangeIsValid(DateTimeOffset startDate, DateTimeOffset endDate)
+        {
+            if (startDate > endDate)
+            {
+                throw new BusinessException("Başlangıç tarihi, bitiş tarihinden önce olmalıdır.", HttpStatusCode.BadRequest);
+            }
         }
 
         public async Task CheckIfEventExists(int eventId)
@@ -48,6 +57,15 @@ namespace NexusTix.Application.Features.Tickets.Rules
             if (pageNumber <= 0 || pageSize <= 0)
             {
                 throw new BusinessException("Sayfa numarası veya boyutu sıfırdan büyük olmalıdır.", HttpStatusCode.BadRequest);
+            }
+        }
+
+        public async Task CheckIfTicketExists(int ticketId)
+        {
+            var exists = await _unitOfWork.Tickets.AnyAsync(ticketId);
+            if (!exists)
+            {
+                throw new BusinessException($"ID'si {ticketId} olan bilet bulunamadı.", HttpStatusCode.BadRequest);
             }
         }
 

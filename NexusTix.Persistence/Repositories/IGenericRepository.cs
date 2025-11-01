@@ -10,6 +10,7 @@ namespace NexusTix.Persistence.Repositories
         Task<IEnumerable<T>> GetAllAsync();
         Task<IEnumerable<T>> GetAllPagedAsync(int pageNumber, int pageSize);
         IQueryable<T> Where(Expression<Func<T, bool>> predicate);
+        IQueryable<T> WhereTracked(Expression<Func<T, bool>> predicate);
         Task<T?> GetByIdAsync(TId id);
         Task AddAsync(T entity);
         void Update(T entity);
