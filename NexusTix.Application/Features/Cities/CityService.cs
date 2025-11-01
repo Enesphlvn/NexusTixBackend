@@ -49,6 +49,7 @@ namespace NexusTix.Application.Features.Cities
             try
             {
                 await _cityRules.CheckIfCityExists(id);
+                await _cityRules.CheckIfCityHasNoDistricts(id);
 
                 var city = await _unitOfWork.Cities.GetByIdAsync(id);
 
@@ -192,6 +193,7 @@ namespace NexusTix.Application.Features.Cities
             try
             {
                 await _cityRules.CheckIfCityExists(id);
+                await _cityRules.CheckIfCityHasNoDistricts(id);
 
                 await _unitOfWork.Cities.PassiveAsync(id);
                 await _unitOfWork.SaveChangesAsync();

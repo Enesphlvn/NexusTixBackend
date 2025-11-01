@@ -22,6 +22,15 @@ namespace NexusTix.Application.Features.Cities.Rules
             }
         }
 
+        public async Task CheckIfCityHasNoDistricts(int cityId)
+        {
+            var hasDistricts = await _unitOfWork.Districts.AnyAsync(x => x.CityId == cityId);
+            if (hasDistricts)
+            {
+                throw new BusinessException($"ID'si {cityId} olan şehre kayıtlı ilçeler bulunmaktadır! İşlem gerçekleştirilemez.", HttpStatusCode.Conflict);
+            }
+        }
+
         public async Task CheckIfCityNameExistsWhenCreating(string cityName)
         {
             var exists = await _unitOfWork.Cities.AnyAsync(x => x.Name.ToLower() == cityName.ToLower());
