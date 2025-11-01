@@ -51,6 +51,7 @@ namespace NexusTix.Application.Features.Districts
             try
             {
                 await _districtRules.CheckIfDistrictExists(id);
+                await _districtRules.CheckIfDistrictHasNoVenues(id);
 
                 var district = await _unitOfWork.Districts.GetByIdAsync(id);
 
@@ -166,6 +167,7 @@ namespace NexusTix.Application.Features.Districts
             try
             {
                 await _districtRules.CheckIfDistrictExists(id);
+                await _districtRules.CheckIfDistrictHasNoVenues(id);
 
                 await _unitOfWork.Districts.PassiveAsync(id);
                 await _unitOfWork.SaveChangesAsync();

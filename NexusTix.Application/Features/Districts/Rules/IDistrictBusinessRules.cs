@@ -8,5 +8,6 @@ namespace NexusTix.Application.Features.Districts.Rules
         Task CheckIfCityExists(int cityId);
         Task CheckIfDistrictNameExistsWhenCreating(string districtName);
         Task CheckIfDistrictNameExistsWhenUpdating(int districtId, string districtName);
+        Task CheckIfDistrictHasNoVenues(int districtId);
     }
 }

@@ -260,6 +260,7 @@ namespace NexusTix.Application.Features.Events
             try
             {
                 await _eventRules.CheckIfEventExists(id);
+                await _eventRules.CheckIfEventHasNoTickets(id);
 
                 await _unitOfWork.Events.PassiveAsync(id);
                 await _unitOfWork.SaveChangesAsync();

@@ -31,6 +31,15 @@ namespace NexusTix.Application.Features.Districts.Rules
             }
         }
 
+        public async Task CheckIfDistrictHasNoVenues(int districtId)
+        {
+            var hasVenues = await _unitOfWork.Venues.AnyAsync(x => x.DistrictId == districtId);
+            if (hasVenues)
+            {
+                throw new BusinessException($"ID'si {districtId} olan ilçeye kayıtlı mekanlar bulunmaktadır! İşlem gerçekleştirilemez.", HttpStatusCode.Conflict);
+            }
+        }
+
         public async Task CheckIfDistrictNameExistsWhenCreating(string districtName)
         {
             var exists = await _unitOfWork.Districts.AnyAsync(x => x.Name.ToLower() == districtName.ToLower());
