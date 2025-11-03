@@ -8,7 +8,7 @@ namespace NexusTix.WebAPI
     public class Program
     {
         public static async Task Main(string[] args)
-        { 
+        {
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
@@ -28,7 +28,8 @@ namespace NexusTix.WebAPI
 
             // -- API katmaný kayýtlarý --
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+
+            builder.Services.AddSwaggerJwtAuthentication();
 
             var app = builder.Build();
 
