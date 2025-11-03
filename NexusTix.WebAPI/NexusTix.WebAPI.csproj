@@ -16,10 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\NexusTix.Application\NexusTix.Application.csproj" />
     <ProjectReference Include="..\NexusTix.Persistence\NexusTix.Persistence.csproj" />
   </ItemGroup>
