@@ -31,10 +31,9 @@ namespace NexusTix.Persistence.Context
                 if (entry.State == EntityState.Added)
                 {
                     entry.Property("Created").CurrentValue = DateTimeOffset.UtcNow;
-                    entry.Property("Created").IsModified = false;
                 }
 
-                if (entry.State == EntityState.Modified)
+                else if (entry.State == EntityState.Modified)
                 {
                     entry.Property("Updated").CurrentValue = DateTimeOffset.UtcNow;
                     entry.Property("Created").IsModified = false;
@@ -46,8 +45,9 @@ namespace NexusTix.Persistence.Context
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             base.OnModelCreating(builder);
+
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             builder.Entity<User>().HasQueryFilter(e => e.IsActive);
             builder.Entity<City>().HasQueryFilter(e => e.IsActive);
