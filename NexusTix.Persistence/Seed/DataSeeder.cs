@@ -1355,6 +1355,7 @@ namespace NexusTix.Persistence.Seed
                     Date = DateTimeOffset.UtcNow.AddDays(20).AddHours(21),
                     Price = 750.00m,
                     Description = "Büyük Ev Ablukada 'Defansif Dizayn' albümüyle Zorlu PSM'de.",
+                    Capacity = 2200,
                     EventTypeId = eventTypeMap["KONSER"],
                     VenueId = venueMap["ZORLU PSM"]
                 },
@@ -1366,6 +1367,7 @@ namespace NexusTix.Persistence.Seed
                     Date = DateTimeOffset.UtcNow.AddDays(30).AddHours(20),
                     Price = 400.00m,
                     Description = "Shakespeare klasiği CSO ADA'da.",
+                    Capacity = 2000,
                     EventTypeId = eventTypeMap["TİYATRO"],
                     VenueId = venueMap["CSO ADA ANKARA"]
                 },
@@ -1377,6 +1379,7 @@ namespace NexusTix.Persistence.Seed
                     Date = DateTimeOffset.UtcNow.AddDays(15).AddHours(20),
                     Price = 300.00m,
                     Description = "DasDas Sahne'de klasik bir eser.",
+                    Capacity = 600,
                     EventTypeId = eventTypeMap["TİYATRO"],
                     VenueId = venueMap["DASDAS SAHNE"]
                 },
@@ -1388,6 +1391,7 @@ namespace NexusTix.Persistence.Seed
                     Date = DateTimeOffset.UtcNow.AddDays(45).AddHours(10),
                     Price = 1500.00m,
                     Description = "Yapay zeka ve blockchain üzerine konuşmalar.",
+                    Capacity = 3000,
                     EventTypeId = eventTypeMap["KONFERANS"],
                     VenueId = venueMap["CONGRESIUM ANKARA"]
                 },
@@ -1399,6 +1403,7 @@ namespace NexusTix.Persistence.Seed
                     Date = DateTimeOffset.UtcNow.AddDays(10).AddHours(21),
                     Price = 600.00m,
                     Description = "Duman, İzmir Arena'da.",
+                    Capacity = 3000,
                     EventTypeId = eventTypeMap["KONSER"],
                     VenueId = venueMap["İZMİR ARENA"]
                 },
@@ -1410,6 +1415,7 @@ namespace NexusTix.Persistence.Seed
                     Date = DateTimeOffset.UtcNow.AddDays(5).AddHours(19),
                     Price = 150.00m,
                     Description = "Bağımsız yönetmenlerin filmleri CKM'de.",
+                    Capacity = 800,
                     EventTypeId = eventTypeMap["SİNEMA"],
                     VenueId = venueMap["CADDEBOSTAN KÜLTÜR MERKEZİ"]
                 },
@@ -1421,6 +1427,7 @@ namespace NexusTix.Persistence.Seed
                     Date = DateTimeOffset.UtcNow.AddDays(50).AddHours(20),
                     Price = 900.00m,
                     Description = "Devlet Opera ve Balesi sunar.",
+                    Capacity = 2200,
                     EventTypeId = eventTypeMap["OPERA"],
                     VenueId = venueMap["ZORLU PSM"]
                 },
@@ -1432,6 +1439,7 @@ namespace NexusTix.Persistence.Seed
                     Date = DateTimeOffset.UtcNow.AddDays(25).AddHours(20),
                     Price = 250.00m,
                     Description = "Genco Erkal yorumuyla.",
+                    Capacity = 650,
                     EventTypeId = eventTypeMap["TİYATRO"],
                     VenueId = venueMap["TAYYARE KÜLTÜR MERKEZİ"]
                 },
@@ -1443,16 +1451,19 @@ namespace NexusTix.Persistence.Seed
                     Date = DateTimeOffset.UtcNow.AddDays(18).AddHours(21),
                     Price = 800.00m,
                     Description = "Teoman'ın akustik performansı.",
+                    Capacity = 5000,
                     EventTypeId = eventTypeMap["KONSER"],
                     VenueId = venueMap["VOLKSWAGEN ARENA"]
                 },
                 
-                // 10. Geçmiş Tarihli Bir Etkinlik (Test için)
+                // 10. İstanbbul Tiyatrosu (Baba Sahne)
                 new Event
                 {
                     Name = "Karagöz ve Hacivat Tiyatro Oyunu",
                     Date = DateTimeOffset.UtcNow.AddDays(25),
                     Price = 100.00m,
+                    Description = "Sevilen ve özlenen Hacivat ve Karagöz oyunu.",
+                    Capacity = 300,
                     EventTypeId = eventTypeMap["TİYATRO"],
                     VenueId = venueMap["BABA SAHNE"]
                 }

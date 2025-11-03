@@ -29,6 +29,9 @@ namespace NexusTix.Application.Features.Events.Create
 
             RuleFor(x => x.Description)
                 .MaximumLength(500).WithMessage("Açıklama 500 karakterden uzun olamaz.");
+
+            RuleFor(x => x.Capacity)
+                .GreaterThan(0).WithMessage("Etkinlik kapasitesi sıfırdan büyük olmalıdır.");
         }
     }
 }

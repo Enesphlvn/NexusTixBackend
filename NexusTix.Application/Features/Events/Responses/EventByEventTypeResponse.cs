@@ -2,4 +2,4 @@
 
 namespace NexusTix.Application.Features.Events.Responses;
 
-public record EventByEventTypeResponse(int Id, string Name, DateTimeOffset Date, decimal Price, string? Description, EventTypeResponse EventType, int VenueId);
+public record EventByEventTypeResponse(int Id, string Name, DateTimeOffset Date, decimal Price, string? Description, int Capacity, EventTypeResponse EventType, int VenueId);

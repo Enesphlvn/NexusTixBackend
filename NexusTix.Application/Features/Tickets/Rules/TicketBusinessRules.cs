@@ -34,19 +34,19 @@ namespace NexusTix.Application.Features.Tickets.Rules
 
         public async Task CheckIfEventHasCapacity(int eventId)
         {
-            var eventWithVenue = await _unitOfWork.Events.Where(x => x.Id == eventId)
-                .Include(x => x.Venue).AsNoTracking().FirstOrDefaultAsync();
+            var eventEntity = await _unitOfWork.Events.Where(x => x.Id == eventId)
+                .Select(x => new { x.Capacity }).AsNoTracking().FirstOrDefaultAsync();
 
-            if (eventWithVenue?.Venue == null)
+            if (eventEntity == null)
             {
-                throw new BusinessException($"Etkinliğin bağlı olduğu mekan bilgisi bulunamadı.", HttpStatusCode.InternalServerError);
+                throw new BusinessException($"Etkinlik bilgisi bulunamadı.", HttpStatusCode.NotFound);
             }
 
-            int capacity = eventWithVenue.Venue.Capacity;
+            int capacity = eventEntity.Capacity;
 
             int soldTickets = await _unitOfWork.Tickets.GetTicketCountByEventAsync(eventId);
 
-            if (soldTickets > capacity)
+            if (soldTickets >= capacity)
             {
                 throw new BusinessException($"Etkinlik için biletler tükendi. Kapasite: {capacity}.", HttpStatusCode.Conflict);
             }
