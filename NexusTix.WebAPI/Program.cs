@@ -5,6 +5,7 @@ using NexusTix.Domain.Entities;
 using NexusTix.Persistence.Context;
 using NexusTix.Persistence.Extensions;
 using NexusTix.Persistence.Seed;
+using NexusTix.WebAPI.Extensions;
 
 namespace NexusTix.WebAPI
 {
@@ -32,6 +33,8 @@ namespace NexusTix.WebAPI
             })
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
+
+            builder.Services.AddJwtAuthentication(builder.Configuration);
 
             builder.Services.AddRepositoryServices();
 
