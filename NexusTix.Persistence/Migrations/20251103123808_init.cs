@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace NexusTix.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -258,6 +258,7 @@ namespace NexusTix.Persistence.Migrations
                     Date = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(800)", maxLength: 800, nullable: true),
+                    Capacity = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     EventTypeId = table.Column<int>(type: "int", nullable: false),
                     VenueId = table.Column<int>(type: "int", nullable: false),
                     Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),

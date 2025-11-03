@@ -8,7 +8,7 @@ namespace NexusTix.Application.Features.Venues.Create
         {
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Mekan adı boş bırakılamaz.")
-                .MaximumLength(150).WithMessage("Mekan adı 100 karakterden uzun olamaz.");
+                .MaximumLength(150).WithMessage("Mekan adı 150 karakterden uzun olamaz.");
 
             RuleFor(x => x.Capacity)
                 .GreaterThan(0).WithMessage("Mekan kapasitesi sıfırdan büyük olmalıdır.");

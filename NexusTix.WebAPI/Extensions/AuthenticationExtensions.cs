@@ -18,7 +18,6 @@ namespace NexusTix.WebAPI.Extensions
             {
                 options.RequireHttpsMetadata = configuration.GetValue<bool>("JwtSettings:RequireHttpsMetadata", false);
 
-                // Burada appsettings.json'a yazdığımız Key, Issuer ve Audience'in nasıl doğrulanacağını söylüyoruz.
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateIssuerSigningKey = true,

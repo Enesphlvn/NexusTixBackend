@@ -12,8 +12,8 @@ using NexusTix.Persistence.Context;
 namespace NexusTix.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251023153746_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20251103123808_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -224,6 +224,11 @@ namespace NexusTix.Persistence.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Capacity")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
