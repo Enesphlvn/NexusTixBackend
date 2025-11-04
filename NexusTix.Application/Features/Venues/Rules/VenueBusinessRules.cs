@@ -1,11 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
+using NexusTix.Application.Common.BaseRules;
 using NexusTix.Domain.Exceptions;
 using NexusTix.Persistence.Repositories;
 using System.Net;
 
 namespace NexusTix.Application.Features.Venues.Rules
 {
-    public class VenueBusinessRules : IVenueBusinessRules
+    public class VenueBusinessRules : BaseBusinessRules, IVenueBusinessRules
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -20,14 +21,6 @@ namespace NexusTix.Application.Features.Venues.Rules
             if (!exists)
             {
                 throw new BusinessException($"ID'si {districtId} olan ilçe bulunamadı.", HttpStatusCode.BadRequest);
-            }
-        }
-
-        public void CheckIfPagingParametersAreValid(int pageNumber, int pageSize)
-        {
-            if (pageNumber <= 0 || pageSize <= 0)
-            {
-                throw new BusinessException("Sayfa numarası veya boyutu sıfırdan büyük olmalıdır.", HttpStatusCode.BadRequest);
             }
         }
 

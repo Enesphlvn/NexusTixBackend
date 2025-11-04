@@ -1,10 +1,11 @@
-﻿using NexusTix.Domain.Exceptions;
+﻿using NexusTix.Application.Common.BaseRules;
+using NexusTix.Domain.Exceptions;
 using NexusTix.Persistence.Repositories;
 using System.Net;
 
 namespace NexusTix.Application.Features.Events.Rules
 {
-    public class EventBusinessRules : IEventBusinessRules
+    public class EventBusinessRules : BaseBusinessRules, IEventBusinessRules
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -71,14 +72,6 @@ namespace NexusTix.Application.Features.Events.Rules
             if (numberOfEvents <= 0 || numberOfEvents > 100)
             {
                 throw new BusinessException("İstenen etkinlik sayısı 1 ile 100 arasında olmalıdır.", HttpStatusCode.BadRequest);
-            }
-        }
-
-        public void CheckIfPagingParametersAreValid(int pageNumber, int pageSize)
-        {
-            if (pageNumber <= 0 || pageSize <= 0)
-            {
-                throw new BusinessException("Sayfa numarası veya boyutu sıfırdan büyük olmalıdır.", HttpStatusCode.BadRequest);
             }
         }
 

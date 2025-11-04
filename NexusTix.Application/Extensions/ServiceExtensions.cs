@@ -30,6 +30,7 @@ namespace NexusTix.Application.Extensions
             services.AddAutoMapper(assembly);
             services.AddValidatorsFromAssembly(assembly);
 
+            services.AddScoped<IBaseBusinessRules, BaseBusinessRules>();
             services.AddScoped<ICityBusinessRules, CityBusinessRules>();
             services.AddScoped<IDistrictBusinessRules, DistrictBusinessRules>();
             services.AddScoped<IEventBusinessRules, EventBusinessRules>();

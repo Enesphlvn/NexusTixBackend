@@ -1,10 +1,11 @@
-﻿using NexusTix.Domain.Exceptions;
+﻿using NexusTix.Application.Common.BaseRules;
+using NexusTix.Domain.Exceptions;
 using NexusTix.Persistence.Repositories;
 using System.Net;
 
 namespace NexusTix.Application.Features.Cities.Rules
 {
-    public class CityBusinessRules : ICityBusinessRules
+    public class CityBusinessRules : BaseBusinessRules, ICityBusinessRules
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -46,14 +47,6 @@ namespace NexusTix.Application.Features.Cities.Rules
             if (exists)
             {
                 throw new BusinessException($"Şehir adı: {cityName}. Bu isimde başka bir şehir mevcut.", HttpStatusCode.Conflict);
-            }
-        }
-
-        public void CheckIfPagingParametersAreValid(int pageNumber, int pageSize)
-        {
-            if (pageNumber <= 0 || pageSize <= 0)
-            {
-                throw new BusinessException("Sayfa numarası veya boyutu sıfırdan büyük olmalıdır.", HttpStatusCode.BadRequest);
             }
         }
     }

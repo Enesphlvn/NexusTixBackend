@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using NexusTix.Application.Common.BaseRules;
 using NexusTix.Domain.Entities;
 using NexusTix.Domain.Exceptions;
 using NexusTix.Persistence.Repositories;
@@ -7,7 +8,7 @@ using System.Net;
 
 namespace NexusTix.Application.Features.Users.Rules
 {
-    public class UserBusinessRules : IUserBusinessRules
+    public class UserBusinessRules : BaseBusinessRules, IUserBusinessRules
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
@@ -18,14 +19,6 @@ namespace NexusTix.Application.Features.Users.Rules
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _roleManager = roleManager;
-        }
-
-        public void CheckIfPagingParametersAreValid(int pageNumber, int pageSize)
-        {
-            if (pageNumber <= 0 || pageSize <= 0)
-            {
-                throw new BusinessException("Sayfa numarası veya boyutu sıfırdan büyük olmalıdır.", HttpStatusCode.BadRequest);
-            }
         }
 
         public async Task CheckIfPhoneNumberExistsWhenUpdating(int userId, string phoneNumber)

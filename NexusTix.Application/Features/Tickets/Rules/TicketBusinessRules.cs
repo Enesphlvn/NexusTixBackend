@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using NexusTix.Application.Common.BaseRules;
 using NexusTix.Domain.Exceptions;
 using NexusTix.Persistence.Repositories;
 using System.Net;
 
 namespace NexusTix.Application.Features.Tickets.Rules
 {
-    public class TicketBusinessRules : ITicketBusinessRules
+    public class TicketBusinessRules : BaseBusinessRules, ITicketBusinessRules
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -49,14 +50,6 @@ namespace NexusTix.Application.Features.Tickets.Rules
             if (soldTickets >= capacity)
             {
                 throw new BusinessException($"Etkinlik için biletler tükendi. Kapasite: {capacity}.", HttpStatusCode.Conflict);
-            }
-        }
-
-        public void CheckIfPagingParametersAreValid(int pageNumber, int pageSize)
-        {
-            if (pageNumber <= 0 || pageSize <= 0)
-            {
-                throw new BusinessException("Sayfa numarası veya boyutu sıfırdan büyük olmalıdır.", HttpStatusCode.BadRequest);
             }
         }
 
