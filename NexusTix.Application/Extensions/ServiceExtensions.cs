@@ -1,5 +1,8 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using NexusTix.Application.Common.BaseRules;
+using NexusTix.Application.Common.Security;
+using NexusTix.Application.Features.Auth;
 using NexusTix.Application.Features.Cities;
 using NexusTix.Application.Features.Cities.Rules;
 using NexusTix.Application.Features.Districts;
@@ -35,12 +38,15 @@ namespace NexusTix.Application.Extensions
             services.AddScoped<IUserBusinessRules, UserBusinessRules>();
             services.AddScoped<IVenueBusinessRules, VenueBusinessRules>();
 
+            services.AddScoped<ITokenService, TokenService>();
+
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICityService, CityService>();
             services.AddScoped<IDistrictService, DistrictService>();
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IEventTypeService, EventTypeService>();
             services.AddScoped<ITicketService, TicketService>();
-            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IVenueService, VenueService>();
 
             return services;

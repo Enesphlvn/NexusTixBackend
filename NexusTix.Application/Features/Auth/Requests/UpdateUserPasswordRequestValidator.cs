@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace NexusTix.Application.Features.Users.Update
+namespace NexusTix.Application.Features.Auth.Requests
 {
     public class UpdateUserPasswordRequestValidator : AbstractValidator<UpdateUserPasswordRequest>
     {

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace NexusTix.Application.Features.Users.Create
+namespace NexusTix.Application.Features.Auth.Requests
 {
     public class CreateUserRequestValidator : AbstractValidator<CreateUserRequest>
     {

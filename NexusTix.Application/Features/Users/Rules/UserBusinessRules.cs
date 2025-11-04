@@ -20,59 +20,11 @@ namespace NexusTix.Application.Features.Users.Rules
             _roleManager = roleManager;
         }
 
-        public async Task CheckIfCurrentPasswordIsValid(int userId, string currentPassword)
-        {
-            await CheckIfUserExists(userId);
-
-            var user = await _userManager.FindByIdAsync(userId.ToString());
-
-            var isPasswordValid = await _userManager.CheckPasswordAsync(user!, currentPassword);
-            if (!isPasswordValid)
-            {
-                throw new BusinessException("Mevcut şifre geçerli değil.", HttpStatusCode.BadRequest);
-            }
-        }
-
-        public async Task CheckIfEmailExistsWhenCreating(string email)
-        {
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user != null)
-            {
-                throw new BusinessException($"Email: {email}. Bu email zaten kullanımda", HttpStatusCode.Conflict);
-            }
-        }
-
-        public async Task CheckIfEmailExistsWhenUpdating(int userId, string email)
-        {
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user != null && user.Id != userId)
-            {
-                throw new BusinessException($"Email: {email}. Bu email zaten kullanımda", HttpStatusCode.Conflict);
-            }
-        }
-
-        public void CheckIfNewPasswordIsDifferent(string currentPassword, string newPassword)
-        {
-            if (currentPassword == newPassword)
-            {
-                throw new BusinessException("Yeni şifre, şu an ki şifreyle aynı olamaz", HttpStatusCode.Conflict);
-            }
-        }
-
         public void CheckIfPagingParametersAreValid(int pageNumber, int pageSize)
         {
             if (pageNumber <= 0 || pageSize <= 0)
             {
                 throw new BusinessException("Sayfa numarası veya boyutu sıfırdan büyük olmalıdır.", HttpStatusCode.BadRequest);
-            }
-        }
-
-        public async Task CheckIfPhoneNumberExistsWhenCreating(string phoneNumber)
-        {
-            var exists = await _unitOfWork.Users.AnyAsync(x => x.PhoneNumber == phoneNumber && x.IsActive);
-            if (exists)
-            {
-                throw new BusinessException($"Telefon numarası: {phoneNumber}. Bu numara zaten kullanımda", HttpStatusCode.Conflict);
             }
         }
 
