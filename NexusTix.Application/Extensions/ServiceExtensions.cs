@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NexusTix.Application.Common.BaseRules;
 using NexusTix.Application.Common.Security;
 using NexusTix.Application.Features.Auth;
+using NexusTix.Application.Features.Auth.Rules;
 using NexusTix.Application.Features.Cities;
 using NexusTix.Application.Features.Cities.Rules;
 using NexusTix.Application.Features.Districts;
@@ -30,6 +31,7 @@ namespace NexusTix.Application.Extensions
             services.AddAutoMapper(assembly);
             services.AddValidatorsFromAssembly(assembly);
 
+            services.AddScoped<IAuthBusinessRules, AuthBusinessRules>();
             services.AddScoped<IBaseBusinessRules, BaseBusinessRules>();
             services.AddScoped<ICityBusinessRules, CityBusinessRules>();
             services.AddScoped<IDistrictBusinessRules, DistrictBusinessRules>();
