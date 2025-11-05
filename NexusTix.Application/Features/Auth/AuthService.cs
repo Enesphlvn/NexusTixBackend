@@ -78,6 +78,7 @@ namespace NexusTix.Application.Features.Auth
                 }
 
                 var newUser = _mapper.Map<User>(request);
+                newUser.UserName = request.Email;
 
                 var result = await _userManager.CreateAsync(newUser, request.Password);
 
