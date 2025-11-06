@@ -38,7 +38,7 @@ namespace NexusTix.WebAPI.Controllers
             return CreateActionResult(await _cityService.GetByIdAsync(id));
         }
 
-        [HttpGet("aggregate/{id:int}")]
+        [HttpGet("{id:int}/aggregate")]
         [AllowAnonymous]
         public async Task<IActionResult> GetCityAggregate(int id)
         {
