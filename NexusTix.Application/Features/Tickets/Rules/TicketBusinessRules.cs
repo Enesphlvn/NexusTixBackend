@@ -29,7 +29,7 @@ namespace NexusTix.Application.Features.Tickets.Rules
             var exists = await _unitOfWork.Events.AnyAsync(eventId);
             if (!exists)
             {
-                throw new BusinessException($"ID'si {eventId} olan etkinlik bulunamadı.", HttpStatusCode.BadRequest);
+                throw new BusinessException($"ID'si '{eventId}' olan etkinlik bulunamadı.", HttpStatusCode.BadRequest);
             }
         }
 
@@ -49,7 +49,7 @@ namespace NexusTix.Application.Features.Tickets.Rules
 
             if (soldTickets >= capacity)
             {
-                throw new BusinessException($"Etkinlik için biletler tükendi. Kapasite: {capacity}.", HttpStatusCode.Conflict);
+                throw new BusinessException($"Etkinlik için biletler tükendi. Kapasite: '{capacity}'.", HttpStatusCode.Conflict);
             }
         }
 
@@ -58,7 +58,7 @@ namespace NexusTix.Application.Features.Tickets.Rules
             var exists = await _unitOfWork.Tickets.AnyAsync(ticketId);
             if (!exists)
             {
-                throw new BusinessException($"ID'si {ticketId} olan bilet bulunamadı.", HttpStatusCode.BadRequest);
+                throw new BusinessException($"ID'si '{ticketId}' olan bilet bulunamadı.", HttpStatusCode.BadRequest);
             }
         }
 
@@ -67,7 +67,7 @@ namespace NexusTix.Application.Features.Tickets.Rules
             var exists = await _unitOfWork.Tickets.AnyAsync(x => x.QRCodeGuid == qrCode);
             if (!exists)
             {
-                throw new BusinessException($"QR Kodu: ({qrCode}) olan bilet bulunamadı.", HttpStatusCode.NotFound);
+                throw new BusinessException($"QR Kodu: '{qrCode}' olan bilet bulunamadı.", HttpStatusCode.NotFound);
             }
         }
 
@@ -85,7 +85,7 @@ namespace NexusTix.Application.Features.Tickets.Rules
             var exists = await _unitOfWork.Users.AnyAsync(userId);
             if (!exists)
             {
-                throw new BusinessException($"ID'si {userId} olan kullanıcı bulunamadı.", HttpStatusCode.BadRequest);
+                throw new BusinessException($"ID'si '{userId}' olan kullanıcı bulunamadı.", HttpStatusCode.BadRequest);
             }
         }
     }

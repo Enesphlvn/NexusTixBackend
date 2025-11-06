@@ -19,7 +19,7 @@ namespace NexusTix.Application.Features.Cities.Rules
             var exists = await _unitOfWork.Cities.AnyAsync(cityId);
             if (!exists)
             {
-                throw new BusinessException($"ID'si {cityId} olan şehir bulunamadı.", HttpStatusCode.NotFound);
+                throw new BusinessException($"ID'si '{cityId}' olan şehir bulunamadı.", HttpStatusCode.NotFound);
             }
         }
 
@@ -28,7 +28,7 @@ namespace NexusTix.Application.Features.Cities.Rules
             var hasDistricts = await _unitOfWork.Districts.AnyAsync(x => x.CityId == cityId);
             if (hasDistricts)
             {
-                throw new BusinessException($"ID'si {cityId} olan şehre kayıtlı ilçeler bulunmaktadır! İşlem gerçekleştirilemez.", HttpStatusCode.Conflict);
+                throw new BusinessException($"ID'si '{cityId}' olan şehre kayıtlı ilçeler bulunmaktadır! İşlem gerçekleştirilemez.", HttpStatusCode.Conflict);
             }
         }
 
@@ -37,7 +37,7 @@ namespace NexusTix.Application.Features.Cities.Rules
             var exists = await _unitOfWork.Cities.AnyAsync(x => x.Name.ToLower() == cityName.ToLower());
             if (exists)
             {
-                throw new BusinessException($"Şehir adı: {cityName}. Bu isimde başka bir şehir mevcut", HttpStatusCode.Conflict);
+                throw new BusinessException($"Şehir adı: '{cityName}'. Bu isimde başka bir şehir mevcut", HttpStatusCode.Conflict);
             }
         }
 
@@ -46,7 +46,7 @@ namespace NexusTix.Application.Features.Cities.Rules
             var exists = await _unitOfWork.Cities.AnyAsync(x => x.Name.ToLower() == cityName.ToLower() && x.Id != cityId);
             if (exists)
             {
-                throw new BusinessException($"Şehir adı: {cityName}. Bu isimde başka bir şehir mevcut.", HttpStatusCode.Conflict);
+                throw new BusinessException($"Şehir adı: '{cityName}'. Bu isimde başka bir şehir mevcut.", HttpStatusCode.Conflict);
             }
         }
     }

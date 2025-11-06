@@ -8,7 +8,7 @@ namespace NexusTix.Application.Features.Auth
     {
         Task<ServiceResult<UserResponse>> RegisterAsync(CreateUserRequest request);
         Task<ServiceResult<LoginResponse>> LoginAsync(LoginRequest request);
-        Task<ServiceResult> UpdateEmailAsync(UpdateUserEmailRequest request);
-        Task<ServiceResult> UpdatePasswordAsync(UpdateUserPasswordRequest request);
+        Task<ServiceResult> UpdateEmailAsync(UpdateUserEmailRequest request, int authenticatedUserId);
+        Task<ServiceResult> UpdatePasswordAsync(UpdateUserPasswordRequest request, int authenticatedUserId);
     }
 }

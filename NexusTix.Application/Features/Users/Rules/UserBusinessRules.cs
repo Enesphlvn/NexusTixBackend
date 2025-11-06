@@ -26,7 +26,7 @@ namespace NexusTix.Application.Features.Users.Rules
             var exists = await _unitOfWork.Users.AnyAsync(x => x.PhoneNumber == phoneNumber && x.IsActive && x.Id != userId);
             if (exists)
             {
-                throw new BusinessException($"Telefon numarası: {phoneNumber}. Bu numara zaten kullanımda", HttpStatusCode.Conflict);
+                throw new BusinessException($"Telefon numarası: '{phoneNumber}'. Bu numara zaten kullanımda", HttpStatusCode.Conflict);
             }
         }
 
@@ -44,7 +44,7 @@ namespace NexusTix.Application.Features.Users.Rules
             var user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null)
             {
-                throw new BusinessException($"ID'si {userId} olan kullanıcı bulunamadı.", HttpStatusCode.NotFound);
+                throw new BusinessException($"ID'si '{userId}' olan kullanıcı bulunamadı.", HttpStatusCode.NotFound);
             }
         }
 
@@ -53,7 +53,7 @@ namespace NexusTix.Application.Features.Users.Rules
             var hasTickets = await _unitOfWork.Tickets.AnyAsync(x => x.UserId == userId);
             if (hasTickets)
             {
-                throw new BusinessException($"ID'si {userId} olan kullanıcının bilet veya biletleri mevcuttur! İşlem gerçekleştirilemez.", HttpStatusCode.Conflict);
+                throw new BusinessException($"ID'si '{userId}' olan kullanıcının bilet veya biletleri mevcuttur! İşlem gerçekleştirilemez.", HttpStatusCode.Conflict);
             }
         }
     }

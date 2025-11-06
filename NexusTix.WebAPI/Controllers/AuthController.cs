@@ -36,12 +36,8 @@ namespace NexusTix.WebAPI.Controllers
         public async Task<IActionResult> UpdateEmail([FromBody] UpdateUserEmailRequest request)
         {
             var authenticatedUserId = GetAuthenticatedUserId();
-            if (authenticatedUserId != request.Id)
-            {
-                return Unauthorized();
-            }
 
-            return CreateActionResult(await _authService.UpdateEmailAsync(request));
+            return CreateActionResult(await _authService.UpdateEmailAsync(request, authenticatedUserId));
         }
 
         [HttpPut("update-password")]
@@ -49,12 +45,8 @@ namespace NexusTix.WebAPI.Controllers
         public async Task<IActionResult> UpdatePassword([FromBody] UpdateUserPasswordRequest request)
         {
             var authenticatedUserId = GetAuthenticatedUserId();
-            if (authenticatedUserId != request.Id)
-            {
-                return Unauthorized();
-            }
 
-            return CreateActionResult(await _authService.UpdatePasswordAsync(request));
+            return CreateActionResult(await _authService.UpdatePasswordAsync(request, authenticatedUserId));
         }
 
         [NonAction]
@@ -62,12 +54,7 @@ namespace NexusTix.WebAPI.Controllers
         {
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (string.IsNullOrEmpty(userIdString))
-            {
-                throw new BusinessException("Kullanıcı kimliği doğrulanamadı.", HttpStatusCode.Unauthorized);
-            }
-
-            return int.Parse(userIdString);
+            return int.Parse(userIdString!);
         }
     }
 }

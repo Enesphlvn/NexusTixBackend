@@ -106,10 +106,15 @@ namespace NexusTix.Application.Features.Auth
             }
         }
 
-        public async Task<ServiceResult> UpdateEmailAsync(UpdateUserEmailRequest request)
+        public async Task<ServiceResult> UpdateEmailAsync(UpdateUserEmailRequest request, int authenticatedUserId)
         {
             try
             {
+                if (authenticatedUserId != request.Id)
+                {
+                    throw new BusinessException("Bu işlemi yapmak için yetkiniz yok.", HttpStatusCode.Forbidden);
+                }
+
                 await _authRules.CheckIfUserExists(request.Id);
                 await _authRules.CheckIfEmailExistsWhenUpdating(request.Id, request.NewEmail);
                 await _authRules.CheckIfCurrentPasswordIsValid(request.Id, request.CurrentPassword);
@@ -132,10 +137,15 @@ namespace NexusTix.Application.Features.Auth
             }
         }
 
-        public async Task<ServiceResult> UpdatePasswordAsync(UpdateUserPasswordRequest request)
+        public async Task<ServiceResult> UpdatePasswordAsync(UpdateUserPasswordRequest request, int authenticatedUserId)
         {
             try
             {
+                if (authenticatedUserId != request.Id)
+                {
+                    throw new BusinessException("Bu işlemi yapmak için yetkiniz yok.", HttpStatusCode.Forbidden);
+                }
+
                 await _authRules.CheckIfUserExists(request.Id);
                 _authRules.CheckIfNewPasswordIsDifferent(request.CurrentPassword, request.NewPassword);
                 await _authRules.CheckIfCurrentPasswordIsValid(request.Id, request.CurrentPassword);

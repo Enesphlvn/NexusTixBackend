@@ -19,7 +19,7 @@ namespace NexusTix.Application.Features.Districts.Rules
             var exists = await _unitOfWork.Cities.AnyAsync(cityId);
             if (!exists)
             {
-                throw new BusinessException($"ID'si {cityId} olan şehir bulunamadı.", HttpStatusCode.BadRequest);
+                throw new BusinessException($"ID'si '{cityId}' olan şehir bulunamadı.", HttpStatusCode.BadRequest);
             }
         }
 
@@ -28,7 +28,7 @@ namespace NexusTix.Application.Features.Districts.Rules
             var exists = await _unitOfWork.Districts.AnyAsync(districtId);
             if (!exists)
             {
-                throw new BusinessException($"ID'si {districtId} olan ilçe bulunamadı.", HttpStatusCode.NotFound);
+                throw new BusinessException($"ID'si '{districtId}' olan ilçe bulunamadı.", HttpStatusCode.NotFound);
             }
         }
 
@@ -37,7 +37,7 @@ namespace NexusTix.Application.Features.Districts.Rules
             var hasVenues = await _unitOfWork.Venues.AnyAsync(x => x.DistrictId == districtId);
             if (hasVenues)
             {
-                throw new BusinessException($"ID'si {districtId} olan ilçeye kayıtlı mekanlar bulunmaktadır! İşlem gerçekleştirilemez.", HttpStatusCode.Conflict);
+                throw new BusinessException($"ID'si '{districtId}' olan ilçeye kayıtlı mekanlar bulunmaktadır! İşlem gerçekleştirilemez.", HttpStatusCode.Conflict);
             }
         }
 
@@ -46,7 +46,7 @@ namespace NexusTix.Application.Features.Districts.Rules
             var exists = await _unitOfWork.Districts.AnyAsync(x => x.Name.ToLower() == districtName.ToLower());
             if (exists)
             {
-                throw new BusinessException($"İlçe adı: {districtName}. Bu isimde başka bir ilçe mevcut", HttpStatusCode.Conflict);
+                throw new BusinessException($"İlçe adı: '{districtName}'. Bu isimde başka bir ilçe mevcut", HttpStatusCode.Conflict);
             }
         }
 
@@ -55,7 +55,7 @@ namespace NexusTix.Application.Features.Districts.Rules
             var exists = await _unitOfWork.Districts.AnyAsync(x => x.Name.ToLower() == districtName.ToLower() && x.Id != districtId);
             if (exists)
             {
-                throw new BusinessException($"İlçe adı: {districtName}. Bu isimde başka bir ilçe mevcut", HttpStatusCode.Conflict);
+                throw new BusinessException($"İlçe adı: '{districtName}'. Bu isimde başka bir ilçe mevcut", HttpStatusCode.Conflict);
             }
         }
     }

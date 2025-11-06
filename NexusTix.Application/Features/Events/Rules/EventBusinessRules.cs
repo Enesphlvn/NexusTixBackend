@@ -27,7 +27,7 @@ namespace NexusTix.Application.Features.Events.Rules
             var exists = await _unitOfWork.Events.AnyAsync(eventId);
             if (!exists)
             {
-                throw new BusinessException($"ID'si {eventId} olan etkinlik bulunamadı.", HttpStatusCode.BadRequest);
+                throw new BusinessException($"ID'si '{eventId}' olan etkinlik bulunamadı.", HttpStatusCode.BadRequest);
             }
         }
 
@@ -36,7 +36,7 @@ namespace NexusTix.Application.Features.Events.Rules
             var hasTickets = await _unitOfWork.Tickets.AnyAsync(x => x.EventId == eventId);
             if (hasTickets)
             {
-                throw new BusinessException($"ID'si {eventId} olan etkinliğe satılmış biletler mevcuttur! İşlem gerçekleştirilemez.", HttpStatusCode.Conflict);
+                throw new BusinessException($"ID'si '{eventId}' olan etkinliğe satılmış biletler mevcuttur! İşlem gerçekleştirilemez.", HttpStatusCode.Conflict);
             }
         }
 
@@ -45,7 +45,7 @@ namespace NexusTix.Application.Features.Events.Rules
             var exists = await _unitOfWork.Events.AnyAsync(x => x.Name.ToLower() == eventName.ToLower());
             if (exists)
             {
-                throw new BusinessException($"Etkinlik adı: {eventName}. Bu isimde başka bir etkinlik mevcut", HttpStatusCode.Conflict);
+                throw new BusinessException($"Etkinlik adı: '{eventName}'. Bu isimde başka bir etkinlik mevcut", HttpStatusCode.Conflict);
             }
         }
 
@@ -54,7 +54,7 @@ namespace NexusTix.Application.Features.Events.Rules
             var exists = await _unitOfWork.Events.AnyAsync(x => x.Name.ToLower() == eventName.ToLower() && x.Id != eventId);
             if (exists)
             {
-                throw new BusinessException($"Etkinlik adı: {eventName}. Bu isimde başka bir etkinlik mevcut", HttpStatusCode.Conflict);
+                throw new BusinessException($"Etkinlik adı: '{eventName}'. Bu isimde başka bir etkinlik mevcut", HttpStatusCode.Conflict);
             }
         }
 
@@ -63,7 +63,7 @@ namespace NexusTix.Application.Features.Events.Rules
             var exists = await _unitOfWork.EventTypes.AnyAsync(eventTypeId);
             if (!exists)
             {
-                throw new BusinessException($"ID'si {eventTypeId} olan etkinlik tipi bulunamadı.", HttpStatusCode.BadRequest);
+                throw new BusinessException($"ID'si '{eventTypeId}' olan etkinlik tipi bulunamadı.", HttpStatusCode.BadRequest);
             }
         }
 
@@ -93,7 +93,7 @@ namespace NexusTix.Application.Features.Events.Rules
             var exists = await _unitOfWork.Users.AnyAsync(userId);
             if (!exists)
             {
-                throw new BusinessException($"ID'si {userId} olan kullanıcı bulunamadı.", HttpStatusCode.BadRequest);
+                throw new BusinessException($"ID'si '{userId}' olan kullanıcı bulunamadı.", HttpStatusCode.BadRequest);
             }
         }
 
@@ -102,7 +102,7 @@ namespace NexusTix.Application.Features.Events.Rules
             var exists = await _unitOfWork.Venues.AnyAsync(venueId);
             if (!exists)
             {
-                throw new BusinessException($"ID'si {venueId} olan mekan bulunamadı.", HttpStatusCode.BadRequest);
+                throw new BusinessException($"ID'si '{venueId}' olan mekan bulunamadı.", HttpStatusCode.BadRequest);
             }
         }
 
@@ -111,7 +111,7 @@ namespace NexusTix.Application.Features.Events.Rules
             var exists = await _unitOfWork.Events.AnyAsync(x => x.VenueId == venueId && x.Date.UtcDateTime.Date == date.UtcDateTime.Date);
             if (exists)
             {
-                throw new BusinessException($"ID'si {venueId} olan mekan, {date:dd/MM/yyyy} tarihinde başka bir etkinliğe sahiptir.", HttpStatusCode.Conflict);
+                throw new BusinessException($"ID'si '{venueId}' olan mekan, '{date:dd/MM/yyyy}' tarihinde başka bir etkinliğe sahiptir.", HttpStatusCode.Conflict);
             }
         }
 
@@ -120,7 +120,7 @@ namespace NexusTix.Application.Features.Events.Rules
             var exists = await _unitOfWork.Events.AnyAsync(x => x.VenueId == venueId && x.Date.UtcDateTime.Date == date.UtcDateTime.Date && x.Id != eventId);
             if (exists)
             {
-                throw new BusinessException($"ID'si {venueId} olan mekan, {date:dd/MM/yyyy} tarihinde başka bir etkinliğe sahiptir.", HttpStatusCode.Conflict);
+                throw new BusinessException($"ID'si '{venueId}' olan mekan, '{date:dd/MM/yyyy}' tarihinde başka bir etkinliğe sahiptir.", HttpStatusCode.Conflict);
             }
         }
     }

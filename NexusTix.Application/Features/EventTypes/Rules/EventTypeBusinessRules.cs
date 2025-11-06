@@ -19,7 +19,7 @@ namespace NexusTix.Application.Features.EventTypes.Rules
             var exists = await _unitOfWork.EventTypes.AnyAsync(x => x.Id == eventTypeId);
             if (!exists)
             {
-                throw new BusinessException($"ID'si {eventTypeId} olan etkinlik türü bulunamadı.", HttpStatusCode.NotFound);
+                throw new BusinessException($"ID'si '{eventTypeId}' olan etkinlik türü bulunamadı.", HttpStatusCode.NotFound);
             }
         }
 
@@ -28,7 +28,7 @@ namespace NexusTix.Application.Features.EventTypes.Rules
             var hasEvents = await _unitOfWork.Events.AnyAsync(x => x.EventTypeId == eventTypeId);
             if (hasEvents)
             {
-                throw new BusinessException($"ID'si {eventTypeId} olan etkinlik türüne ait kayıtlı etkinlikler mevcuttur! Silinemez.", HttpStatusCode.Conflict);
+                throw new BusinessException($"ID'si '{eventTypeId}' olan etkinlik türüne ait kayıtlı etkinlikler mevcuttur! Silinemez.", HttpStatusCode.Conflict);
             }
         }
 
@@ -37,7 +37,7 @@ namespace NexusTix.Application.Features.EventTypes.Rules
             var exists = await _unitOfWork.EventTypes.AnyAsync(x => x.Name.ToLower() == eventTypeName.ToLower());
             if (exists)
             {
-                throw new BusinessException($"Etkinlik türü adı: {eventTypeName}. Bu isimde başka bir etkinlik türü mevcut", HttpStatusCode.Conflict);
+                throw new BusinessException($"Etkinlik türü adı: '{eventTypeName}'. Bu isimde başka bir etkinlik türü mevcut", HttpStatusCode.Conflict);
             }
         }
 
@@ -46,7 +46,7 @@ namespace NexusTix.Application.Features.EventTypes.Rules
             var exists = await _unitOfWork.EventTypes.AnyAsync(x => x.Name.ToLower() == eventTypeName.ToLower() && x.Id != eventTypeId);
             if (exists)
             {
-                throw new BusinessException($"Etkinlik türü adı: {eventTypeName}. Bu isimde başka bir etkinlik türü mevcut", HttpStatusCode.Conflict);
+                throw new BusinessException($"Etkinlik türü adı: '{eventTypeName}'. Bu isimde başka bir etkinlik türü mevcut", HttpStatusCode.Conflict);
             }
         }
     }
