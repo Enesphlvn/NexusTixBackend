@@ -1314,7 +1314,7 @@ namespace NexusTix.Persistence.Seed
                 // --- İSTANBUL Mekanları ---
                 new Venue { Name = "ZORLU PSM", Capacity = 2200, DistrictId = districtMap["BEŞİKTAŞ-İSTANBUL"] },
                 new Venue { Name = "CADDEBOSTAN KÜLTÜR MERKEZİ", Capacity = 800, DistrictId = districtMap["KADIKÖY-İSTANBUL"] },
-                new Venue { Name = "DASDAS SAHNE", Capacity = 600, DistrictId = districtMap["KADIKÖY-İSTANBUL"] }, // Not: Ataşehir'de, ancak Seed datanızda Ataşehir yoksa Kadıköy'e ekleyelim.
+                new Venue { Name = "DASDAS SAHNE", Capacity = 600, DistrictId = districtMap["KADIKÖY-İSTANBUL"] },
                 new Venue { Name = "VOLKSWAGEN ARENA", Capacity = 5000, DistrictId = districtMap["SARIYER-İSTANBUL"] },
                 new Venue { Name = "HARBİYE CEMİL TOPUZLU AÇIKHAVA TİYATROSU", Capacity = 4500, DistrictId = districtMap["ŞİŞLİ-İSTANBUL"] },
                 new Venue { Name = "BABA SAHNE", Capacity = 300, DistrictId = districtMap["KADIKÖY-İSTANBUL"] },

@@ -1,3 +1,4 @@
+using FluentValidation.AspNetCore;
 using NexusTix.Application.Extensions;
 using NexusTix.Persistence.Extensions;
 using NexusTix.Persistence.Seed;
@@ -12,7 +13,10 @@ namespace NexusTix.WebAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddFluentValidation(config =>
+            {
+                config.RegisterValidatorsFromAssembly(typeof(ServiceExtensions).Assembly);
+            });
 
             // Identity Kaydý
             builder.Services.AddIdentityServices(builder.Configuration);

@@ -107,15 +107,6 @@ namespace NexusTix.Application.Features.Cities
             return ServiceResult<IEnumerable<CityWithDistrictsResponse>>.Success(citiesAsDto);
         }
 
-        public async Task<ServiceResult<IEnumerable<CityWithVenuesResponse>>> GetCitiesWithVenuesAsync()
-        {
-            var cities = await _unitOfWork.Cities.GetCitiesWithVenuesAsync();
-
-            var citiesAsDto = _mapper.Map<IEnumerable<CityWithVenuesResponse>>(cities);
-
-            return ServiceResult<IEnumerable<CityWithVenuesResponse>>.Success(citiesAsDto);
-        }
-
         public async Task<ServiceResult<CityAggregateResponse>> GetCityAggregateAsync(int id)
         {
             try
@@ -149,24 +140,6 @@ namespace NexusTix.Application.Features.Cities
             catch (BusinessException ex)
             {
                 return ServiceResult<CityWithDistrictsResponse>.Fail(ex.Message, ex.StatusCode);
-            }
-        }
-
-        public async Task<ServiceResult<CityWithVenuesResponse>> GetCityWithVenuesAsync(int id)
-        {
-            try
-            {
-                await _cityRules.CheckIfCityExists(id);
-
-                var city = await _unitOfWork.Cities.GetCityWithVenuesAsync(id);
-
-                var cityAsDto = _mapper.Map<CityWithVenuesResponse>(city);
-
-                return ServiceResult<CityWithVenuesResponse>.Success(cityAsDto);
-            }
-            catch (BusinessException ex)
-            {
-                return ServiceResult<CityWithVenuesResponse>.Fail(ex.Message, ex.StatusCode);
             }
         }
 

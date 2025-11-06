@@ -66,20 +66,6 @@ namespace NexusTix.WebAPI.Controllers
             return CreateActionResult(await _cityService.GetCitiesWithDistrictsAsync());
         }
 
-        [HttpGet("{id:int}/venues")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetCityWithVenues(int id)
-        {
-            return CreateActionResult(await _cityService.GetCityWithVenuesAsync(id));
-        }
-
-        [HttpGet("venues")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetCitiesWithVenues()
-        {
-            return CreateActionResult(await _cityService.GetCitiesWithVenuesAsync());
-        }
-
         [HttpPost]
         [Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> Create([FromBody] CreateCityRequest request)

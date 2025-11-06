@@ -6,6 +6,5 @@ namespace NexusTix.Domain.Entities
     {
         public string Name { get; set; } = null!;
         public List<District> Districts { get; set; } = [];
-        public List<Venue> Venues { get; set; } = [];
     }
 }

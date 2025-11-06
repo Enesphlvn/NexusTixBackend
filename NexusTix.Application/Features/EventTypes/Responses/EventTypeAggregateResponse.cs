@@ -2,4 +2,4 @@
 
 namespace NexusTix.Application.Features.EventTypes.Responses;
 
-public record EventTypeAggregateResponse(int Id, string Name, IEnumerable<EventAggregateResponse> Events);
+public record EventTypeAggregateResponse(int Id, string Name, IEnumerable<EventResponse> Events);

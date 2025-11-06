@@ -29,7 +29,6 @@ namespace NexusTix.Application.Extensions
             var assembly = Assembly.GetExecutingAssembly();
 
             services.AddAutoMapper(assembly);
-            services.AddValidatorsFromAssembly(assembly);
 
             services.AddScoped<IAuthBusinessRules, AuthBusinessRules>();
             services.AddScoped<IBaseBusinessRules, BaseBusinessRules>();

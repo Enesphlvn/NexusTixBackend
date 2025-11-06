@@ -435,9 +435,6 @@ namespace NexusTix.Persistence.Migrations
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CityId")
-                        .HasColumnType("int");
-
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
 
@@ -456,8 +453,6 @@ namespace NexusTix.Persistence.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CityId");
 
                     b.HasIndex("DistrictId");
 
@@ -566,10 +561,6 @@ namespace NexusTix.Persistence.Migrations
 
             modelBuilder.Entity("NexusTix.Domain.Entities.Venue", b =>
                 {
-                    b.HasOne("NexusTix.Domain.Entities.City", null)
-                        .WithMany("Venues")
-                        .HasForeignKey("CityId");
-
                     b.HasOne("NexusTix.Domain.Entities.District", "District")
                         .WithMany("Venues")
                         .HasForeignKey("DistrictId")
@@ -582,8 +573,6 @@ namespace NexusTix.Persistence.Migrations
             modelBuilder.Entity("NexusTix.Domain.Entities.City", b =>
                 {
                     b.Navigation("Districts");
-
-                    b.Navigation("Venues");
                 });
 
             modelBuilder.Entity("NexusTix.Domain.Entities.District", b =>

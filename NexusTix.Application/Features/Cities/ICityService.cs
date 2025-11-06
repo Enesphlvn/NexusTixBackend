@@ -12,8 +12,6 @@ namespace NexusTix.Application.Features.Cities
 
         Task<ServiceResult<CityWithDistrictsResponse>> GetCityWithDistrictsAsync(int id);
         Task<ServiceResult<IEnumerable<CityWithDistrictsResponse>>> GetCitiesWithDistrictsAsync();
-        Task<ServiceResult<CityWithVenuesResponse>> GetCityWithVenuesAsync(int id);
-        Task<ServiceResult<IEnumerable<CityWithVenuesResponse>>> GetCitiesWithVenuesAsync();
         Task<ServiceResult<CityAggregateResponse>> GetCityAggregateAsync(int id);
         Task<ServiceResult<IEnumerable<CityAggregateResponse>>> GetCitiesAggregateAsync();
 

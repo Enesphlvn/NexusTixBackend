@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace NexusTix.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -227,7 +227,6 @@ namespace NexusTix.Persistence.Migrations
                     Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     Capacity = table.Column<int>(type: "int", nullable: false),
                     DistrictId = table.Column<int>(type: "int", nullable: false),
-                    CityId = table.Column<int>(type: "int", nullable: true),
                     Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     Updated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false)
@@ -235,11 +234,6 @@ namespace NexusTix.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Venues", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Venues_Cities_CityId",
-                        column: x => x.CityId,
-                        principalTable: "Cities",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Venues_Districts_DistrictId",
                         column: x => x.DistrictId,
@@ -383,11 +377,6 @@ namespace NexusTix.Persistence.Migrations
                 name: "IX_Tickets_UserId",
                 table: "Tickets",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Venues_CityId",
-                table: "Venues",
-                column: "CityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Venues_DistrictId",

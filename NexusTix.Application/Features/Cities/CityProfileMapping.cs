@@ -15,7 +15,6 @@ namespace NexusTix.Application.Features.Cities
 
             CreateMap<City, CityResponse>();
             CreateMap<City, CityWithDistrictsResponse>();
-            CreateMap<City, CityWithVenuesResponse>();
             CreateMap<City, CityAggregateResponse>();
         }
     }
