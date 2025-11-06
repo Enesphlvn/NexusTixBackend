@@ -1,13 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using NexusTix.Domain.Entities;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace NexusTix.Application.Common.Security
 {
@@ -27,7 +23,8 @@ namespace NexusTix.Application.Common.Security
                 new(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new(ClaimTypes.Email, user.Email!),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new("FullName", $"{user.FirstName} {user.LastName}")
+                new("FullName", $"{user.FirstName} {user.LastName}"),
+                new("AspNet.Identity.SecurityStamp", user.SecurityStamp!)
             };
 
             foreach (var role in roles)

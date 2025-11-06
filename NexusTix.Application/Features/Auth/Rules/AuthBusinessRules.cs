@@ -64,7 +64,7 @@ namespace NexusTix.Application.Features.Auth.Rules
             var isPasswordValid = await _userManager.CheckPasswordAsync(user!, currentPassword);
             if (!isPasswordValid)
             {
-                throw new BusinessException("Mevcut şifre geçerli değil.", HttpStatusCode.BadRequest);
+                throw new BusinessException("Mevcut şifre yanlış.", HttpStatusCode.BadRequest);
             }
         }
 

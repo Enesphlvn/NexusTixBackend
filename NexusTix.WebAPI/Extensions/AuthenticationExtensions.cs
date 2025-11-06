@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using NexusTix.Domain.Entities;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 
@@ -33,6 +36,32 @@ namespace NexusTix.WebAPI.Extensions
 
                 options.Events = new JwtBearerEvents
                 {
+                    OnTokenValidated = async context =>
+                    {
+                        var userManager = context.HttpContext.RequestServices.GetRequiredService<UserManager<User>>();
+
+                        var stampClaim = context.Principal?.Claims.FirstOrDefault
+                        (
+                            x => x.Type == "AspNet.Identity.SecurityStamp"
+                        );
+                        var tokenSecurityStamp = stampClaim?.Value;
+
+                        var userId = context.Principal?.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                        if (userId == null)
+                        {
+                            context.Fail("Token NameIdentifier (UserId) claim'i içermiyor.");
+                            return;
+                        }
+
+                        var user = await userManager.FindByIdAsync(userId);
+
+                        if (user == null || user.SecurityStamp != tokenSecurityStamp)
+                        {
+                            context.Fail("Security stamp doğrulaması başarısız.");
+                        }
+                    },
+
                     OnChallenge = async context =>
                     {
                         context.HandleResponse();
