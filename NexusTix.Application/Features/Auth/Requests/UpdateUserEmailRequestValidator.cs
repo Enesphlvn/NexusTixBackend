@@ -12,7 +12,8 @@ namespace NexusTix.Application.Features.Auth.Requests
             RuleFor(x => x.NewEmail)
                 .NotEmpty().WithMessage("Yeni E-posta alanı boş bırakılamaz.")
                 .NotNull().WithMessage("Yeni E-posta alanı gereklidir.")
-                .EmailAddress().WithMessage("Geçerli bir e-posta adresi giriniz.")
+                .EmailAddress(FluentValidation.Validators.EmailValidationMode.Net4xRegex)
+                    .WithMessage("Geçerli bir e-posta adresi giriniz. (örn: kullanici@alanadi.com).")
                 .MaximumLength(256).WithMessage("E-posta adresi 256 karakterden uzun olamaz.");
 
             RuleFor(x => x.CurrentPassword)
