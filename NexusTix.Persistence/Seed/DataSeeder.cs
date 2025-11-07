@@ -64,7 +64,7 @@ namespace NexusTix.Persistence.Seed
             {
                 var superAdmin = await context.Users.FirstOrDefaultAsync(x => x.UserName == "SuperAdmin");
 
-                var eventToBuy = context.Events.FirstOrDefaultAsync(x => x.Name == "Büyük Ev Ablukada Konseri");
+                var eventToBuy = await context.Events.FirstOrDefaultAsync(x => x.Name == "Büyük Ev Ablukada Konseri");
 
                 if (superAdmin != null && eventToBuy != null)
                 {

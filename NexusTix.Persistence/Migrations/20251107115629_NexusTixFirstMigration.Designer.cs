@@ -12,8 +12,8 @@ using NexusTix.Persistence.Context;
 namespace NexusTix.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251105124100_Init")]
-    partial class Init
+    [Migration("20251107115629_NexusTixFirstMigration")]
+    partial class NexusTixFirstMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
