@@ -59,6 +59,20 @@ namespace NexusTix.Persistence.Seed
                     await context.SaveChangesAsync();
                 }
             }
+
+            if (!await context.Tickets.AnyAsync())
+            {
+                var superAdmin = await context.Users.FirstOrDefaultAsync(x => x.UserName == "SuperAdmin");
+
+                var eventToBuy = context.Events.FirstOrDefaultAsync(x => x.Name == "Büyük Ev Ablukada Konseri");
+
+                if (superAdmin != null && eventToBuy != null)
+                {
+                    var tickets = GetTickets(eventToBuy.Id, superAdmin.Id);
+                    await context.Tickets.AddRangeAsync(tickets);
+                    await context.SaveChangesAsync();
+                }
+            }
         }
 
         private static IEnumerable<City> GetCities()
@@ -1315,7 +1329,7 @@ namespace NexusTix.Persistence.Seed
                 new Venue { Name = "ZORLU PSM", Capacity = 2200, DistrictId = districtMap["BEŞİKTAŞ-İSTANBUL"] },
                 new Venue { Name = "CADDEBOSTAN KÜLTÜR MERKEZİ", Capacity = 800, DistrictId = districtMap["KADIKÖY-İSTANBUL"] },
                 new Venue { Name = "DASDAS SAHNE", Capacity = 600, DistrictId = districtMap["KADIKÖY-İSTANBUL"] },
-                new Venue { Name = "VOLKSWAGEN ARENA", Capacity = 5000, DistrictId = districtMap["SARIYER-İSTANBUL"] },
+            new Venue { Name = "VOLKSWAGEN ARENA", Capacity = 5000, DistrictId = districtMap["SARIYER-İSTANBUL"] },
                 new Venue { Name = "HARBİYE CEMİL TOPUZLU AÇIKHAVA TİYATROSU", Capacity = 4500, DistrictId = districtMap["ŞİŞLİ-İSTANBUL"] },
                 new Venue { Name = "BABA SAHNE", Capacity = 300, DistrictId = districtMap["KADIKÖY-İSTANBUL"] },
 
@@ -1466,6 +1480,30 @@ namespace NexusTix.Persistence.Seed
                     Capacity = 300,
                     EventTypeId = eventTypeMap["TİYATRO"],
                     VenueId = venueMap["BABA SAHNE"]
+                }
+            ];
+        }
+
+        private static IEnumerable<Ticket> GetTickets(int eventId, int userId)
+        {
+            return
+            [
+                new Ticket
+                {
+                    EventId = eventId,
+                    UserId = userId,
+
+                    QRCodeGuid = Guid.NewGuid(),
+                    PurchaseDate = DateTimeOffset.UtcNow.AddDays(-5),
+                    IsUsed = false
+                },
+                new Ticket
+                {
+                    EventId = eventId,
+                    UserId = userId,
+                    QRCodeGuid = Guid.NewGuid(),
+                    PurchaseDate = DateTimeOffset.UtcNow.AddDays(-3),
+                    IsUsed = false
                 }
             ];
         }
