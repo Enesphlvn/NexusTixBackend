@@ -25,15 +25,5 @@ namespace NexusTix.Persistence.Repositories.Users
                 .Include(x => x.Tickets).ThenInclude(x => x.Event).ThenInclude(x => x.Venue).ThenInclude(x => x.District).ThenInclude(x => x.City)
                 .AsNoTracking().ToListAsync();
         }
-
-        public async Task<IEnumerable<User>> GetUsersWithTicketsAsync()
-        {
-            return await _context.Users.Include(x => x.Tickets).AsNoTracking().ToListAsync();
-        }
-
-        public async Task<User?> GetUserWithTicketsAsync(int id)
-        {
-            return await _context.Users.Include(x => x.Tickets).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
-        }
     }
 }

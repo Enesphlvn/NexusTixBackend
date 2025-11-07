@@ -117,31 +117,6 @@ namespace NexusTix.Application.Features.Users
             return ServiceResult<IEnumerable<UserAggregateResponse>>.Success(usersAsDto);
         }
 
-        public async Task<ServiceResult<IEnumerable<UserWithTicketsResponse>>> GetUsersWithTicketsAsync()
-        {
-            var users = await _unitOfWork.Users.GetUsersWithTicketsAsync();
-            var usersAsDto = _mapper.Map<IEnumerable<UserWithTicketsResponse>>(users);
-
-            return ServiceResult<IEnumerable<UserWithTicketsResponse>>.Success(usersAsDto);
-        }
-
-        public async Task<ServiceResult<UserWithTicketsResponse>> GetUserWithTicketsAsync(int id)
-        {
-            try
-            {
-                await _userRules.CheckIfUserExists(id);
-
-                var user = await _unitOfWork.Users.GetUserWithTicketsAsync(id);
-                var userAsDto = _mapper.Map<UserWithTicketsResponse>(user);
-
-                return ServiceResult<UserWithTicketsResponse>.Success(userAsDto);
-            }
-            catch (BusinessException ex)
-            {
-                return ServiceResult<UserWithTicketsResponse>.Fail(ex.Message, ex.StatusCode);
-            }
-        }
-
         public async Task<ServiceResult> PassiveAsync(int id)
         {
             try

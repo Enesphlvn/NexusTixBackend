@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexusTix.Application;
+using NexusTix.Application.Features.Tickets;
 using NexusTix.Application.Features.Users;
 using NexusTix.Application.Features.Users.Update;
 using System.Net;
@@ -12,10 +13,12 @@ namespace NexusTix.WebAPI.Controllers
     public class UsersController : BaseController
     {
         private readonly IUserService _userService;
+        private readonly ITicketService _ticketService;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, ITicketService ticketService)
         {
             _userService = userService;
+            _ticketService = ticketService;
         }
 
         // --- YÖNETİM (Admin/Manager) ENDPOINT'LERİ ---
@@ -54,19 +57,6 @@ namespace NexusTix.WebAPI.Controllers
             return CreateActionResult(await _userService.GetUsersAggregateAsync());
         }
 
-
-        [HttpGet("{id:int}/tickets")]
-        public async Task<IActionResult> GetUserWithTickets(int id)
-        {
-            return CreateActionResult(await _userService.GetUserWithTicketsAsync(id));
-        }
-
-        [HttpGet("tickets")]
-        public async Task<IActionResult> GetUsersWithTickets()
-        {
-            return CreateActionResult(await _userService.GetUsersWithTicketsAsync());
-        }
-
         // --- KULLANICI (Kendi) ENDPOINT'LERİ ---
         [HttpGet("me")]
         [Authorize]
@@ -81,7 +71,7 @@ namespace NexusTix.WebAPI.Controllers
         public async Task<IActionResult> GetMyTickets()
         {
             var authenticatedUserId = GetAuthenticatedUserId();
-            return CreateActionResult(await _userService.GetUserWithTicketsAsync(authenticatedUserId));
+            return CreateActionResult(await _ticketService.GetTicketsByUserAsync(authenticatedUserId));
         }
 
         // --- YÖNETİM KOMUTLARI ---

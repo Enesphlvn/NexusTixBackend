@@ -9,8 +9,6 @@ namespace NexusTix.Application.Features.Users
         Task<ServiceResult<IEnumerable<UserResponse>>> GetPagedAllUsersAsync(int pageNumber, int pageSize);
         Task<ServiceResult<UserResponse>> GetByIdAsync(int id);
 
-        Task<ServiceResult<UserWithTicketsResponse>> GetUserWithTicketsAsync(int id);
-        Task<ServiceResult<IEnumerable<UserWithTicketsResponse>>> GetUsersWithTicketsAsync();
         Task<ServiceResult<UserAggregateResponse>> GetUserAggregateAsync(int id);
         Task<ServiceResult<IEnumerable<UserAggregateResponse>>> GetUsersAggregateAsync();
 
