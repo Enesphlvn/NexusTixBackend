@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using NexusTix.Application.Features.Auth;
 using NexusTix.Application.Features.Auth.Requests;
-using NexusTix.Domain.Exceptions;
-using System.Net;
 using System.Security.Claims;
 
 namespace NexusTix.WebAPI.Controllers

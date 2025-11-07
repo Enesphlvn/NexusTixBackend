@@ -108,7 +108,7 @@ namespace NexusTix.Application.Features.Events.Rules
 
         public async Task CheckIfVenueIsAvailableOnDateCreating(int venueId, DateTimeOffset date)
         {
-            var exists = await _unitOfWork.Events.AnyAsync(x => x.VenueId == venueId && x.Date.UtcDateTime.Date == date.UtcDateTime.Date);
+            var exists = await _unitOfWork.Events.AnyAsync(x => x.VenueId == venueId && x.Date.Date == date.Date);
             if (exists)
             {
                 throw new BusinessException($"ID'si '{venueId}' olan mekan, '{date:dd/MM/yyyy}' tarihinde başka bir etkinliğe sahiptir.", HttpStatusCode.Conflict);
@@ -117,7 +117,7 @@ namespace NexusTix.Application.Features.Events.Rules
 
         public async Task CheckIfVenueIsAvailableOnDateUpdating(int eventId, int venueId, DateTimeOffset date)
         {
-            var exists = await _unitOfWork.Events.AnyAsync(x => x.VenueId == venueId && x.Date.UtcDateTime.Date == date.UtcDateTime.Date && x.Id != eventId);
+            var exists = await _unitOfWork.Events.AnyAsync(x => x.VenueId == venueId && x.Date.Date == date.Date && x.Id != eventId);
             if (exists)
             {
                 throw new BusinessException($"ID'si '{venueId}' olan mekan, '{date:dd/MM/yyyy}' tarihinde başka bir etkinliğe sahiptir.", HttpStatusCode.Conflict);
