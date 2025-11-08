@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using NexusTix.Application.Common.BaseRules;
 using NexusTix.Application.Common.Security;
 using NexusTix.Application.Features.Auth;
