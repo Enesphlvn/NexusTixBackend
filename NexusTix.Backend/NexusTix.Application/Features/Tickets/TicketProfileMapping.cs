@@ -26,7 +26,10 @@ namespace NexusTix.Application.Features.Tickets
                 .ForMember(dest => dest.Event, opt => opt.MapFrom(src => src.Event));
 
             CreateMap<Ticket, TicketByUserResponse>()
-                .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User));
+                .ForMember(dest => dest.EventName, opt => opt.MapFrom(src => src.Event.Name))
+                .ForMember(dest => dest.EventDate, opt => opt.MapFrom(src => src.Event.Date))
+                .ForMember(dest => dest.VenueName, opt => opt.MapFrom(src => src.Event.Venue.Name))
+                .ForMember(dest => dest.CityName, opt => opt.MapFrom(src => src.Event.Venue.District.City.Name));
 
             CreateMap<Ticket, TicketByDateRangeResponse>()
                 .ForMember(dest => dest.Event, opt => opt.MapFrom(src => src.Event))
