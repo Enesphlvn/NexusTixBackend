@@ -56,5 +56,30 @@ namespace NexusTix.Persistence.Repositories.Events
                 .Include(x => x.Venue).ThenInclude(x => x.District).ThenInclude(x => x.City)
                 .Include(x => x.Tickets).ThenInclude(x => x.User).AsNoTracking().FirstOrDefaultAsync(x => x.Id == eventId);
         }
+
+        public async Task<IEnumerable<Event>> GetFilteredEventsAsync(int? cityId, int? eventTypeId, DateTimeOffset? date)
+        {
+            var query = _context.Events
+                .Include(x => x.EventType)
+                .Include(x => x.Venue).ThenInclude(x => x.District)
+                .AsNoTracking();
+
+            if (cityId.HasValue)
+            {
+                query = query.Where(x => x.Venue.District.CityId == cityId.Value);
+            }
+
+            if (eventTypeId.HasValue)
+            {
+                query = query.Where(x => x.EventTypeId == eventTypeId.Value);
+            }
+
+            if (date.HasValue)
+            {
+                query = query.Where(x => x.Date.Date == date.Value.Date);
+            }
+
+            return await query.ToListAsync();
+        }
     }
 }

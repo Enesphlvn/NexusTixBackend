@@ -238,6 +238,32 @@ namespace NexusTix.Application.Features.Events
 
         }
 
+        public async Task<ServiceResult<IEnumerable<EventResponse>>> GetFilteredEventsAsync(int? cityId, int? eventTypeId, DateTimeOffset? date)
+        {
+            try
+            {
+                if (cityId.HasValue && cityId > 0)
+                {
+                    await _eventRules.CheckIfCityExists(cityId!.Value);
+                }
+
+                if (eventTypeId.HasValue && eventTypeId > 0)
+                {
+                    await _eventRules.CheckIfEventTypeExists(eventTypeId!.Value);
+                }
+
+                var events = await _unitOfWork.Events.GetFilteredEventsAsync(cityId, eventTypeId, date);
+
+                var eventsAsDto = _mapper.Map<IEnumerable<EventResponse>>(events);
+
+                return ServiceResult<IEnumerable<EventResponse>>.Success(eventsAsDto);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult<IEnumerable<EventResponse>>.Fail(ex.Message, ex.StatusCode);
+            }
+        }
+
         public async Task<ServiceResult<IEnumerable<EventResponse>>> GetPagedAllEventsAsync(int pageNumber, int pageSize)
         {
             try

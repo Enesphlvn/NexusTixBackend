@@ -1,4 +1,5 @@
-﻿using NexusTix.Application.Common.BaseRules;
+﻿using Microsoft.Extensions.Logging;
+using NexusTix.Application.Common.BaseRules;
 using NexusTix.Domain.Exceptions;
 using NexusTix.Persistence.Repositories;
 using System.Net;
@@ -12,6 +13,15 @@ namespace NexusTix.Application.Features.Events.Rules
         public EventBusinessRules(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+        }
+
+        public async Task CheckIfCityExists(int cityId)
+        {
+            var exists = await _unitOfWork.Cities.AnyAsync(cityId);
+            if (!exists)
+            {
+                throw new BusinessException($"ID'si '{cityId}' olan şehir bulunamadı.", HttpStatusCode.BadRequest);
+            }
         }
 
         public void CheckIfDateRangeIsValid(DateTimeOffset startDate, DateTimeOffset endDate)

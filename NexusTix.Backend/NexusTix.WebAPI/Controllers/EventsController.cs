@@ -52,6 +52,13 @@ namespace NexusTix.WebAPI.Controllers
             return CreateActionResult(await _eventService.GetEventsAggregateAsync());
         }
 
+        [HttpGet("filter")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetFilteredEvents([FromQuery] int? cityId, [FromQuery] int? eventTypeId, [FromQuery] DateTimeOffset? date)
+        {
+            return CreateActionResult(await _eventService.GetFilteredEventsAsync(cityId, eventTypeId, date));
+        }
+
         [HttpGet("{eventTypeId:int}/eventtype")]
         [AllowAnonymous]
         public async Task<IActionResult> GetEventsByEventType(int eventTypeId)
