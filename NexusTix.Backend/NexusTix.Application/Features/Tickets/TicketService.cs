@@ -25,6 +25,29 @@ namespace NexusTix.Application.Features.Tickets
             _ticketRules = ticketRules;
         }
 
+        public async Task<ServiceResult> CancelTicketAsync(int ticketId, int userId)
+        {
+            try
+            {
+                await _ticketRules.CheckIfTicketExists(ticketId);
+
+                var ticket = await _unitOfWork.Tickets.GetByIdAsync(ticketId);
+
+                await _ticketRules.CheckIfTicketCanBeCancelled(ticketId);
+
+                ticket!.IsCancelled = true;
+
+                _unitOfWork.Tickets.Update(ticket);
+                await _unitOfWork.SaveChangesAsync();
+
+                return ServiceResult.Success(HttpStatusCode.NoContent);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult.Fail(ex.Message, ex.StatusCode);
+            }
+        }
+
         public async Task<ServiceResult> CheckInAsync(CheckInTicketRequest request)
         {
             try

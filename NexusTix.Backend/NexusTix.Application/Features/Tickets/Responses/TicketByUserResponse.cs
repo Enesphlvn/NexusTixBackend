@@ -11,4 +11,5 @@ public record TicketByUserResponse
     public DateTimeOffset EventDate { get; init; }
     public string VenueName { get; init; } = string.Empty;
     public string CityName { get; init; } = string.Empty;
+    public bool IsCancelled { get; init; }
 }

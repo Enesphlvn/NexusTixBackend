@@ -1,4 +1,5 @@
-﻿using NexusTix.Application.Features.Tickets.CheckIn;
+﻿using Microsoft.Identity.Client;
+using NexusTix.Application.Features.Tickets.CheckIn;
 using NexusTix.Application.Features.Tickets.Create;
 using NexusTix.Application.Features.Tickets.Responses;
 
@@ -17,6 +18,7 @@ namespace NexusTix.Application.Features.Tickets
         Task<ServiceResult<IEnumerable<TicketByDateRangeResponse>>> GetTicketsByDateRangeAsync(DateTimeOffset startDate, DateTimeOffset endDate);
         Task<ServiceResult<bool>> HasUserTicketForEventAsync(int userId, int eventId);
         Task<ServiceResult<int>> GetTicketCountByEventAsync(int eventId);
+        Task<ServiceResult> CancelTicketAsync(int ticketId, int userId);
 
         Task<ServiceResult<TicketResponse>> CreateAsync(CreateTicketRequest request, int userId);
         Task<ServiceResult> CheckInAsync(CheckInTicketRequest request);
