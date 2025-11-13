@@ -55,7 +55,9 @@ namespace NexusTix.Application.Features.Tickets.Rules
 
         public async Task CheckIfTicketCanBeCancelled(int ticketId)
         {
-            var ticket = await _unitOfWork.Tickets.GetByIdAsync(ticketId);
+            var ticket = await _unitOfWork.Tickets.Where(x => x.Id == ticketId)
+                .Include(x => x.Event).AsNoTracking().FirstOrDefaultAsync();
+
             if (ticket!.IsCancelled)
             {
                 throw new BusinessException("Bu bilet zaten iptal edilmiş.", HttpStatusCode.BadRequest);
@@ -64,6 +66,17 @@ namespace NexusTix.Application.Features.Tickets.Rules
             if (ticket.IsUsed)
             {
                 throw new BusinessException("Kullanılmış biletler iptal edilemez.", HttpStatusCode.BadRequest);
+            }
+
+            if (DateTimeOffset.UtcNow > ticket.Event.Date)
+            {
+                throw new BusinessException("Geçmiş etkinliklerin biletleri iptal edilemez.", HttpStatusCode.BadRequest);
+            }
+
+            if (DateTimeOffset.UtcNow.AddHours(24) > ticket.Event.Date)
+            {
+                throw new BusinessException("Etkinliğe 24 saat kala bilet iptal edilemez.", HttpStatusCode.BadRequest);
+
             }
         }
 

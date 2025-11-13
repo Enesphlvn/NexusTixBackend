@@ -90,13 +90,13 @@ namespace NexusTix.WebAPI.Controllers
             return CreateActionResult(result);
         }
 
-        [HttpPut("{id:int}/cancel")]
+        [HttpPut("{ticketId:int}/cancel")]
         [Authorize]
-        public async Task<IActionResult> CancelTicket(int id)
+        public async Task<IActionResult> CancelTicket(int ticketId)
         {
             var authenticatedUserId = GetAuthenticatedUserId();
 
-            return CreateActionResult(await _ticketService.CancelTicketAsync(id, authenticatedUserId));
+            return CreateActionResult(await _ticketService.CancelTicketAsync(ticketId, authenticatedUserId));
         }
 
         [HttpPost]
