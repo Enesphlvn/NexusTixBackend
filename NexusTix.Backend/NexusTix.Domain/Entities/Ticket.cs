@@ -11,5 +11,6 @@ namespace NexusTix.Domain.Entities
         public Guid QRCodeGuid { get; set; }
         public DateTimeOffset PurchaseDate { get; set; }
         public bool IsUsed { get; set; }
+        public bool IsCancelled { get; set; } = false;
     }
 }

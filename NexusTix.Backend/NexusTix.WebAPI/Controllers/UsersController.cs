@@ -74,19 +74,20 @@ namespace NexusTix.WebAPI.Controllers
             return CreateActionResult(await _ticketService.GetTicketsByUserAsync(authenticatedUserId));
         }
 
-        // --- YÖNETİM KOMUTLARI ---
-        [HttpPut("{id:int}")]
-        [Authorize(Roles = "Admin, Manager")]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdateUserRequest request)
+        [HttpPut("me")]
+        [Authorize]
+        public async Task<IActionResult> UpdateMyProfile([FromBody] UpdateUserRequest request)
         {
-            if (id != request.Id)
+            var authenticatedUserId = GetAuthenticatedUserId();
+            if (authenticatedUserId != request.Id)
             {
-                return CreateActionResult(ServiceResult.Fail("Route ID ve Request Body ID eşleşmiyor.", HttpStatusCode.BadRequest));
+                return CreateActionResult(ServiceResult.Fail("Kendi ID'niz dışındaki bir profili güncelleyemezsiniz.", HttpStatusCode.BadRequest));
             }
 
             return CreateActionResult(await _userService.UpdateAsync(request));
         }
 
+        // --- YÖNETİM KOMUTLARI ---
         [HttpPut("{id:int}/role")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateRole(int id, [FromBody] UpdateUserRoleRequest request)

@@ -1,3 +1,14 @@
 ﻿namespace NexusTix.Application.Features.Tickets.Responses;
 
-public record TicketByUserResponse(int Id, Guid QRCodeGuid, DateTimeOffset PurchaseDate, bool IsUsed, int EventId, string EventName, DateTimeOffset EventDate, string VenueName, string CityName);
+public record TicketByUserResponse
+{
+    public int Id { get; init; }
+    public Guid QRCodeGuid { get; init; }
+    public DateTimeOffset PurchaseDate { get; init; }
+    public bool IsUsed { get; init; }
+    public int EventId { get; init; }
+    public string EventName { get; init; } = string.Empty;
+    public DateTimeOffset EventDate { get; init; }
+    public string VenueName { get; init; } = string.Empty;
+    public string CityName { get; init; } = string.Empty;
+}

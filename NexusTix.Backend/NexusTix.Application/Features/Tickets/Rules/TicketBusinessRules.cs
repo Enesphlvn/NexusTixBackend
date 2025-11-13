@@ -53,6 +53,20 @@ namespace NexusTix.Application.Features.Tickets.Rules
             }
         }
 
+        public async Task CheckIfTicketCanBeCancelled(int ticketId)
+        {
+            var ticket = await _unitOfWork.Tickets.GetByIdAsync(ticketId);
+            if (ticket!.IsCancelled)
+            {
+                throw new BusinessException("Bu bilet zaten iptal edilmiş.", HttpStatusCode.BadRequest);
+            }
+
+            if (ticket.IsUsed)
+            {
+                throw new BusinessException("Kullanılmış biletler iptal edilemez.", HttpStatusCode.BadRequest);
+            }
+        }
+
         public async Task CheckIfTicketExists(int ticketId)
         {
             var exists = await _unitOfWork.Tickets.AnyAsync(ticketId);
@@ -73,11 +87,11 @@ namespace NexusTix.Application.Features.Tickets.Rules
 
         public async Task CheckIfTicketIsAlreadyUsed(Guid qrCode)
         {
-            var isUsed = await _unitOfWork.Tickets.AnyAsync(x => x.QRCodeGuid == qrCode && x.IsUsed == true);
-            if (isUsed)
-            {
-                throw new BusinessException($"Bu bilet zaten kullanılmış.", HttpStatusCode.Conflict);
-            }
+            var ticket = await _unitOfWork.Tickets.Where(x => x.QRCodeGuid == qrCode).FirstOrDefaultAsync();
+
+            if (ticket!.IsUsed) throw new BusinessException("Bilet zaten kullanılmış.", HttpStatusCode.Conflict);
+
+            if (ticket.IsCancelled) throw new BusinessException("Bu bilet İPTAL EDİLMİŞTİR. Giriş yapılamaz.", HttpStatusCode.Conflict);
         }
 
         public async Task CheckIfUserExists(int userId)
