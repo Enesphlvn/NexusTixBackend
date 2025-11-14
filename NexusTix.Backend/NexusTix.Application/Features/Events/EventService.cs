@@ -219,6 +219,22 @@ namespace NexusTix.Application.Features.Events
             }
         }
 
+        public async Task<ServiceResult<IEnumerable<EventAdminResponse>>> GetEventsForAdminAsync()
+        {
+            try
+            {
+                var events = await _unitOfWork.Events.GetFilteredEventsAsync(null, null, null, null);
+
+                var eventsAsDto = _mapper.Map<IEnumerable<EventAdminResponse>>(events);
+
+                return ServiceResult<IEnumerable<EventAdminResponse>>.Success(eventsAsDto);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult<IEnumerable<EventAdminResponse>>.Fail(ex.Message, ex.StatusCode);
+            }
+        }
+
         public async Task<ServiceResult<IEnumerable<EventByUserTicketsResponse>>> GetEventsWithHighestSalesAsync(int numberOfEvents)
         {
             try
