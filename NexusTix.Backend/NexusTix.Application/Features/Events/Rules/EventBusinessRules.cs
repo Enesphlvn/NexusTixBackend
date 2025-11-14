@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using NexusTix.Application.Common.BaseRules;
+using NexusTix.Domain.Entities;
 using NexusTix.Domain.Exceptions;
 using NexusTix.Persistence.Repositories;
 using System.Net;
@@ -29,6 +30,15 @@ namespace NexusTix.Application.Features.Events.Rules
             if (startDate > endDate)
             {
                 throw new BusinessException("Başlangıç tarihi, bitiş tarihinden önce olmalıdır.", HttpStatusCode.BadRequest);
+            }
+        }
+
+        public async Task CheckIfDistrictExists(int districtId)
+        {
+            var exists = await _unitOfWork.Districts.AnyAsync(districtId);
+            if (!exists)
+            {
+                throw new BusinessException($"ID'si '{districtId}' olan ilçe bulunamadı.", HttpStatusCode.BadRequest);
             }
         }
 

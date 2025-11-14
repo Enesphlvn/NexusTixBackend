@@ -6,6 +6,7 @@ namespace NexusTix.Application.Features.Events.Rules
     {
         Task CheckIfEventExists(int eventId);
         Task CheckIfEventTypeExists(int eventTypeId);
+        Task CheckIfDistrictExists(int districtId);
         Task CheckIfVenueExists(int venueId);
         Task CheckIfUserExists(int userId);
         Task CheckIfCityExists(int cityId);

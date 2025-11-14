@@ -238,7 +238,7 @@ namespace NexusTix.Application.Features.Events
 
         }
 
-        public async Task<ServiceResult<IEnumerable<EventResponse>>> GetFilteredEventsAsync(int? cityId, int? eventTypeId, DateTimeOffset? date)
+        public async Task<ServiceResult<IEnumerable<EventResponse>>> GetFilteredEventsAsync(int? cityId, int? districtId, int? eventTypeId, DateTimeOffset? date)
         {
             try
             {
@@ -247,12 +247,17 @@ namespace NexusTix.Application.Features.Events
                     await _eventRules.CheckIfCityExists(cityId!.Value);
                 }
 
+                if (districtId.HasValue && districtId > 0)
+                {
+                    await _eventRules.CheckIfDistrictExists(districtId!.Value);
+                }
+
                 if (eventTypeId.HasValue && eventTypeId > 0)
                 {
                     await _eventRules.CheckIfEventTypeExists(eventTypeId!.Value);
                 }
 
-                var events = await _unitOfWork.Events.GetFilteredEventsAsync(cityId, eventTypeId, date);
+                var events = await _unitOfWork.Events.GetFilteredEventsAsync(cityId, districtId, eventTypeId, date);
 
                 var eventsAsDto = _mapper.Map<IEnumerable<EventResponse>>(events);
 

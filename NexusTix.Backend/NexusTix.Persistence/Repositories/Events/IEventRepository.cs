@@ -12,6 +12,6 @@ namespace NexusTix.Persistence.Repositories.Events
         Task<IEnumerable<Event>> GetEventsByDateRangeAsync(DateTimeOffset startDate, DateTimeOffset endDate);
         Task<IEnumerable<Event>> GetEventsByPriceRangeAsync(decimal minPrice, decimal maxPrice);
         Task<IEnumerable<Event>> GetEventsByUserTicketsAsync(int userId);
-        Task<IEnumerable<Event>> GetFilteredEventsAsync(int? cityId, int? eventTypeId, DateTimeOffset? date);
+        Task<IEnumerable<Event>> GetFilteredEventsAsync(int? cityId, int? districtId, int? eventTypeId, DateTimeOffset? date);
     }
 }
