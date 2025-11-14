@@ -53,7 +53,8 @@ namespace NexusTix.Application.Features.Auth
                     Expiration: expiration,
                     Email: user.Email!,
                     FirstName: user.FirstName,
-                    LastName: user.LastName
+                    LastName: user.LastName,
+                    Roles: roles
                     );
 
                 return ServiceResult<LoginResponse>.Success(response);
