@@ -3,7 +3,7 @@ using NexusTix.Application.Features.Districts.Responses;
 using NexusTix.Application.Features.Districts.Update;
 
 namespace NexusTix.Application.Features.Districts
-{   
+{
     public interface IDistrictService
     {
         Task<ServiceResult<IEnumerable<DistrictResponse>>> GetAllDistrictsAsync();
@@ -14,6 +14,7 @@ namespace NexusTix.Application.Features.Districts
         Task<ServiceResult<IEnumerable<DistrictWithVenuesResponse>>> GetDistrictsWithVenuesAsync();
         Task<ServiceResult<DistrictAggregateResponse>> GetDistrictAggregateAsync(int id);
         Task<ServiceResult<IEnumerable<DistrictAggregateResponse>>> GetDistrictsAggregateAsync();
+        Task<ServiceResult<IEnumerable<DistrictResponse>>> GetDistrictsByCityAsync(int cityId);
 
         Task<ServiceResult<DistrictResponse>> CreateAsync(CreateDistrictRequest request);
         Task<ServiceResult> UpdateAsync(UpdateDistrictRequest request);

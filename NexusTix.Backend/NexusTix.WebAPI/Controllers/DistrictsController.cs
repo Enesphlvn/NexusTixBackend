@@ -38,6 +38,13 @@ namespace NexusTix.WebAPI.Controllers
             return CreateActionResult(await _districtService.GetByIdAsync(id));
         }
 
+        [HttpGet("city/{cityId:int}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetDistrictsByCity(int cityId)
+        {
+            return CreateActionResult(await _districtService.GetDistrictsByCityAsync(cityId));
+        }
+
         [HttpGet("{id:int}/aggregate")]
         [AllowAnonymous]
         public async Task<IActionResult> GetDistrictAggregate(int id)

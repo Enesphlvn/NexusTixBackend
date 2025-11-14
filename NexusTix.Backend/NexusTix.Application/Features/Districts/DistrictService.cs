@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using NexusTix.Application.Features.Cities.Responses;
 using NexusTix.Application.Features.Districts.Create;
 using NexusTix.Application.Features.Districts.Responses;
 using NexusTix.Application.Features.Districts.Rules;
@@ -117,6 +116,24 @@ namespace NexusTix.Application.Features.Districts
             var districtsAsDto = _mapper.Map<IEnumerable<DistrictAggregateResponse>>(districts);
 
             return ServiceResult<IEnumerable<DistrictAggregateResponse>>.Success(districtsAsDto);
+        }
+
+        public async Task<ServiceResult<IEnumerable<DistrictResponse>>> GetDistrictsByCityAsync(int cityId)
+        {
+            try
+            {
+                await _districtRules.CheckIfCityExists(cityId);
+
+                var districts = await _unitOfWork.Districts.GetDistrictsByCityAsync(cityId);
+
+                var districtsAsDto = _mapper.Map<IEnumerable<DistrictResponse>>(districts);
+
+                return ServiceResult<IEnumerable<DistrictResponse>>.Success(districtsAsDto);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult<IEnumerable<DistrictResponse>>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult<IEnumerable<DistrictWithVenuesResponse>>> GetDistrictsWithVenuesAsync()

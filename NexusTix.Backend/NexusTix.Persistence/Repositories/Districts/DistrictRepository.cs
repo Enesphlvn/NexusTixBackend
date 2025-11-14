@@ -28,6 +28,11 @@ namespace NexusTix.Persistence.Repositories.Districts
                 .AsNoTracking().ToListAsync();
         }
 
+        public async Task<IEnumerable<District>> GetDistrictsByCityAsync(int cityId)
+        {
+            return await _context.Districts.Where(x => x.CityId == cityId).AsNoTracking().ToListAsync();
+        }
+
         public async Task<IEnumerable<District>> GetDistrictsWithVenuesAsync()
         {
             return await _context.Districts.Include(x => x.Venues).AsNoTracking().ToListAsync();
