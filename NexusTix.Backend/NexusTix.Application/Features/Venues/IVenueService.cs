@@ -14,6 +14,7 @@ namespace NexusTix.Application.Features.Venues
         Task<ServiceResult<IEnumerable<VenueWithEventsResponse>>> GetVenuesWithEventsAsync();
         Task<ServiceResult<VenueAggregateResponse>> GetVenueAggregateAsync(int id);
         Task<ServiceResult<IEnumerable<VenueAggregateResponse>>> GetVenuesAggregateAsync();
+        Task<ServiceResult<VenueAdminResponse>> GetVenueForAdminAsync(int id);
 
         Task<ServiceResult<VenueResponse>> CreateAsync(CreateVenueRequest request);
         Task<ServiceResult> UpdateAsync(UpdateVenueRequest request);

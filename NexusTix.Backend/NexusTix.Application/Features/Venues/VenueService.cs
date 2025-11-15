@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using NexusTix.Application.Features.Events.Responses;
 using NexusTix.Application.Features.Venues.Create;
 using NexusTix.Application.Features.Venues.Responses;
 using NexusTix.Application.Features.Venues.Rules;
@@ -120,6 +121,24 @@ namespace NexusTix.Application.Features.Venues
             catch (BusinessException ex)
             {
                 return ServiceResult<VenueAggregateResponse>.Fail(ex.Message, ex.StatusCode);
+            }
+        }
+
+        public async Task<ServiceResult<VenueAdminResponse>> GetVenueForAdminAsync(int id)
+        {
+            try
+            {
+                await _venueRules.CheckIfVenueExists(id);
+
+                var venue = await _unitOfWork.Venues.GetVenueForAdminAsync(id);
+
+                var venueAsDto = _mapper.Map<VenueAdminResponse>(venue);
+
+                return ServiceResult<VenueAdminResponse>.Success(venueAsDto);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult<VenueAdminResponse>.Fail(ex.Message, ex.StatusCode);
             }
         }
 

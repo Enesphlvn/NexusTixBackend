@@ -53,10 +53,10 @@ namespace NexusTix.Application.Features.Events.Rules
 
         public async Task CheckIfEventHasNoTickets(int eventId)
         {
-            var hasTickets = await _unitOfWork.Tickets.AnyAsync(x => x.EventId == eventId);
-            if (hasTickets)
+            var hasActiveTickets = await _unitOfWork.Tickets.AnyAsync(x => x.EventId == eventId && !x.IsCancelled);
+            if (hasActiveTickets)
             {
-                throw new BusinessException($"ID'si '{eventId}' olan etkinliğe satılmış biletler mevcuttur! İşlem gerçekleştirilemez.", HttpStatusCode.Conflict);
+                throw new BusinessException($"ID'si '{eventId}' olan etkinliğe ait aktif biletler mevcuttur! İşlem gerçekleştirilemez.", HttpStatusCode.Conflict);
             }
         }
 

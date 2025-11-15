@@ -16,6 +16,8 @@ namespace NexusTix.Application.Features.Venues
             CreateMap<Venue, VenueResponse>();
             CreateMap<Venue, VenueAggregateResponse>();
             CreateMap<Venue, VenueWithEventsResponse>();
+            CreateMap<Venue, VenueAdminResponse>()
+                .ForMember(dest => dest.CityId, opt => opt.MapFrom(src => src.District.CityId));
         }
     }
 }
