@@ -3,6 +3,7 @@ using NexusTix.Application.Features.Cities.Create;
 using NexusTix.Application.Features.Cities.Responses;
 using NexusTix.Application.Features.Cities.Rules;
 using NexusTix.Application.Features.Cities.Update;
+using NexusTix.Application.Features.Districts.Responses;
 using NexusTix.Domain.Entities;
 using NexusTix.Domain.Exceptions;
 using NexusTix.Persistence.Repositories;
@@ -66,10 +67,17 @@ namespace NexusTix.Application.Features.Cities
 
         public async Task<ServiceResult<IEnumerable<CityResponse>>> GetAllCitiesAsync()
         {
-            var cities = await _unitOfWork.Cities.GetAllAsync();
-            var citiesAsDto = _mapper.Map<IEnumerable<CityResponse>>(cities);
+            try
+            {
+                var cities = await _unitOfWork.Cities.GetAllAsync();
+                var citiesAsDto = _mapper.Map<IEnumerable<CityResponse>>(cities);
 
-            return ServiceResult<IEnumerable<CityResponse>>.Success(citiesAsDto);
+                return ServiceResult<IEnumerable<CityResponse>>.Success(citiesAsDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<CityResponse>>.Fail($"Bir hata oluştu: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
         }
 
         public async Task<ServiceResult<CityResponse>> GetByIdAsync(int id)
@@ -92,19 +100,33 @@ namespace NexusTix.Application.Features.Cities
 
         public async Task<ServiceResult<IEnumerable<CityAggregateResponse>>> GetCitiesAggregateAsync()
         {
-            var cities = await _unitOfWork.Cities.GetCitiesAggregateAsync();
-            var citiesAsDto = _mapper.Map<IEnumerable<CityAggregateResponse>>(cities);
+            try
+            {
+                var cities = await _unitOfWork.Cities.GetCitiesAggregateAsync();
+                var citiesAsDto = _mapper.Map<IEnumerable<CityAggregateResponse>>(cities);
 
-            return ServiceResult<IEnumerable<CityAggregateResponse>>.Success(citiesAsDto);
+                return ServiceResult<IEnumerable<CityAggregateResponse>>.Success(citiesAsDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<CityAggregateResponse>>.Fail($"Bir hata oluştu: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
         }
 
         public async Task<ServiceResult<IEnumerable<CityWithDistrictsResponse>>> GetCitiesWithDistrictsAsync()
         {
-            var cities = await _unitOfWork.Cities.GetCitiesWithDistrictsAsync();
+            try
+            {
+                var cities = await _unitOfWork.Cities.GetCitiesWithDistrictsAsync();
 
-            var citiesAsDto = _mapper.Map<IEnumerable<CityWithDistrictsResponse>>(cities);
+                var citiesAsDto = _mapper.Map<IEnumerable<CityWithDistrictsResponse>>(cities);
 
-            return ServiceResult<IEnumerable<CityWithDistrictsResponse>>.Success(citiesAsDto);
+                return ServiceResult<IEnumerable<CityWithDistrictsResponse>>.Success(citiesAsDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<CityWithDistrictsResponse>>.Fail($"Bir hata oluştu: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
         }
 
         public async Task<ServiceResult<CityAggregateResponse>> GetCityAggregateAsync(int id)

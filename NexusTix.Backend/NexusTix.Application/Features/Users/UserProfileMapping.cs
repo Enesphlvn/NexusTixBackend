@@ -18,6 +18,8 @@ namespace NexusTix.Application.Features.Users
             CreateMap<User, UserResponse>();
             CreateMap<User, UserWithTicketsResponse>();
             CreateMap<User, UserAggregateResponse>();
+            CreateMap<User, UserAdminResponse>()
+                .ForMember(dest => dest.Roles, opt => opt.Ignore());
         }
     }
 }

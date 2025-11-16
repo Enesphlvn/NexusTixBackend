@@ -11,6 +11,7 @@ namespace NexusTix.Application.Features.Users
 
         Task<ServiceResult<UserAggregateResponse>> GetUserAggregateAsync(int id);
         Task<ServiceResult<IEnumerable<UserAggregateResponse>>> GetUsersAggregateAsync();
+        Task<ServiceResult<IEnumerable<UserAdminResponse>>> GetUsersForAdminAsync();
 
         Task<ServiceResult> UpdateAsync(UpdateUserRequest request);
         Task<ServiceResult> UpdateRoleAsync(UpdateUserRoleRequest request);

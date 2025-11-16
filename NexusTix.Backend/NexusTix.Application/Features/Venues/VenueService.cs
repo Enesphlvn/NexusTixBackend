@@ -49,7 +49,7 @@ namespace NexusTix.Application.Features.Venues
             try
             {
                 await _venueRules.CheckIfVenueExists(id);
-                await _venueRules.CheckIfVenueHasNoEvents(id);
+                await _venueRules.CheckIfVenueHasActiveEvents(id);
 
                 var venue = await _unitOfWork.Venues.GetByIdAsync(id);
                 _unitOfWork.Venues.Delete(venue!);
@@ -65,10 +65,17 @@ namespace NexusTix.Application.Features.Venues
 
         public async Task<ServiceResult<IEnumerable<VenueResponse>>> GetAllVenuesAsync()
         {
-            var venues = await _unitOfWork.Venues.GetAllAsync();
-            var venuesAsDto = _mapper.Map<IEnumerable<VenueResponse>>(venues);
+            try
+            {
+                var venues = await _unitOfWork.Venues.GetAllAsync();
+                var venuesAsDto = _mapper.Map<IEnumerable<VenueResponse>>(venues);
 
-            return ServiceResult<IEnumerable<VenueResponse>>.Success(venuesAsDto);
+                return ServiceResult<IEnumerable<VenueResponse>>.Success(venuesAsDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<VenueResponse>>.Fail($"Bir hata oluştu: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
         }
 
         public async Task<ServiceResult<VenueResponse>> GetByIdAsync(int id)
@@ -144,18 +151,32 @@ namespace NexusTix.Application.Features.Venues
 
         public async Task<ServiceResult<IEnumerable<VenueAggregateResponse>>> GetVenuesAggregateAsync()
         {
-            var venues = await _unitOfWork.Venues.GetVenuesAggregateAsync();
-            var venuesAsDto = _mapper.Map<IEnumerable<VenueAggregateResponse>>(venues);
+            try
+            {
+                var venues = await _unitOfWork.Venues.GetVenuesAggregateAsync();
+                var venuesAsDto = _mapper.Map<IEnumerable<VenueAggregateResponse>>(venues);
 
-            return ServiceResult<IEnumerable<VenueAggregateResponse>>.Success(venuesAsDto);
+                return ServiceResult<IEnumerable<VenueAggregateResponse>>.Success(venuesAsDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<VenueAggregateResponse>>.Fail($"Bir hata oluştu: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
         }
 
         public async Task<ServiceResult<IEnumerable<VenueWithEventsResponse>>> GetVenuesWithEventsAsync()
         {
-            var venues = await _unitOfWork.Venues.GetVenuesWithEventsAsync();
-            var venuesAsDto = _mapper.Map<IEnumerable<VenueWithEventsResponse>>(venues);
+            try
+            {
+                var venues = await _unitOfWork.Venues.GetVenuesWithEventsAsync();
+                var venuesAsDto = _mapper.Map<IEnumerable<VenueWithEventsResponse>>(venues);
 
-            return ServiceResult<IEnumerable<VenueWithEventsResponse>>.Success(venuesAsDto);
+                return ServiceResult<IEnumerable<VenueWithEventsResponse>>.Success(venuesAsDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<VenueWithEventsResponse>>.Fail($"Bir hata oluştu: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
         }
 
         public async Task<ServiceResult<VenueWithEventsResponse>> GetVenueWithEventsAsync(int id)
@@ -180,7 +201,7 @@ namespace NexusTix.Application.Features.Venues
             try
             {
                 await _venueRules.CheckIfVenueExists(id);
-                await _venueRules.CheckIfVenueHasNoEvents(id);
+                await _venueRules.CheckIfVenueHasActiveEvents(id);
 
                 await _unitOfWork.Venues.PassiveAsync(id);
                 await _unitOfWork.SaveChangesAsync();

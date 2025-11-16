@@ -33,12 +33,12 @@ namespace NexusTix.Application.Features.Venues.Rules
             }
         }
 
-        public async Task CheckIfVenueHasNoEvents(int venueId)
+        public async Task CheckIfVenueHasActiveEvents(int venueId)
         {
-            var hasEvents = await _unitOfWork.Events.AnyAsync(x => x.VenueId == venueId);
-            if (hasEvents)
+            var hasFutureEvents = await _unitOfWork.Events.AnyAsync(x => x.VenueId == venueId && x.Date > DateTimeOffset.UtcNow);
+            if (hasFutureEvents)
             {
-                throw new BusinessException($"ID'si '{venueId}' olan mekana bağlı etkinlikler mevcuttur! İşlem gerçekleştirilemez.", HttpStatusCode.Conflict);
+                throw new BusinessException($"ID'si '{venueId}' olan mekana planlanmış gelecek etkinlikler mevcuttur! Önce bu etkinlikleri iptal edin veya taşıyın.", HttpStatusCode.Conflict);
             }
         }
 

@@ -52,10 +52,17 @@ namespace NexusTix.Application.Features.Users
 
         public async Task<ServiceResult<IEnumerable<UserResponse>>> GetAllUsersAsync()
         {
-            var users = await _unitOfWork.Users.GetAllAsync();
-            var usersAsDto = _mapper.Map<IEnumerable<UserResponse>>(users);
+            try
+            {
+                var users = await _unitOfWork.Users.GetAllAsync();
+                var usersAsDto = _mapper.Map<IEnumerable<UserResponse>>(users);
 
-            return ServiceResult<IEnumerable<UserResponse>>.Success(usersAsDto);
+                return ServiceResult<IEnumerable<UserResponse>>.Success(usersAsDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<UserResponse>>.Fail($"Bir hata oluştu: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
         }
 
         public async Task<ServiceResult<UserResponse>> GetByIdAsync(int id)
@@ -111,10 +118,42 @@ namespace NexusTix.Application.Features.Users
 
         public async Task<ServiceResult<IEnumerable<UserAggregateResponse>>> GetUsersAggregateAsync()
         {
-            var users = await _unitOfWork.Users.GetUsersAggregateAsync();
-            var usersAsDto = _mapper.Map<IEnumerable<UserAggregateResponse>>(users);
+            try
+            {
+                var users = await _unitOfWork.Users.GetUsersAggregateAsync();
+                var usersAsDto = _mapper.Map<IEnumerable<UserAggregateResponse>>(users);
 
-            return ServiceResult<IEnumerable<UserAggregateResponse>>.Success(usersAsDto);
+                return ServiceResult<IEnumerable<UserAggregateResponse>>.Success(usersAsDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<UserAggregateResponse>>.Fail($"Bir hata oluştu: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
+        }
+
+        public async Task<ServiceResult<IEnumerable<UserAdminResponse>>> GetUsersForAdminAsync()
+        {
+            try
+            {
+                var users = (await _unitOfWork.Users.GetAllAsync()).ToList();
+
+                var usersAsDto = _mapper.Map<List<UserAdminResponse>>(users);
+
+                for (int i = 0; i < users.Count; i++)
+                {
+                    var userEntity = users[i];
+
+                    var roles = await _userManager.GetRolesAsync(userEntity);
+
+                    usersAsDto[i].Roles = roles;
+                }
+
+                return ServiceResult<IEnumerable<UserAdminResponse>>.Success(usersAsDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<UserAdminResponse>>.Fail($"Bir hata oluştu: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
         }
 
         public async Task<ServiceResult> PassiveAsync(int id)

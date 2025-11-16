@@ -8,6 +8,6 @@ namespace NexusTix.Application.Features.Venues.Rules
         Task CheckIfVenueExists(int venueId);
         Task CheckIfVenueNameExistsWhenCreating(string venueName);
         Task CheckIfVenueNameExistsWhenUpdating(int venueId, string venueName);
-        Task CheckIfVenueHasNoEvents(int venueId);
+        Task CheckIfVenueHasActiveEvents(int venueId);
     }
 }

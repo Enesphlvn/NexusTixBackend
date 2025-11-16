@@ -66,10 +66,17 @@ namespace NexusTix.Application.Features.EventTypes
 
         public async Task<ServiceResult<IEnumerable<EventTypeResponse>>> GetAllEventTypesAsync()
         {
-            var eventTypes = await _unitOfWork.EventTypes.GetAllAsync();
-            var eventTypesAsDto = _mapper.Map<IEnumerable<EventTypeResponse>>(eventTypes);
+            try
+            {
+                var eventTypes = await _unitOfWork.EventTypes.GetAllAsync();
+                var eventTypesAsDto = _mapper.Map<IEnumerable<EventTypeResponse>>(eventTypes);
 
-            return ServiceResult<IEnumerable<EventTypeResponse>>.Success(eventTypesAsDto);
+                return ServiceResult<IEnumerable<EventTypeResponse>>.Success(eventTypesAsDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<EventTypeResponse>>.Fail($"Bir hata oluştu: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
         }
 
         public async Task<ServiceResult<EventTypeResponse>> GetByIdAsync(int id)
@@ -110,18 +117,32 @@ namespace NexusTix.Application.Features.EventTypes
 
         public async Task<ServiceResult<IEnumerable<EventTypeAggregateResponse>>> GetEventTypesAggregateAsync()
         {
-            var eventTypes = await _unitOfWork.EventTypes.GetEventTypesAggregateAsync();
-            var eventTypesAsDto = _mapper.Map<IEnumerable<EventTypeAggregateResponse>>(eventTypes);
+            try
+            {
+                var eventTypes = await _unitOfWork.EventTypes.GetEventTypesAggregateAsync();
+                var eventTypesAsDto = _mapper.Map<IEnumerable<EventTypeAggregateResponse>>(eventTypes);
 
-            return ServiceResult<IEnumerable<EventTypeAggregateResponse>>.Success(eventTypesAsDto);
+                return ServiceResult<IEnumerable<EventTypeAggregateResponse>>.Success(eventTypesAsDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<EventTypeAggregateResponse>>.Fail($"Bir hata oluştu: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
         }
 
         public async Task<ServiceResult<IEnumerable<EventTypeWithEventsResponse>>> GetEventTypesWithEventsAsync()
         {
-            var eventTypes = await _unitOfWork.EventTypes.GetEventTypesWithEventsAsync();
-            var eventTypesAsDto = _mapper.Map<IEnumerable<EventTypeWithEventsResponse>>(eventTypes);
+            try
+            {
+                var eventTypes = await _unitOfWork.EventTypes.GetEventTypesWithEventsAsync();
+                var eventTypesAsDto = _mapper.Map<IEnumerable<EventTypeWithEventsResponse>>(eventTypes);
 
-            return ServiceResult<IEnumerable<EventTypeWithEventsResponse>>.Success(eventTypesAsDto);
+                return ServiceResult<IEnumerable<EventTypeWithEventsResponse>>.Success(eventTypesAsDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<EventTypeWithEventsResponse>>.Fail($"Bir hata oluştu: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
         }
 
         public async Task<ServiceResult<EventTypeWithEventsResponse>> GetEventTypeWithEventsAsync(int id)

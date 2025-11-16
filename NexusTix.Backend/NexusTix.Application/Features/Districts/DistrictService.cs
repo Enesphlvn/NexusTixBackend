@@ -67,10 +67,17 @@ namespace NexusTix.Application.Features.Districts
 
         public async Task<ServiceResult<IEnumerable<DistrictResponse>>> GetAllDistrictsAsync()
         {
-            var districts = await _unitOfWork.Districts.GetAllAsync();
-            var districtsAsDto = _mapper.Map<IEnumerable<DistrictResponse>>(districts);
+            try
+            {
+                var districts = await _unitOfWork.Districts.GetAllAsync();
+                var districtsAsDto = _mapper.Map<IEnumerable<DistrictResponse>>(districts);
 
-            return ServiceResult<IEnumerable<DistrictResponse>>.Success(districtsAsDto);
+                return ServiceResult<IEnumerable<DistrictResponse>>.Success(districtsAsDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<DistrictResponse>>.Fail($"Bir hata oluştu: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
         }
 
         public async Task<ServiceResult<DistrictResponse>> GetByIdAsync(int id)
@@ -111,11 +118,18 @@ namespace NexusTix.Application.Features.Districts
 
         public async Task<ServiceResult<IEnumerable<DistrictAggregateResponse>>> GetDistrictsAggregateAsync()
         {
-            var districts = await _unitOfWork.Districts.GetDistrictsAggregateAsync();
+            try
+            {
+                var districts = await _unitOfWork.Districts.GetDistrictsAggregateAsync();
 
-            var districtsAsDto = _mapper.Map<IEnumerable<DistrictAggregateResponse>>(districts);
+                var districtsAsDto = _mapper.Map<IEnumerable<DistrictAggregateResponse>>(districts);
 
-            return ServiceResult<IEnumerable<DistrictAggregateResponse>>.Success(districtsAsDto);
+                return ServiceResult<IEnumerable<DistrictAggregateResponse>>.Success(districtsAsDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<DistrictAggregateResponse>>.Fail($"Bir hata oluştu: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
         }
 
         public async Task<ServiceResult<IEnumerable<DistrictResponse>>> GetDistrictsByCityAsync(int cityId)
@@ -138,10 +152,17 @@ namespace NexusTix.Application.Features.Districts
 
         public async Task<ServiceResult<IEnumerable<DistrictWithVenuesResponse>>> GetDistrictsWithVenuesAsync()
         {
-            var districts = await _unitOfWork.Districts.GetDistrictsWithVenuesAsync();
-            var districtsAsDto = _mapper.Map<IEnumerable<DistrictWithVenuesResponse>>(districts);
+            try
+            {
+                var districts = await _unitOfWork.Districts.GetDistrictsWithVenuesAsync();
+                var districtsAsDto = _mapper.Map<IEnumerable<DistrictWithVenuesResponse>>(districts);
 
-            return ServiceResult<IEnumerable<DistrictWithVenuesResponse>>.Success(districtsAsDto);
+                return ServiceResult<IEnumerable<DistrictWithVenuesResponse>>.Success(districtsAsDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<DistrictWithVenuesResponse>>.Fail($"Bir hata oluştu: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
         }
 
         public async Task<ServiceResult<DistrictWithVenuesResponse>> GetDistrictWithVenuesAsync(int id)

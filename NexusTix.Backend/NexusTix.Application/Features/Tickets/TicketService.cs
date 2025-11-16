@@ -118,10 +118,17 @@ namespace NexusTix.Application.Features.Tickets
 
         public async Task<ServiceResult<IEnumerable<TicketResponse>>> GetAllTicketsAsync()
         {
-            var tickets = await _unitOfWork.Tickets.GetAllAsync();
-            var ticketsAsDto = _mapper.Map<IEnumerable<TicketResponse>>(tickets);
+            try
+            {
+                var tickets = await _unitOfWork.Tickets.GetAllAsync();
+                var ticketsAsDto = _mapper.Map<IEnumerable<TicketResponse>>(tickets);
 
-            return ServiceResult<IEnumerable<TicketResponse>>.Success(ticketsAsDto);
+                return ServiceResult<IEnumerable<TicketResponse>>.Success(ticketsAsDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<TicketResponse>>.Fail($"Bir hata oluştu: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
         }
 
         public async Task<ServiceResult<TicketResponse>> GetByIdAsync(int id)
@@ -195,11 +202,18 @@ namespace NexusTix.Application.Features.Tickets
 
         public async Task<ServiceResult<IEnumerable<TicketAggregateResponse>>> GetTicketsAggregateAsync()
         {
-            var tickets = await _unitOfWork.Tickets.GetTicketsAggregateAsync();
+            try
+            {
+                var tickets = await _unitOfWork.Tickets.GetTicketsAggregateAsync();
 
-            var ticketsAsDto = _mapper.Map<IEnumerable<TicketAggregateResponse>>(tickets);
+                var ticketsAsDto = _mapper.Map<IEnumerable<TicketAggregateResponse>>(tickets);
 
-            return ServiceResult<IEnumerable<TicketAggregateResponse>>.Success(ticketsAsDto);
+                return ServiceResult<IEnumerable<TicketAggregateResponse>>.Success(ticketsAsDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<TicketAggregateResponse>>.Fail($"Bir hata oluştu: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
         }
 
         public async Task<ServiceResult<IEnumerable<TicketByDateRangeResponse>>> GetTicketsByDateRangeAsync(DateTimeOffset startDate, DateTimeOffset endDate)

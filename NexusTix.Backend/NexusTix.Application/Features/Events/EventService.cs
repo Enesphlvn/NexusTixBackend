@@ -69,11 +69,18 @@ namespace NexusTix.Application.Features.Events
 
         public async Task<ServiceResult<IEnumerable<EventResponse>>> GetAllEventsAsync()
         {
-            var events = await _unitOfWork.Events.GetAllAsync();
+            try
+            {
+                var events = await _unitOfWork.Events.GetAllAsync();
 
-            var eventsAsDto = _mapper.Map<IEnumerable<EventResponse>>(events);
+                var eventsAsDto = _mapper.Map<IEnumerable<EventResponse>>(events);
 
-            return ServiceResult<IEnumerable<EventResponse>>.Success(eventsAsDto);
+                return ServiceResult<IEnumerable<EventResponse>>.Success(eventsAsDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<EventResponse>>.Fail($"Bir hata oluştu: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
         }
 
         public async Task<ServiceResult<EventResponse>> GetByIdAsync(int id)
@@ -122,9 +129,9 @@ namespace NexusTix.Application.Features.Events
 
                 return ServiceResult<IEnumerable<EventAggregateResponse>>.Success(eventsAsDto);
             }
-            catch (BusinessException ex)
+            catch (Exception ex)
             {
-                return ServiceResult<IEnumerable<EventAggregateResponse>>.Fail(ex.Message, ex.StatusCode);
+                return ServiceResult<IEnumerable<EventAggregateResponse>>.Fail($"Bir hata oluştu: {ex.Message}", HttpStatusCode.InternalServerError);
             }
         }
 
@@ -229,9 +236,9 @@ namespace NexusTix.Application.Features.Events
 
                 return ServiceResult<IEnumerable<EventAdminResponse>>.Success(eventsAsDto);
             }
-            catch (BusinessException ex)
+            catch (Exception ex)
             {
-                return ServiceResult<IEnumerable<EventAdminResponse>>.Fail(ex.Message, ex.StatusCode);
+                return ServiceResult<IEnumerable<EventAdminResponse>>.Fail($"Bir hata oluştu: {ex.Message}", HttpStatusCode.InternalServerError);
             }
         }
 
