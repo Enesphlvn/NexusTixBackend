@@ -180,6 +180,7 @@ namespace NexusTix.Application.Features.Venues
             try
             {
                 await _venueRules.CheckIfVenueExists(id);
+                await _venueRules.CheckIfVenueHasNoEvents(id);
 
                 await _unitOfWork.Venues.PassiveAsync(id);
                 await _unitOfWork.SaveChangesAsync();
