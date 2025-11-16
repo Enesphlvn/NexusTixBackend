@@ -48,12 +48,13 @@ namespace NexusTix.Application.Features.Users.Rules
             }
         }
 
-        public async Task CheckIfUserHasNoTickets(int userId)
+        public async Task CheckIfUserHasActiveFutureTickets(int userId)
         {
-            var hasTickets = await _unitOfWork.Tickets.AnyAsync(x => x.UserId == userId);
-            if (hasTickets)
+            var hasActiveTickets = await _unitOfWork.Tickets.AnyAsync(x => x.UserId == userId && !x.IsCancelled && x.Event.Date > DateTimeOffset.UtcNow);
+
+            if (hasActiveTickets)
             {
-                throw new BusinessException($"ID'si '{userId}' olan kullanıcının bilet veya biletleri mevcuttur! İşlem gerçekleştirilemez.", HttpStatusCode.Conflict);
+                throw new BusinessException($"Bu kullanıcının gelecekteki etkinlikler için aktif biletleri bulunmaktadır. Kullanıcı pasife alınamaz.", HttpStatusCode.Conflict);
             }
         }
     }

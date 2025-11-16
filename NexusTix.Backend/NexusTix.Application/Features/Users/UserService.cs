@@ -30,7 +30,7 @@ namespace NexusTix.Application.Features.Users
             try
             {
                 await _userRules.CheckIfUserExists(id);
-                await _userRules.CheckIfUserHasNoTickets(id);
+                await _userRules.CheckIfUserHasActiveFutureTickets(id);
 
                 var user = await _userManager.FindByIdAsync(id.ToString());
 
@@ -161,6 +161,7 @@ namespace NexusTix.Application.Features.Users
             try
             {
                 await _userRules.CheckIfUserExists(id);
+                await _userRules.CheckIfUserHasActiveFutureTickets(id);
 
                 await _unitOfWork.Users.PassiveAsync(id);
                 await _unitOfWork.SaveChangesAsync();

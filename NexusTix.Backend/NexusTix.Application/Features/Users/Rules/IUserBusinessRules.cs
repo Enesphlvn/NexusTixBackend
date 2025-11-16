@@ -7,6 +7,6 @@ namespace NexusTix.Application.Features.Users.Rules
         Task CheckIfUserExists(int userId);
         Task CheckIfRoleExists(string roleName);
         Task CheckIfPhoneNumberExistsWhenUpdating(int userId, string phoneNumber);
-        Task CheckIfUserHasNoTickets(int userId);
+        Task CheckIfUserHasActiveFutureTickets(int userId);
     }
 }
