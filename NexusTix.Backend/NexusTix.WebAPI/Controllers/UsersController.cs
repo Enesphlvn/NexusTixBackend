@@ -43,6 +43,13 @@ namespace NexusTix.WebAPI.Controllers
             return CreateActionResult(await _userService.GetByIdAsync(id));
         }
 
+        [HttpGet("admin-list")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetUsersForAdmin()
+        {
+            return CreateActionResult(await _userService.GetUsersForAdminAsync());
+        }
+
         [HttpGet("{id:int}/aggregate")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetUserAggregate(int id)
