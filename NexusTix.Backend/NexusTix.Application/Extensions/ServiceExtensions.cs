@@ -5,6 +5,7 @@ using NexusTix.Application.Features.Auth;
 using NexusTix.Application.Features.Auth.Rules;
 using NexusTix.Application.Features.Cities;
 using NexusTix.Application.Features.Cities.Rules;
+using NexusTix.Application.Features.Dashboards;
 using NexusTix.Application.Features.Districts;
 using NexusTix.Application.Features.Districts.Rules;
 using NexusTix.Application.Features.Events;
@@ -49,6 +50,7 @@ namespace NexusTix.Application.Extensions
             services.AddScoped<IEventTypeService, EventTypeService>();
             services.AddScoped<ITicketService, TicketService>();
             services.AddScoped<IVenueService, VenueService>();
+            services.AddScoped<IDashboardService, DashboardService>();
 
             return services;
         }
