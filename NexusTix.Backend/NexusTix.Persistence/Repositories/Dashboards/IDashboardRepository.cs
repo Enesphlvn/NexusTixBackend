@@ -7,6 +7,7 @@ namespace NexusTix.Persistence.Repositories.Dashboards
         Task<decimal> GetTotalRevenueAsync();
         Task<int> GetTotalTicketsSoldAsync();
         Task<int> GetActiveEventsCountAsync();
+        Task<int> GetTotalEventsCountAsync();
         Task<int> GetTotalUsersCountAsync();
         Task<IEnumerable<MonthlyRevenueData>> GetMonthlyRevenuesAsync();
         Task<IEnumerable<CategorySalesData>> GetCategorySalesAsync();

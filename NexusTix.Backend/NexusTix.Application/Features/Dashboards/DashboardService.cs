@@ -46,17 +46,19 @@ namespace NexusTix.Application.Features.Dashboards
         {
             try
             {
-                var revenueTask = await _dashboardRepository.GetTotalRevenueAsync();
-                var ticketsTask = await _dashboardRepository.GetTotalTicketsSoldAsync();
-                var eventsTask = await _dashboardRepository.GetActiveEventsCountAsync();
-                var usersTask = await _dashboardRepository.GetTotalUsersCountAsync();
+                var revenueData = await _dashboardRepository.GetTotalRevenueAsync();
+                var ticketsData = await _dashboardRepository.GetTotalTicketsSoldAsync();
+                var totalEventsData = await _dashboardRepository.GetTotalEventsCountAsync();
+                var activeEventsData = await _dashboardRepository.GetActiveEventsCountAsync();
+                var usersData = await _dashboardRepository.GetTotalUsersCountAsync();
 
                 var response = new DashboardSummaryResponse
                 (
-                    TotalRevenue: revenueTask,
-                    TotalTicketsSold: ticketsTask,
-                    ActiveEventsCount: eventsTask,
-                    TotalUsersCount: usersTask
+                    TotalRevenue: revenueData,
+                    TotalTicketsSold: ticketsData,
+                    TotalEventsCount: totalEventsData,
+                    ActiveEventsCount: activeEventsData,
+                    TotalUsersCount: usersData
                 );
 
                 return ServiceResult<DashboardSummaryResponse>.Success(response);

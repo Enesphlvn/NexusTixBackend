@@ -48,6 +48,11 @@ namespace NexusTix.Persistence.Repositories.Dashboards
             return data;
         }
 
+        public async Task<int> GetTotalEventsCountAsync()
+        {
+            return await _context.Events.IgnoreQueryFilters().CountAsync();
+        }
+
         public async Task<decimal> GetTotalRevenueAsync()
         {
             return await _context.Tickets.Where(x => !x.IsCancelled).SumAsync(x => x.Event.Price);
