@@ -30,7 +30,8 @@ namespace NexusTix.Persistence.Repositories.Tickets
         {
             return await _context.Tickets
                 .Include(x => x.Event).ThenInclude(x => x.Venue).ThenInclude(x => x.District).ThenInclude(x => x.City)
-                .AsNoTracking().Where(x => x.UserId == userId).ToListAsync();
+                .Where(x => x.UserId == userId)
+                .OrderByDescending(x => x.PurchaseDate).AsNoTracking().ToListAsync();
         }
 
         public async Task<IEnumerable<Ticket>> GetTicketsAggregateAsync()
