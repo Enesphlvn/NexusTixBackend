@@ -10,6 +10,16 @@ namespace NexusTix.Persistence.Repositories.Users
         {
         }
 
+        public async Task<IEnumerable<User>> GetAllUsersForAdminListAsync()
+        {
+            return await _context.Users.IgnoreQueryFilters().AsNoTracking().ToListAsync();
+        }
+
+        public async Task<User?> GetByIdIncludingPassiveAsync(int id)
+        {
+            return await _context.Users.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == id);
+        }
+
         public async Task<User?> GetUserAggregateAsync(int id)
         {
             return await _context.Users

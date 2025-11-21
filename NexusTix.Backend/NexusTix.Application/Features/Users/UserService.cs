@@ -135,7 +135,7 @@ namespace NexusTix.Application.Features.Users
         {
             try
             {
-                var users = (await _unitOfWork.Users.GetAllAsync()).ToList();
+                var users = (await _unitOfWork.Users.GetAllUsersForAdminListAsync()).ToList();
 
                 var usersAsDto = _mapper.Map<List<UserAdminResponse>>(users);
 
@@ -160,11 +160,26 @@ namespace NexusTix.Application.Features.Users
         {
             try
             {
-                await _userRules.CheckIfUserExists(id);
-                await _userRules.CheckIfUserHasActiveFutureTickets(id);
+                var user = await _unitOfWork.Users.GetByIdIncludingPassiveAsync(id);
 
-                await _unitOfWork.Users.PassiveAsync(id);
-                await _unitOfWork.SaveChangesAsync();
+                if (user == null)
+                {
+                    return ServiceResult.Fail($"ID'si '{id}' olan kullanıcı bulunamadı.", HttpStatusCode.NotFound);
+                }
+
+                if (user.IsActive)
+                {
+                    await _userRules.CheckIfUserHasActiveFutureTickets(id);
+                }
+
+                user.IsActive = !user.IsActive;
+
+                var result = await _userManager.UpdateAsync(user);
+
+                if (!result.Succeeded)
+                {
+                    return ServiceResult.Fail("Kullanıcı durumu güncellenemedi.", HttpStatusCode.InternalServerError);
+                }
 
                 return ServiceResult.Success(HttpStatusCode.NoContent);
             }

@@ -6,5 +6,7 @@ namespace NexusTix.Persistence.Repositories.Users
     {
         Task<User?> GetUserAggregateAsync(int id);
         Task<IEnumerable<User>> GetUsersAggregateAsync();
+        Task<IEnumerable<User>> GetAllUsersForAdminListAsync();
+        Task<User?> GetByIdIncludingPassiveAsync(int id);
     }
 }
