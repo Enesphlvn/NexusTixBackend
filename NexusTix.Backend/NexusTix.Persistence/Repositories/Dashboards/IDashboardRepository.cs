@@ -1,4 +1,6 @@
-﻿namespace NexusTix.Persistence.Repositories.Dashboards
+﻿using NexusTix.Domain.Entities.Dashboard;
+
+namespace NexusTix.Persistence.Repositories.Dashboards
 {
     public interface IDashboardRepository
     {
@@ -6,5 +8,7 @@
         Task<int> GetTotalTicketsSoldAsync();
         Task<int> GetActiveEventsCountAsync();
         Task<int> GetTotalUsersCountAsync();
+        Task<IEnumerable<MonthlyRevenueData>> GetMonthlyRevenuesAsync();
+        Task<IEnumerable<CategorySalesData>> GetCategorySalesAsync();
     }
 }

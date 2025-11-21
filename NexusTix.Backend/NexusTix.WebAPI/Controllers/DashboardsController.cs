@@ -18,5 +18,11 @@ namespace NexusTix.WebAPI.Controllers
         {
             return CreateActionResult(await _dashboardService.GetDashboardSummaryAsync());
         }
+
+        [HttpGet("charts")]
+        public async Task<IActionResult> GetCharts()
+        {
+            return CreateActionResult(await _dashboardService.GetDashboardChartsAsync());
+        }
     }
 }
