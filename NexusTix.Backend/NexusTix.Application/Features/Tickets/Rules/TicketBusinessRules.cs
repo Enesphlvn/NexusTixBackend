@@ -53,6 +53,19 @@ namespace NexusTix.Application.Features.Tickets.Rules
             }
         }
 
+        public async Task CheckIfEventIsPast(int eventId)
+        {
+            var eventDate = await _unitOfWork.Events
+                .Where(x => x.Id == eventId)
+                .Select(x => x.Date)
+                .FirstOrDefaultAsync();
+
+            if (eventDate < DateTimeOffset.UtcNow)
+            {
+                throw new BusinessException("Geçmiş tarihli etkinliklere bilet satın alınamaz.", HttpStatusCode.BadRequest);
+            }
+        }
+
         public async Task CheckIfTicketCanBeCancelled(int ticketId)
         {
             var ticket = await _unitOfWork.Tickets.Where(x => x.Id == ticketId)

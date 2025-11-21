@@ -12,5 +12,6 @@ namespace NexusTix.Application.Features.Tickets.Rules
         Task CheckIfTicketIsAlreadyUsed(Guid qrCode);
         void CheckIfDateRangeIsValid(DateTimeOffset startDate, DateTimeOffset endDate);
         Task CheckIfTicketCanBeCancelled(int ticketId);
+        Task CheckIfEventIsPast(int eventId);
     }
 }

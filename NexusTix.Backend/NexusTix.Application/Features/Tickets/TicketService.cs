@@ -73,8 +73,9 @@ namespace NexusTix.Application.Features.Tickets
         {
             try
             {
-                await _ticketRules.CheckIfEventExists(request.EventId);
                 await _ticketRules.CheckIfUserExists(userId);
+                await _ticketRules.CheckIfEventExists(request.EventId);
+                await _ticketRules.CheckIfEventIsPast(request.EventId);
                 await _ticketRules.CheckIfEventHasCapacity(request.EventId);
 
                 var newTicket = _mapper.Map<Ticket>(request);

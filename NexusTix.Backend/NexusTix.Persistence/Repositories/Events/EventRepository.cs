@@ -81,6 +81,12 @@ namespace NexusTix.Persistence.Repositories.Events
             {
                 query = query.Where(x => x.Date.Date == date.Value.Date);
             }
+            else
+            {
+                query = query.Where(x => x.Date > DateTimeOffset.UtcNow);
+            }
+
+            query = query.OrderBy(x => x.Date);
 
             return await query.ToListAsync();
         }
