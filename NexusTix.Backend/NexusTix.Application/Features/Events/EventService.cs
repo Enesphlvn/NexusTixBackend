@@ -261,7 +261,7 @@ namespace NexusTix.Application.Features.Events
 
         }
 
-        public async Task<ServiceResult<IEnumerable<EventResponse>>> GetFilteredEventsAsync(int? cityId, int? districtId, int? eventTypeId, DateTimeOffset? date)
+        public async Task<ServiceResult<IEnumerable<EventListResponse>>> GetFilteredEventsAsync(int? cityId, int? districtId, int? eventTypeId, DateTimeOffset? date)
         {
             try
             {
@@ -282,13 +282,13 @@ namespace NexusTix.Application.Features.Events
 
                 var events = await _unitOfWork.Events.GetFilteredEventsAsync(cityId, districtId, eventTypeId, date);
 
-                var eventsAsDto = _mapper.Map<IEnumerable<EventResponse>>(events);
+                var eventsAsDto = _mapper.Map<IEnumerable<EventListResponse>>(events);
 
-                return ServiceResult<IEnumerable<EventResponse>>.Success(eventsAsDto);
+                return ServiceResult<IEnumerable<EventListResponse>>.Success(eventsAsDto);
             }
             catch (BusinessException ex)
             {
-                return ServiceResult<IEnumerable<EventResponse>>.Fail(ex.Message, ex.StatusCode);
+                return ServiceResult<IEnumerable<EventListResponse>>.Fail(ex.Message, ex.StatusCode);
             }
         }
 
