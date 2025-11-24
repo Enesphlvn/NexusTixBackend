@@ -53,6 +53,7 @@ namespace NexusTix.Application.Features.Tickets
             try
             {
                 await _ticketRules.CheckIfTicketExistsByQrCode(request.QRCodeGuid);
+                await _ticketRules.CheckIfTicketBelongsToEvent(request.QRCodeGuid, request.EventId);
                 await _ticketRules.CheckIfTicketIsAlreadyUsed(request.QRCodeGuid);
 
                 var ticket = await _unitOfWork.Tickets.WhereTracked(x => x.QRCodeGuid == request.QRCodeGuid).FirstOrDefaultAsync();

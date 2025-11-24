@@ -128,5 +128,17 @@ namespace NexusTix.Application.Features.Tickets.Rules
                 throw new BusinessException($"ID'si '{userId}' olan kullanıcı bulunamadı.", HttpStatusCode.BadRequest);
             }
         }
+
+        public async Task CheckIfTicketBelongsToEvent(Guid qrCode, int targetEventId)
+        {
+            var ticket = await _unitOfWork.Tickets
+                .Where(x => x.QRCodeGuid == qrCode)
+                .Include(x => x.Event).AsNoTracking().FirstOrDefaultAsync();
+
+            if (ticket != null && ticket.EventId != targetEventId)
+            {
+                throw new BusinessException($"Bu bilet bu etkinlik için geçerli değil! Biletin ait olduğu etkinlik: '{ticket.Event.Name}'", HttpStatusCode.BadRequest);
+            }
+        }
     }
 }
