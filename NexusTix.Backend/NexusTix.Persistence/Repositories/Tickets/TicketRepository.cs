@@ -12,7 +12,7 @@ namespace NexusTix.Persistence.Repositories.Tickets
 
         public async Task<int> GetTicketCountByEventAsync(int eventId)
         {
-            return await _context.Tickets.CountAsync(x => x.EventId == eventId);
+            return await _context.Tickets.CountAsync(x => x.EventId == eventId && !x.IsCancelled);
         }
 
         public async Task<IEnumerable<Ticket>> GetTicketsByDateRangeAsync(DateTimeOffset startDate, DateTimeOffset endDate)
