@@ -28,6 +28,19 @@ namespace NexusTix.Application.Features.Auth
             _signInManager = signInManager;
         }
 
+        public async Task<ServiceResult<string>> ForgotPasswordAsync(ForgotPasswordRequest request)
+        {
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user == null)
+            {
+                return ServiceResult<string>.Fail("Kullanıcı bulunamadı.", HttpStatusCode.NotFound);
+            }
+
+            string token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            return ServiceResult<string>.Success(token);
+        }
+
         public async Task<ServiceResult<LoginResponse>> LoginAsync(LoginRequest request)
         {
             try
@@ -105,6 +118,32 @@ namespace NexusTix.Application.Features.Auth
             {
                 return ServiceResult<UserResponse>.Fail(ex.Message, ex.StatusCode);
             }
+        }
+
+        public async Task<ServiceResult> ResetPasswordAsync(ResetPasswordRequest request)
+        {
+            if (request.NewPassword != request.NewPasswordConfirm)
+            {
+                return ServiceResult.Fail("Yeni şifre ve şifre onayı eşleşmiyor.", HttpStatusCode.BadRequest);
+            }
+
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user == null)
+            {
+                return ServiceResult.Fail("Kullanıcı bulunamadı.", HttpStatusCode.NotFound);
+            }
+
+            var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
+
+            if (!result.Succeeded)
+            {
+                var errors = result.Errors.Select(e => e.Description).ToList();
+                return ServiceResult.Fail(errors, HttpStatusCode.BadRequest);
+            }
+
+            await _userManager.UpdateSecurityStampAsync(user);
+
+            return ServiceResult.Success(HttpStatusCode.NoContent);
         }
 
         public async Task<ServiceResult> UpdateEmailAsync(UpdateUserEmailRequest request, int authenticatedUserId)
