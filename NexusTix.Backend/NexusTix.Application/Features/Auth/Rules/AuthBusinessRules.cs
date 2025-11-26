@@ -75,5 +75,33 @@ namespace NexusTix.Application.Features.Auth.Rules
                 throw new BusinessException("Yeni şifre, şu an ki şifreyle aynı olamaz", HttpStatusCode.Conflict);
             }
         }
+
+        public void CheckIfPasswordMatch(string password, string confirmPassword)
+        {
+            if (password != confirmPassword)
+            {
+                throw new BusinessException("Yeni şifre ve şifre onayı eşleşmiyor.", HttpStatusCode.BadRequest);
+            }
+        }
+
+        public async Task<User> CheckIfUserExistsByEmail(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                throw new BusinessException("Kullanıcı bulunamadı.", HttpStatusCode.NotFound);
+            }
+
+            return user;
+        }
+
+        public void CheckIdentityResult(IdentityResult result)
+        {
+            if (!result.Succeeded)
+            {
+                var errorMessages = string.Join(", ", result.Errors.Select(e => e.Description));
+                throw new BusinessException(errorMessages, HttpStatusCode.BadRequest);
+            }
+        }
     }
 }

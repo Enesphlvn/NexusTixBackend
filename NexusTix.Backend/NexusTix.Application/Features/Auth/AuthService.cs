@@ -30,15 +30,18 @@ namespace NexusTix.Application.Features.Auth
 
         public async Task<ServiceResult<string>> ForgotPasswordAsync(ForgotPasswordRequest request)
         {
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user == null)
+            try
             {
-                return ServiceResult<string>.Fail("Kullanıcı bulunamadı.", HttpStatusCode.NotFound);
+                var user = await _authRules.CheckIfUserExistsByEmail(request.Email);
+
+                string token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                return ServiceResult<string>.Success(token);
             }
-
-            string token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-            return ServiceResult<string>.Success(token);
+            catch (BusinessException ex)
+            {
+                return ServiceResult<string>.Fail(ex.Message, ex.StatusCode);
+            }
         }
 
         public async Task<ServiceResult<LoginResponse>> LoginAsync(LoginRequest request)
@@ -122,28 +125,24 @@ namespace NexusTix.Application.Features.Auth
 
         public async Task<ServiceResult> ResetPasswordAsync(ResetPasswordRequest request)
         {
-            if (request.NewPassword != request.NewPasswordConfirm)
+            try
             {
-                return ServiceResult.Fail("Yeni şifre ve şifre onayı eşleşmiyor.", HttpStatusCode.BadRequest);
-            }
+                _authRules.CheckIfPasswordMatch(request.NewPassword, request.NewPasswordConfirm);
 
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user == null)
+                var user = await _authRules.CheckIfUserExistsByEmail(request.Email);
+
+                var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
+
+                _authRules.CheckIdentityResult(result);
+
+                await _userManager.UpdateSecurityStampAsync(user);
+
+                return ServiceResult.Success(HttpStatusCode.NoContent);
+            }
+            catch (BusinessException ex)
             {
-                return ServiceResult.Fail("Kullanıcı bulunamadı.", HttpStatusCode.NotFound);
+                return ServiceResult.Fail(ex.Message, ex.StatusCode);
             }
-
-            var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
-
-            if (!result.Succeeded)
-            {
-                var errors = result.Errors.Select(e => e.Description).ToList();
-                return ServiceResult.Fail(errors, HttpStatusCode.BadRequest);
-            }
-
-            await _userManager.UpdateSecurityStampAsync(user);
-
-            return ServiceResult.Success(HttpStatusCode.NoContent);
         }
 
         public async Task<ServiceResult> UpdateEmailAsync(UpdateUserEmailRequest request, int authenticatedUserId)
