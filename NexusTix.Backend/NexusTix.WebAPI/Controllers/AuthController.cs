@@ -54,5 +54,19 @@ namespace NexusTix.WebAPI.Controllers
 
             return int.Parse(userIdString!);
         }
+
+        [HttpPost("forgot-password")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            return CreateActionResult(await _authService.ForgotPasswordAsync(request));
+        }
+
+        [HttpPost("reset-password")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            return CreateActionResult(await _authService.ResetPasswordAsync(request));
+        }
     }
 }
