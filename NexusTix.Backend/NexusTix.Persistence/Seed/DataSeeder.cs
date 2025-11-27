@@ -1326,32 +1326,32 @@ namespace NexusTix.Persistence.Seed
             return
             [
                 // --- İSTANBUL Mekanları ---
-                new Venue { Name = "ZORLU PSM", Capacity = 2200, DistrictId = districtMap["BEŞİKTAŞ-İSTANBUL"] },
-                new Venue { Name = "CADDEBOSTAN KÜLTÜR MERKEZİ", Capacity = 800, DistrictId = districtMap["KADIKÖY-İSTANBUL"] },
-                new Venue { Name = "DASDAS SAHNE", Capacity = 600, DistrictId = districtMap["KADIKÖY-İSTANBUL"] },
-            new Venue { Name = "VOLKSWAGEN ARENA", Capacity = 5000, DistrictId = districtMap["SARIYER-İSTANBUL"] },
-                new Venue { Name = "HARBİYE CEMİL TOPUZLU AÇIKHAVA TİYATROSU", Capacity = 4500, DistrictId = districtMap["ŞİŞLİ-İSTANBUL"] },
-                new Venue { Name = "BABA SAHNE", Capacity = 300, DistrictId = districtMap["KADIKÖY-İSTANBUL"] },
+                new Venue { Name = "ZORLU PSM", Capacity = 2200, Latitude = 41.06734578238515, Longitude = 29.01767464313463, DistrictId = districtMap["BEŞİKTAŞ-İSTANBUL"] },
+                new Venue { Name = "CADDEBOSTAN KÜLTÜR MERKEZİ", Capacity = 800, Latitude = 40.96772779982779, Longitude = 29.06473807600374, DistrictId = districtMap["KADIKÖY-İSTANBUL"] },
+                new Venue { Name = "DASDAS SAHNE", Capacity = 600, Latitude = 40.99436841618758, Longitude = 29.12531434462998, DistrictId = districtMap["KADIKÖY-İSTANBUL"] },
+                new Venue { Name = "VOLKSWAGEN ARENA", Capacity = 5000, Latitude = 41.10890251166003, Longitude = 29.00772465472965, DistrictId = districtMap["SARIYER-İSTANBUL"] },
+                new Venue { Name = "HARBİYE CEMİL TOPUZLU AÇIK HAVA TİYATROSU", Capacity = 4500, Latitude = 41.04618254364777, Longitude = 28.990062283562608, DistrictId = districtMap["ŞİŞLİ-İSTANBUL"] },
+                new Venue { Name = "BABA SAHNE", Capacity = 300, Latitude = 40.98782359657544, Longitude = 29.027835042336285, DistrictId = districtMap["KADIKÖY-İSTANBUL"] },
 
                 // --- ANKARA Mekanları ---
-                new Venue { Name = "CSO ADA ANKARA", Capacity = 2000, DistrictId = districtMap["ÇANKAYA-ANKARA"] },
-                new Venue { Name = "CONGRESIUM ANKARA", Capacity = 3000, DistrictId = districtMap["ÇANKAYA-ANKARA"] },
-                new Venue { Name = "MEB ŞURA SALONU", Capacity = 1000, DistrictId = districtMap["ÇANKAYA-ANKARA"] },
-                new Venue { Name = "ODTÜ KKM", Capacity = 1200, DistrictId = districtMap["ÇANKAYA-ANKARA"] },
+                new Venue { Name = "CSO ADA ANKARA", Capacity = 2000, Latitude = 39.93646176169428, Longitude = 32.850425212473525, DistrictId = districtMap["ÇANKAYA-ANKARA"] },
+                new Venue { Name = "CONGRESIUM ANKARA", Capacity = 3000, Latitude = 39.911600930220644, Longitude = 32.80291982584995, DistrictId = districtMap["ÇANKAYA-ANKARA"] },
+                new Venue { Name = "MEB ŞURA SALONU", Capacity = 1000, Latitude = 39.93629688731671, Longitude = 32.8251749966378, DistrictId = districtMap["ÇANKAYA-ANKARA"] },
+                new Venue { Name = "ODTÜ KKM", Capacity = 1200, Latitude = 39.894744563016594, Longitude = 32.78608145468479, DistrictId = districtMap["ÇANKAYA-ANKARA"] },
 
                 // --- İZMİR Mekanları ---
-                new Venue { Name = "İZMİR ARENA", Capacity = 3000, DistrictId = districtMap["BAYRAKLI-İZMİR"] },
-                new Venue { Name = "BOSTANLI SUAT TAŞER TİYATROSU", Capacity = 700, DistrictId = districtMap["KARŞIYAKA-İZMİR"] },
-                new Venue { Name = "KÜLTÜRPARK AÇIKHAVA TİYATROSU", Capacity = 2500, DistrictId = districtMap["KONAK-İZMİR"] },
-                new Venue { Name = "AHMET ADNAN SAYGUN SANAT MERKEZİ", Capacity = 1100, DistrictId = districtMap["KONAK-İZMİR"] },
+                new Venue { Name = "İZMİR ARENA", Capacity = 3000, Latitude = 38.46572307993086, Longitude = 27.14524159696288, DistrictId = districtMap["BAYRAKLI-İZMİR"] },
+                new Venue { Name = "BOSTANLI SUAT TAŞER TİYATROSU", Capacity = 700, Latitude = 38.454479407583406, Longitude = 27.099752641140206, DistrictId = districtMap["KARŞIYAKA-İZMİR"] },
+                new Venue { Name = "ATATÜRK AÇIK HAVA TİYATROSU", Capacity = 2500, Latitude = 38.42875099324638, Longitude = 27.148249959508245, DistrictId = districtMap["KONAK-İZMİR"] },
+                new Venue { Name = "AHMET ADNAN SAYGUN SANAT MERKEZİ", Capacity = 1100, Latitude = 38.3975003636308, Longitude = 27.078283967463722, DistrictId = districtMap["KONAK-İZMİR"] },
 
                 // --- BURSA Mekanları ---
-                new Venue { Name = "MERİNOS AKKM", Capacity = 1700, DistrictId = districtMap["OSMANGAZİ-BURSA"] },
-                new Venue { Name = "TAYYARE KÜLTÜR MERKEZİ", Capacity = 650, DistrictId = districtMap["OSMANGAZİ-BURSA"] },
+                new Venue { Name = "MERİNOS AKKM", Capacity = 1700, Latitude = 40.19990145440947, Longitude = 29.052431027657903, DistrictId = districtMap["OSMANGAZİ-BURSA"] },
+                new Venue { Name = "TAYYARE KÜLTÜR MERKEZİ", Capacity = 650, Latitude = 40.184038690637735, Longitude = 29.065044817965088, DistrictId = districtMap["OSMANGAZİ-BURSA"] },
 
                 // --- ANTALYA Mekanları ---
-                new Venue { Name = "ANTALYA AÇIKHAVA TİYATROSU", Capacity = 3000, DistrictId = districtMap["KONYAALTI-ANTALYA"] },
-                new Venue { Name = "EXPO 2016 KONGRE MERKEZİ", Capacity = 5000, DistrictId = districtMap["AKSU-ANTALYA"] }
+                new Venue { Name = "ANTALYA AÇIK HAVA", Capacity = 3000, Latitude = 36.88242226822005, Longitude = 30.666863639756134, DistrictId = districtMap["KONYAALTI-ANTALYA"] },
+                new Venue { Name = "EXPO KONGRE MERKEZİ", Capacity = 5000, Latitude = 36.948120036742694, Longitude = 30.893394124336556, DistrictId = districtMap["AKSU-ANTALYA"] }
             ];
         }
 
