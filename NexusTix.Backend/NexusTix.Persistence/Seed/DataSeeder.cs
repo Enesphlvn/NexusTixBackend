@@ -47,6 +47,13 @@ namespace NexusTix.Persistence.Seed
                 }
             }
 
+            if (!await context.Artists.AnyAsync())
+            {
+                var artists = GetArtists();
+                await context.Artists.AddRangeAsync(artists);
+                await context.SaveChangesAsync();
+            }
+
             if (!await context.Events.AnyAsync())
             {
                 var allEventTypes = await context.EventTypes.AsNoTracking().ToListAsync();
@@ -58,6 +65,33 @@ namespace NexusTix.Persistence.Seed
                     await context.Events.AddRangeAsync(events);
                     await context.SaveChangesAsync();
                 }
+            }
+
+            var dbEvents = await context.Events.Include(e => e.Artists).ToListAsync();
+            var dbArtists = await context.Artists.ToListAsync();
+
+            if (dbEvents.Any() && dbArtists.Any())
+            {
+                Artist? GetArtist(string name) => dbArtists.FirstOrDefault(a => a.Name == name);
+
+                foreach (var ev in dbEvents)
+                {
+                    if (!ev.Artists.Any())
+                    {
+                        if (ev.Name.Contains("Büyük Ev Ablukada")) ev.Artists.Add(GetArtist("Büyük Ev Ablukada")!);
+                        else if (ev.Name.Contains("Teoman")) ev.Artists.Add(GetArtist("Teoman")!);
+                        else if (ev.Name.Contains("Duman")) ev.Artists.Add(GetArtist("Duman")!);
+                        else if (ev.Name.Contains("Fazıl Say")) ev.Artists.Add(GetArtist("Fazıl Say")!);
+                        else if (ev.Name.Contains("Genco") || ev.Description!.Contains("Genco")) ev.Artists.Add(GetArtist("Genco Erkal")!);
+                        else if (ev.Name.Contains("Cem Yılmaz")) ev.Artists.Add(GetArtist("Cem Yılmaz")!);
+                        else if (ev.Name.Contains("Sertab")) ev.Artists.Add(GetArtist("Sertab Erener")!);
+                        else if (ev.Name.Contains("Athena")) ev.Artists.Add(GetArtist("Athena")!);
+                        else if (ev.Name.Contains("Haluk Levent")) ev.Artists.Add(GetArtist("Haluk Levent")!);
+                        else if (ev.Name.Contains("Hayko")) ev.Artists.Add(GetArtist("Hayko Cepkin")!);
+                    }
+                }
+
+                await context.SaveChangesAsync();
             }
 
             if (!await context.Tickets.AnyAsync())
@@ -1902,6 +1936,23 @@ namespace NexusTix.Persistence.Seed
             }
 
             return tickets;
+        }
+
+        private static IEnumerable<Artist> GetArtists()
+        {
+            return
+            [
+                new Artist { Name = "Büyük Ev Ablukada", Bio = "Alternatif müzik grubu." },
+                new Artist { Name = "Teoman", Bio = "Türk rock müziği sanatçısı." },
+                new Artist { Name = "Duman", Bio = "Türk rock grubu." },
+                new Artist { Name = "Fazıl Say", Bio = "Dünyaca ünlü piyanist." },
+                new Artist { Name = "Genco Erkal", Bio = "Tiyatro sanatçısı." },
+                new Artist { Name = "Cem Yılmaz", Bio = "Komedyen." },
+                new Artist { Name = "Sertab Erener", Bio = "Türk pop müziği sanatçısı." },
+                new Artist { Name = "Athena", Bio = "Ska ve punk rock grubu." },
+                new Artist { Name = "Haluk Levent", Bio = "Anadolu rock sanatçısı." },
+                new Artist { Name = "Hayko Cepkin", Bio = "Alternatif metal sanatçısı." }
+            ];
         }
     }
 }

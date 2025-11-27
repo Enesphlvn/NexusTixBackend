@@ -1,6 +1,8 @@
-﻿namespace NexusTix.Persistence.Repositories.Artists
+﻿using NexusTix.Domain.Entities;
+
+namespace NexusTix.Persistence.Repositories.Artists
 {
-    public interface IArtistRepository
+    public interface IArtistRepository : IGenericRepository<Artist, int>
     {
     }
 }
