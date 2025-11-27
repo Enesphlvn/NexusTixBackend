@@ -1942,16 +1942,78 @@ namespace NexusTix.Persistence.Seed
         {
             return
             [
-                new Artist { Name = "Büyük Ev Ablukada", Bio = "Alternatif müzik grubu." },
-                new Artist { Name = "Teoman", Bio = "Türk rock müziği sanatçısı." },
-                new Artist { Name = "Duman", Bio = "Türk rock grubu." },
-                new Artist { Name = "Fazıl Say", Bio = "Dünyaca ünlü piyanist." },
-                new Artist { Name = "Genco Erkal", Bio = "Tiyatro sanatçısı." },
-                new Artist { Name = "Cem Yılmaz", Bio = "Komedyen." },
-                new Artist { Name = "Sertab Erener", Bio = "Türk pop müziği sanatçısı." },
-                new Artist { Name = "Athena", Bio = "Ska ve punk rock grubu." },
-                new Artist { Name = "Haluk Levent", Bio = "Anadolu rock sanatçısı." },
-                new Artist { Name = "Hayko Cepkin", Bio = "Alternatif metal sanatçısı." }
+                new Artist
+                {
+                    Name = "Sagopa",
+                    Bio = "Türk rap müziği sanatçısı.",
+                    ImageUrl = "/images/artists/sagopa.jpg"
+                },
+                new Artist
+                {
+                    Name = "Ceza",
+                    Bio = "Türk rap müziği sanatçısı.",
+                    ImageUrl = "/images/artists/ceza.jpg"
+                },
+                new Artist
+                {
+                    Name = "Büyük Ev Ablukada",
+                    Bio = "Alternatif müzik grubu.",
+                    ImageUrl = "/images/artists/buyuk-ev-ablukada.jpg"
+                },
+                new Artist
+                {
+                    Name = "Teoman",
+                    Bio = "Türk rock müziği sanatçısı.",
+                    ImageUrl = "/images/artists/teoman.jpg"
+                },
+                new Artist
+                {
+                    Name = "Duman",
+                    Bio = "Türk rock grubu.",
+                    ImageUrl = "/images/artists/duman.jpg"
+                },
+                new Artist
+                {
+                    Name = "Fazıl Say",
+                    Bio = "Dünyaca ünlü piyanist.",
+                    ImageUrl = "/images/artists/fazil-say.jpg"
+                },
+                new Artist
+                {
+                    Name = "Genco Erkal",
+                    Bio = "Tiyatro sanatçısı.",
+                    ImageUrl = "/images/artists/genco-erkal.jpg"
+                },
+                new Artist
+                {
+                    Name = "Cem Yılmaz",
+                    Bio = "Komedyen.",
+                    ImageUrl = "/images/artists/cem-yilmaz.jpg"
+                },
+                new Artist
+                {
+                    Name = "Sertab Erener",
+                    Bio = "Türk pop müziği sanatçısı.",
+                    ImageUrl = "/images/artists/sertab-erener.jpg"
+                },
+                new Artist
+                {
+                    Name = "Athena",
+                    Bio = "Ska ve punk rock grubu.",
+                    ImageUrl = "/images/artists/athena.jpg"
+                },
+                new Artist
+                {
+                    Name = "Haluk Levent",
+                    Bio = "Anadolu rock sanatçısı.",
+                    ImageUrl = "/images/artists/haluk-levent.jpg"
+                },
+                new Artist
+                {
+                    Name = "Hayko Cepkin",
+                    Bio = "Alternatif metal sanatçısı.",
+                    ImageUrl = "/images/artists/hayko-cepkin.jpg"
+                }
             ];
         }
     }
