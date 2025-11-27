@@ -1,4 +1,5 @@
 ﻿using NexusTix.Persistence.Context;
+using NexusTix.Persistence.Repositories.Artists;
 using NexusTix.Persistence.Repositories.Cities;
 using NexusTix.Persistence.Repositories.Districts;
 using NexusTix.Persistence.Repositories.Events;
@@ -20,6 +21,7 @@ namespace NexusTix.Persistence.Repositories
         private ITicketRepository? _ticketRepository;
         private IUserRepository? _userRepository;
         private IVenueRepository? _venueRepository;
+        private IArtistRepository? _artistRepository;
 
         public UnitOfWork(AppDbContext context)
         {
@@ -79,6 +81,14 @@ namespace NexusTix.Persistence.Repositories
             get
             {
                 return _venueRepository ??= new VenueRepository(_context);
+            }
+        }
+
+        public IArtistRepository Artists
+        {
+            get
+            {
+                return _artistRepository ??= new ArtistRepository(_context);
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using NexusTix.Persistence.Repositories.Cities;
+﻿using NexusTix.Persistence.Repositories.Artists;
+using NexusTix.Persistence.Repositories.Cities;
 using NexusTix.Persistence.Repositories.Districts;
 using NexusTix.Persistence.Repositories.Events;
 using NexusTix.Persistence.Repositories.EventTypes;
@@ -17,6 +18,7 @@ namespace NexusTix.Persistence.Repositories
         ITicketRepository Tickets { get; }
         IUserRepository Users { get; }
         IVenueRepository Venues { get; }
+        IArtistRepository Artists { get; }
 
         Task<int> SaveChangesAsync();
     }
