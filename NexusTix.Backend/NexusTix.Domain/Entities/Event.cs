@@ -14,5 +14,6 @@ namespace NexusTix.Domain.Entities
         public int VenueId { get; set; }
         public Venue Venue { get; set; } = default!;
         public List<Ticket> Tickets { get; set; } = [];
+        public List<Artist> Artists { get; set; } = [];
     }
 }
