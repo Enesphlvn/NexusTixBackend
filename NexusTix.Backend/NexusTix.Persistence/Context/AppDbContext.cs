@@ -19,6 +19,7 @@ namespace NexusTix.Persistence.Context
         public DbSet<Venue> Venues { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<Artist> Artists { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
@@ -56,6 +57,7 @@ namespace NexusTix.Persistence.Context
             builder.Entity<Venue>().HasQueryFilter(e => e.IsActive);
             builder.Entity<Event>().HasQueryFilter(e => e.IsActive);
             builder.Entity<Ticket>().HasQueryFilter(e => e.IsActive);
+            builder.Entity<Artist>().HasQueryFilter(e => e.IsActive);
         }
     }
 }
