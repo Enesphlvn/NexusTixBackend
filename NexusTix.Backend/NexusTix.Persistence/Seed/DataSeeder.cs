@@ -62,13 +62,14 @@ namespace NexusTix.Persistence.Seed
 
             if (!await context.Tickets.AnyAsync())
             {
-                var superAdmin = await context.Users.FirstOrDefaultAsync(x => x.UserName == "SuperAdmin");
+                var users = await context.Users.AsNoTracking().ToListAsync();
 
-                var eventToBuy = await context.Events.FirstOrDefaultAsync(x => x.Name == "Büyük Ev Ablukada Konseri");
+                var events = await context.Events.AsNoTracking().ToListAsync();
 
-                if (superAdmin != null && eventToBuy != null)
+                if (users.Any() && events.Any())
                 {
-                    var tickets = GetTickets(eventToBuy.Id, superAdmin.Id);
+                    var tickets = GetGeneratedTickets(users, events);
+
                     await context.Tickets.AddRangeAsync(tickets);
                     await context.SaveChangesAsync();
                 }
@@ -1316,6 +1317,8 @@ namespace NexusTix.Persistence.Seed
                 new EventType{  Name= "SİNEMA" },
                 new EventType{  Name= "OPERA" },
                 new EventType{  Name= "KONFERANS" },
+                new EventType{  Name= "SPOR" },
+                new EventType{  Name= "STAND-UP" },
             ];
         }
 
@@ -1351,7 +1354,47 @@ namespace NexusTix.Persistence.Seed
 
                 // --- ANTALYA Mekanları ---
                 new Venue { Name = "ANTALYA AÇIK HAVA", Capacity = 3000, Latitude = 36.88242226822005, Longitude = 30.666863639756134, DistrictId = districtMap["KONYAALTI-ANTALYA"] },
-                new Venue { Name = "EXPO KONGRE MERKEZİ", Capacity = 5000, Latitude = 36.948120036742694, Longitude = 30.893394124336556, DistrictId = districtMap["AKSU-ANTALYA"] }
+                new Venue { Name = "EXPO KONGRE MERKEZİ", Capacity = 5000, Latitude = 36.948120036742694, Longitude = 30.893394124336556, DistrictId = districtMap["AKSU-ANTALYA"] },
+
+                // --- ADANA Mekanları ---
+                new Venue { Name = "ÇUKUROVA ÜNİVERSİTESİ AÇIK HAVA TİYATROSU", Capacity = 3500, Latitude = 37.05719638003976, Longitude = 35.358772560684194, DistrictId = districtMap["SARIÇAM-ADANA"] },
+                new Venue { Name = "01 BURDA PGM", Capacity = 1000, Latitude = 36.99393917811716, Longitude = 35.30852408341883, DistrictId = districtMap["SEYHAN-ADANA"] },
+
+                // --- KONYA Mekanları ---
+                new Venue { Name = "SELÇUKLU KONGRE MERKEZİ", Capacity = 2000, Latitude = 37.93727022547573, Longitude = 32.51167311761386, DistrictId = districtMap["SELÇUKLU-KONYA"] },
+                new Venue { Name = "KONYA DEVLET TİYATROSU", Capacity = 500, Latitude = 37.868160473362934, Longitude = 32.48679662577764, DistrictId = districtMap["MERAM-KONYA"] },
+
+                // --- GAZİANTEP Mekanları ---
+                new Venue { Name = "GAÜN MAVERA KONGRE VE SANAT MERKEZİ", Capacity = 1500, Latitude = 37.037788492803784, Longitude = 37.31823236544846, DistrictId = districtMap["ŞEHİTKAMİL-GAZİANTEP"] },
+                new Venue { Name = "ŞAHİNBEY KONGRE VE SANAT MERKEZİ", Capacity = 2500, Latitude = 37.01498064044113, Longitude = 37.35901115458404, DistrictId = districtMap["ŞAHİNBEY-GAZİANTEP"] },
+
+                // --- ESKİŞEHİR Mekanları ---
+                new Venue { Name = "VEHBİ KOÇ KONGRE MERKEZİ", Capacity = 1000, Latitude = 39.75288909504329, Longitude = 30.594294625844192, DistrictId = districtMap["TEPEBAŞI-ESKİŞEHİR"] },
+                new Venue { Name = "ATATÜRK KÜLTÜR SANAT VE KONGRE MERKEZİ", Capacity = 1200, Latitude = 39.7670546597064, Longitude = 30.533321539338036, DistrictId = districtMap["ODUNPAZARI-ESKİŞEHİR"] },
+
+                // --- MERSİN Mekanları ---
+                new Venue { Name = "MERSİN KÜLTÜR MERKEZİ", Capacity = 700, Latitude = 36.7940970124008, Longitude = 34.62470841039903, DistrictId = districtMap["AKDENİZ-MERSİN"] },
+                new Venue { Name = "YENİŞEHİR BELEDİYESİ ATATÜRK KÜLTÜR MERKEZİ", Capacity = 1500, Latitude = 36.80458074216666, Longitude = 34.587445083412554, DistrictId = districtMap["YENİŞEHİR-MERSİN"] },
+
+                // --- TRABZON Mekanları ---
+                new Venue { Name = "KARADENİZ TEKNİK ÜNİVERSİTESİ AKM", Capacity = 800, Latitude = 40.998470913144175, Longitude = 39.77126732773853, DistrictId = districtMap["ORTAHİSAR-TRABZON"] },
+                new Venue { Name = "HAMAMİZADE İHSAN BEY KÜLTÜR MERKEZİ", Capacity = 600, Latitude = 41.00652860587252, Longitude = 39.731317371916475, DistrictId = districtMap["ORTAHİSAR-TRABZON"] },
+
+                // --- SAMSUN Mekanları ---
+                new Venue { Name = "SAMSUN BÜYÜKŞEHİR BELEDİYESİ SANAT MERKEZİ", Capacity = 1300, Latitude = 41.33093794242345, Longitude = 36.29235367008008, DistrictId = districtMap["İLKADIM-SAMSUN"] },
+                new Venue { Name = "19 MAYIS KÜLTÜR MERKEZİ", Capacity = 500, Latitude = 41.501439802250935, Longitude = 36.08600357089251, DistrictId = districtMap["İLKADIM-SAMSUN"] },
+
+                // --- KAYSERİ Mekanları ---
+                new Venue { Name = "ERCİYES KÜLTÜR MERKEZİ", Capacity = 1800, Latitude = 38.699133016504476, Longitude = 35.52952249697104, DistrictId = districtMap["MELİKGAZİ-KAYSERİ"] },
+                new Venue { Name = "KADİR HAS KONGRE MERKEZİ", Capacity = 2500, Latitude = 38.75074370512907, Longitude = 35.4916847408741, DistrictId = districtMap["KOCASİNAN-KAYSERİ"] },
+
+                // --- KOCAELİ Mekanları ---
+                new Venue { Name = "KOCAELİ KONGRE MERKEZİ", Capacity = 1500, Latitude = 40.76133679398952, Longitude = 29.895995825881027, DistrictId = districtMap["İZMİT-KOCAELİ"] },
+                new Venue { Name = "SÜLEYMAN DEMİREL KÜLTÜR MERKEZİ", Capacity = 600, Latitude = 40.76603601403779, Longitude = 29.976069697045883, DistrictId = districtMap["İZMİT-KOCAELİ"] },
+
+                // --- MUĞLA Mekanları ---
+                new Venue { Name = "BODRUM ANTİK TİYATROSU", Capacity = 3000, Latitude = 37.04015651433693, Longitude = 27.421589739242794, DistrictId = districtMap["BODRUM-MUĞLA"] },
+                new Venue { Name = "MARMARİS AMFİ TİYATRO", Capacity = 2000, Latitude = 36.85518382108656, Longitude = 28.258577368072093, DistrictId = districtMap["MARMARİS-MUĞLA"] }
             ];
         }
 
@@ -1480,32 +1523,385 @@ namespace NexusTix.Persistence.Seed
                     Capacity = 300,
                     EventTypeId = eventTypeMap["TİYATRO"],
                     VenueId = venueMap["BABA SAHNE"]
+                },
+
+                // 11. ADANA - Çukurova Açıkhava (Konser)
+                new Event
+                {
+                    Name = "Hayko Cepkin Konseri",
+                    Date = DateTimeOffset.UtcNow.AddDays(12).AddHours(20),
+                    Price = 450.00m,
+                    Description = "Adana'yı sallayacak rock konseri.",
+                    Capacity = 3500,
+                    EventTypeId = eventTypeMap["KONSER"],
+                    VenueId = venueMap["ÇUKUROVA ÜNİVERSİTESİ AÇIK HAVA TİYATROSU"]
+                },
+
+                // 12. KONYA - Selçuklu Kongre (Konferans)
+                new Event
+                {
+                    Name = "Tarım Teknolojileri Zirvesi",
+                    Date = DateTimeOffset.UtcNow.AddDays(40).AddHours(9),
+                    Price = 200.00m,
+                    Description = "Geleceğin tarım teknolojileri konuşuluyor.",
+                    Capacity = 2000,
+                    EventTypeId = eventTypeMap["KONFERANS"],
+                    VenueId = venueMap["SELÇUKLU KONGRE MERKEZİ"]
+                },
+
+                // 13. GAZİANTEP - Şahinbey (Tiyatro)
+                new Event
+                {
+                    Name = "Zengin Mutfağı",
+                    Date = DateTimeOffset.UtcNow.AddDays(22).AddHours(20),
+                    Price = 350.00m,
+                    Description = "Şener Şen efsanesi Gaziantep'te.",
+                    Capacity = 2500,
+                    EventTypeId = eventTypeMap["TİYATRO"],
+                    VenueId = venueMap["ŞAHİNBEY KONGRE VE SANAT MERKEZİ"]
+                },
+
+                // 14. ESKİŞEHİR - Vehbi Koç (Stand-Up)
+                new Event
+                {
+                    Name = "Cem Yılmaz - Diamond Elite Platinum Plus",
+                    Date = DateTimeOffset.UtcNow.AddDays(8).AddHours(21),
+                    Price = 1200.00m,
+                    Description = "Kahkaha tufanı Eskişehir'de.",
+                    Capacity = 1000,
+                    EventTypeId = eventTypeMap["STAND-UP"],
+                    VenueId = venueMap["VEHBİ KOÇ KONGRE MERKEZİ"]
+                },
+
+                // 15. MERSİN - Yenişehir AKM (Opera)
+                new Event
+                {
+                    Name = "Carmen",
+                    Date = DateTimeOffset.UtcNow.AddDays(60).AddHours(20),
+                    Price = 600.00m,
+                    Description = "Mersin Devlet Opera ve Balesi sunar.",
+                    Capacity = 1500,
+                    EventTypeId = eventTypeMap["OPERA"],
+                    VenueId = venueMap["YENİŞEHİR BELEDİYESİ ATATÜRK KÜLTÜR MERKEZİ"]
+                },
+
+                // 16. TRABZON - KTÜ AKM (Konser)
+                new Event
+                {
+                    Name = "Volkan Konak - Kuzeyin Oğlu",
+                    Date = DateTimeOffset.UtcNow.AddDays(15).AddHours(20),
+                    Price = 500.00m,
+                    Description = "Karadeniz rüzgarı Trabzon'da esecek.",
+                    Capacity = 800,
+                    EventTypeId = eventTypeMap["KONSER"],
+                    VenueId = venueMap["KARADENİZ TEKNİK ÜNİVERSİTESİ AKM"]
+                },
+
+                // 17. SAMSUN - Büyükşehir Sanat (Sinema/Festival)
+                new Event
+                {
+                    Name = "Samsun Kısa Film Festivali",
+                    Date = DateTimeOffset.UtcNow.AddDays(5).AddHours(14),
+                    Price = 50.00m,
+                    Description = "Genç yönetmenlerin kısa filmleri.",
+                    Capacity = 1300,
+                    EventTypeId = eventTypeMap["SİNEMA"],
+                    VenueId = venueMap["SAMSUN BÜYÜKŞEHİR BELEDİYESİ SANAT MERKEZİ"]
+                },
+
+                // 18. KAYSERİ - Kadir Has (Spor/Etkinlik)
+                new Event
+                {
+                    Name = "Anadolu Basketbol Turnuvası Finali",
+                    Date = DateTimeOffset.UtcNow.AddDays(3).AddHours(18),
+                    Price = 100.00m,
+                    Description = "Heyecan dolu final maçı.",
+                    Capacity = 2500,
+                    EventTypeId = eventTypeMap["SPOR"],
+                    VenueId = venueMap["KADİR HAS KONGRE MERKEZİ"]
+                },
+
+                // 19. KOCAELİ - Kocaeli Kongre (Konser)
+                new Event
+                {
+                    Name = "Madrigal Konseri",
+                    Date = DateTimeOffset.UtcNow.AddDays(28).AddHours(21),
+                    Price = 400.00m,
+                    Description = "Alternatif rock grubu Madrigal sahnede.",
+                    Capacity = 1500,
+                    EventTypeId = eventTypeMap["KONSER"],
+                    VenueId = venueMap["KOCAELİ KONGRE MERKEZİ"]
+                },
+
+                // 20. MUĞLA - Bodrum Antik Tiyatro (Konser)
+                new Event
+                {
+                    Name = "Sertab Erener - Yaz Konserleri",
+                    Date = DateTimeOffset.UtcNow.AddDays(90).AddHours(21),
+                    Price = 1500.00m,
+                    Description = "Tarihi atmosferde müzik ziyafeti.",
+                    Capacity = 3000,
+                    EventTypeId = eventTypeMap["KONSER"],
+                    VenueId = venueMap["BODRUM ANTİK TİYATROSU"]
+                },
+
+                // 21. Harbiye Açıkhava (Konser)
+                new Event
+                {
+                    Name = "Yıldız Tilbe",
+                    Date = DateTimeOffset.UtcNow.AddDays(45).AddHours(21),
+                    Price = 1000.00m,
+                    Description = "Yıldız Tilbe ile unutulmaz bir gece.",
+                    Capacity = 4500,
+                    EventTypeId = eventTypeMap["KONSER"],
+                    VenueId = venueMap["HARBİYE CEMİL TOPUZLU AÇIK HAVA TİYATROSU"]
+                },
+
+                // 22. Bostanlı Suat Taşer (Tiyatro)
+                new Event
+                {
+                    Name = "Zengin Mutfağı - İzmir Turnesi",
+                    Date = DateTimeOffset.UtcNow.AddDays(12).AddHours(20),
+                    Price = 400.00m,
+                    Description = "Lütfü Usta'nın hikayesi İzmir'de.",
+                    Capacity = 700,
+                    EventTypeId = eventTypeMap["TİYATRO"],
+                    VenueId = venueMap["BOSTANLI SUAT TAŞER TİYATROSU"]
+                },
+
+                // 23. Atatürk Açıkhava (Konser)
+                new Event
+                {
+                    Name = "Athena Konseri",
+                    Date = DateTimeOffset.UtcNow.AddDays(35).AddHours(21),
+                    Price = 600.00m,
+                    Description = "Athena en sevilen ska-punk şarkılarıyla sahnede.",
+                    Capacity = 2500,
+                    EventTypeId = eventTypeMap["KONSER"],
+                    VenueId = venueMap["ATATÜRK AÇIK HAVA TİYATROSU"]
+                },
+
+                // 24. Ahmet Adnan Saygun (Klasik Müzik/Konser)
+                new Event
+                {
+                    Name = "Fazıl Say Resitali",
+                    Date = DateTimeOffset.UtcNow.AddDays(60).AddHours(20),
+                    Price = 900.00m,
+                    Description = "Dünyaca ünlü piyanistimizden özel bir resital.",
+                    Capacity = 1100,
+                    EventTypeId = eventTypeMap["KONSER"],
+                    VenueId = venueMap["AHMET ADNAN SAYGUN SANAT MERKEZİ"]
+                },
+
+                // 25. Merinos AKKM (Stand-Up)
+                new Event
+                {
+                    Name = "Hasan Can Kaya - Stand Up",
+                    Date = DateTimeOffset.UtcNow.AddDays(18).AddHours(20),
+                    Price = 700.00m,
+                    Description = "Gülmekten kırılacağınız bir gösteri.",
+                    Capacity = 1700,
+                    EventTypeId = eventTypeMap["STAND-UP"],
+                    VenueId = venueMap["MERİNOS AKKM"]
+                },
+
+                // 26. Antalya Açıkhava (Konser)
+                new Event
+                {
+                    Name = "Kenan Doğulu Yaz Konseri",
+                    Date = DateTimeOffset.UtcNow.AddDays(80).AddHours(21),
+                    Price = 850.00m,
+                    Description = "Yazın enerjisi Kenan Doğulu ile artıyor.",
+                    Capacity = 3000,
+                    EventTypeId = eventTypeMap["KONSER"],
+                    VenueId = venueMap["ANTALYA AÇIK HAVA"]
+                },
+
+                // 27. EXPO Kongre (Fuar/Konferans)
+                new Event
+                {
+                    Name = "Uluslararası Turizm Fuarı",
+                    Date = DateTimeOffset.UtcNow.AddDays(100).AddHours(10),
+                    Price = 150.00m,
+                    Description = "Turizm sektörünün kalbi Antalya'da atıyor.",
+                    Capacity = 5000,
+                    EventTypeId = eventTypeMap["KONFERANS"],
+                    VenueId = venueMap["EXPO KONGRE MERKEZİ"]
+                },
+
+                // 28. 01 Burda PGM (Tiyatro)
+                new Event
+                {
+                    Name = "Cimri",
+                    Date = DateTimeOffset.UtcNow.AddDays(14).AddHours(20),
+                    Price = 250.00m,
+                    Description = "Moliere'in ölümsüz eseri sahnede.",
+                    Capacity = 1000,
+                    EventTypeId = eventTypeMap["TİYATRO"],
+                    VenueId = venueMap["01 BURDA PGM"]
+                },
+
+                // 29. Konya Devlet Tiyatrosu (Tiyatro)
+                new Event
+                {
+                    Name = "Mevlana Celaleddin Rumi - Çağrı",
+                    Date = DateTimeOffset.UtcNow.AddDays(9).AddHours(19),
+                    Price = 100.00m,
+                    Description = "Mevlana'nın hayatından kesitler.",
+                    Capacity = 500,
+                    EventTypeId = eventTypeMap["TİYATRO"],
+                    VenueId = venueMap["KONYA DEVLET TİYATROSU"]
+                },
+
+                // 30. GAÜN Mavera (Konser)
+                new Event
+                {
+                    Name = "Haluk Levent - Halk Konseri",
+                    Date = DateTimeOffset.UtcNow.AddDays(25).AddHours(20),
+                    Price = 300.00m,
+                    Description = "Anadolu rock müziğinin efsane ismi.",
+                    Capacity = 1500,
+                    EventTypeId = eventTypeMap["KONSER"],
+                    VenueId = venueMap["GAÜN MAVERA KONGRE VE SANAT MERKEZİ"]
+                },
+
+                // 31. Atatürk Kültür Sanat (Opera/Bale)
+                new Event
+                {
+                    Name = "Kuğu Gölü Balesi",
+                    Date = DateTimeOffset.UtcNow.AddDays(45).AddHours(20),
+                    Price = 400.00m,
+                    Description = "Zarif ve büyüleyici bir bale gösterisi.",
+                    Capacity = 1200,
+                    EventTypeId = eventTypeMap["OPERA"],
+                    VenueId = venueMap["ATATÜRK KÜLTÜR SANAT VE KONGRE MERKEZİ"]
+                },
+
+                // 32. Mersin Kültür Merkezi (Konser)
+                new Event
+                {
+                    Name = "Mersin Senfoni Orkestrası",
+                    Date = DateTimeOffset.UtcNow.AddDays(30).AddHours(20),
+                    Price = 200.00m,
+                    Description = "Klasik müziğin en seçkin eserleri.",
+                    Capacity = 700,
+                    EventTypeId = eventTypeMap["KONSER"],
+                    VenueId = venueMap["MERSİN KÜLTÜR MERKEZİ"]
+                },
+
+                // 33. Hamamizade İhsan Bey (Tiyatro)
+                new Event
+                {
+                    Name = "Karadeniz Güldürüsü",
+                    Date = DateTimeOffset.UtcNow.AddDays(7).AddHours(19),
+                    Price = 150.00m,
+                    Description = "Yöresel komedi oyunu.",
+                    Capacity = 600,
+                    EventTypeId = eventTypeMap["TİYATRO"],
+                    VenueId = venueMap["HAMAMİZADE İHSAN BEY KÜLTÜR MERKEZİ"]
+                },
+
+                // 34. 19 Mayıs Kültür Merkezi (Konferans)
+                new Event
+                {
+                    Name = "Gençlik ve Spor Paneli",
+                    Date = DateTimeOffset.UtcNow.AddDays(20).AddHours(14),
+                    Price = 50.00m,
+                    Description = "Spor dünyasının ünlü isimleri Samsun'da.",
+                    Capacity = 500,
+                    EventTypeId = eventTypeMap["KONFERANS"],
+                    VenueId = venueMap["19 MAYIS KÜLTÜR MERKEZİ"]
+                },
+
+                // 35. Erciyes Kültür Merkezi (Konser)
+                new Event
+                {
+                    Name = "Mustafa Ceceli Konseri",
+                    Date = DateTimeOffset.UtcNow.AddDays(35).AddHours(21),
+                    Price = 400.00m,
+                    Description = "Romantik şarkıların prensi Kayseri'de.",
+                    Capacity = 1800,
+                    EventTypeId = eventTypeMap["KONSER"],
+                    VenueId = venueMap["ERCİYES KÜLTÜR MERKEZİ"]
+                },
+
+                // 36. Süleyman Demirel Kültür (Tiyatro)
+                new Event
+                {
+                    Name = "İkinci Bahar",
+                    Date = DateTimeOffset.UtcNow.AddDays(15).AddHours(20),
+                    Price = 200.00m,
+                    Description = "Usta oyunculardan harika bir oyun.",
+                    Capacity = 600,
+                    EventTypeId = eventTypeMap["TİYATRO"],
+                    VenueId = venueMap["SÜLEYMAN DEMİREL KÜLTÜR MERKEZİ"]
+                },
+
+                // 37. Marmaris Amfi Tiyatro (Stand-Up)
+                new Event
+                {
+                    Name = "Ata Demirer Gazinosu",
+                    Date = DateTimeOffset.UtcNow.AddDays(60).AddHours(21),
+                    Price = 1200.00m,
+                    Description = "Müzikli mizah şöleni Marmaris'te.",
+                    Capacity = 2000,
+                    EventTypeId = eventTypeMap["STAND-UP"],
+                    VenueId = venueMap["MARMARİS AMFİ TİYATRO"]
+                },
+                
+                // 38. Ankara ODTÜ (Konser)
+                new Event
+                {
+                    Name = "ODTÜ Caz Günleri",
+                    Date = DateTimeOffset.UtcNow.AddDays(40).AddHours(19),
+                    Price = 300.00m,
+                    Description = "Caz müziğinin sevilen isimleri kampüste.",
+                    Capacity = 1200,
+                    EventTypeId = eventTypeMap["KONSER"],
+                    VenueId = venueMap["ODTÜ KKM"]
                 }
             ];
         }
 
-        private static IEnumerable<Ticket> GetTickets(int eventId, int userId)
+        private static IEnumerable<Ticket> GetGeneratedTickets(List<User> users, List<Event> events)
         {
-            return
-            [
-                new Ticket
-                {
-                    EventId = eventId,
-                    UserId = userId,
+            var tickets = new List<Ticket>();
+            var random = new Random();
 
-                    QRCodeGuid = Guid.NewGuid(),
-                    PurchaseDate = DateTimeOffset.UtcNow.AddDays(-5),
-                    IsUsed = false
-                },
-                new Ticket
+            foreach (var ev in events)
+            {
+                int ticketsToSell = ev.Date < DateTimeOffset.UtcNow
+                    ? random.Next(15, 50)
+                    : random.Next(2, 15);
+
+                if (ticketsToSell > ev.Capacity) ticketsToSell = ev.Capacity;
+
+                for (int i = 0; i < ticketsToSell; i++)
                 {
-                    EventId = eventId,
-                    UserId = userId,
-                    QRCodeGuid = Guid.NewGuid(),
-                    PurchaseDate = DateTimeOffset.UtcNow.AddDays(-3),
-                    IsUsed = false
+                    var randomUser = users[random.Next(users.Count)];
+
+                    var daysDiff = (ev.Date - ev.Created).Days;
+                    var randomDays = random.Next(0, daysDiff > 0 ? daysDiff : 1);
+                    var purchaseDate = ev.Created.AddDays(randomDays);
+
+                    bool isCancelled = random.Next(100) < 5;
+                    bool isUsed = !isCancelled && ev.Date < DateTimeOffset.UtcNow;
+
+                    tickets.Add(new Ticket
+                    {
+                        EventId = ev.Id,
+                        UserId = randomUser.Id,
+                        QRCodeGuid = Guid.NewGuid(),
+                        PurchaseDate = purchaseDate,
+                        IsUsed = isUsed,
+                        IsCancelled = isCancelled,
+                        IsActive = true,
+                        Created = purchaseDate
+                    });
                 }
-            ];
+            }
+
+            return tickets;
         }
     }
 }
