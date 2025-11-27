@@ -4,5 +4,7 @@ namespace NexusTix.Persistence.Repositories.Artists
 {
     public interface IArtistRepository : IGenericRepository<Artist, int>
     {
+        Task<Artist?> GetArtistWithEventsAsync(int id);
+        Task<IEnumerable<Artist>> GetAllArtistsWithEventsAsync();
     }
 }
