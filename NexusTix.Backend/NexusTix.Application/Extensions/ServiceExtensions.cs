@@ -21,7 +21,7 @@ using NexusTix.Application.Features.Users.Rules;
 using NexusTix.Application.Features.Venues;
 using NexusTix.Application.Features.Venues.Rules;
 using System.Reflection;
-
+ 
 namespace NexusTix.Application.Extensions
 {
     public static class ServiceExtensions
