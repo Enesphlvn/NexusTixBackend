@@ -19,8 +19,4 @@
     <ProjectReference Include="..\NexusTix.Persistence\NexusTix.Persistence.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Artists\Rules\" />
-  </ItemGroup>
-
 </Project>

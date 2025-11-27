@@ -11,7 +11,7 @@ namespace NexusTix.Persistence.Repositories.Artists
 
         }
 
-        public async Task<IEnumerable<Artist>> GetAllArtistsWithEventsAsync()
+        public async Task<IEnumerable<Artist>> GetArtistsWithEventsAsync()
         {
             return await _context.Artists
                 .Include(x => x.Events).AsNoTracking().ToListAsync();
