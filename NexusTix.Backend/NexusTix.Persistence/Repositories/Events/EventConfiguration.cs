@@ -27,7 +27,7 @@ namespace NexusTix.Persistence.Repositories.Events
             builder.HasMany(e => e.Tickets)
                 .WithOne(t => t.Event)
                 .HasForeignKey(t => t.EventId)
-                .OnDelete(DeleteBehavior.Cascade); // Eğer bir etkinliği silersek o etkinliğe ait biletler de silinsin.
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Property(e => e.Capacity)
                 .IsRequired().HasDefaultValue(0);

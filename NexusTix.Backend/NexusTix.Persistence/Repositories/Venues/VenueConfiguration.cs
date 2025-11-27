@@ -11,6 +11,8 @@ namespace NexusTix.Persistence.Repositories.Venues
             builder.HasKey(v => v.Id);
             builder.Property(v => v.Name).IsRequired().HasMaxLength(150);
             builder.Property(v => v.Capacity).IsRequired();
+            builder.Property(v => v.Latitude).IsRequired();
+            builder.Property(v => v.Longitude).IsRequired();
 
             builder.HasOne(v => v.District)
                 .WithMany(d => d.Venues)
