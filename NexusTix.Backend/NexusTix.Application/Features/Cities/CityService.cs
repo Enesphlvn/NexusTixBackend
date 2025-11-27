@@ -3,7 +3,6 @@ using NexusTix.Application.Features.Cities.Create;
 using NexusTix.Application.Features.Cities.Responses;
 using NexusTix.Application.Features.Cities.Rules;
 using NexusTix.Application.Features.Cities.Update;
-using NexusTix.Application.Features.Districts.Responses;
 using NexusTix.Domain.Entities;
 using NexusTix.Domain.Exceptions;
 using NexusTix.Persistence.Repositories;

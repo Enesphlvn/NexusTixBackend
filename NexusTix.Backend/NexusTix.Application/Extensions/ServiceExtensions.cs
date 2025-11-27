@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NexusTix.Application.Common.BaseRules;
 using NexusTix.Application.Common.Security;
+using NexusTix.Application.Features.Artists;
+using NexusTix.Application.Features.Artists.Rules;
 using NexusTix.Application.Features.Auth;
 using NexusTix.Application.Features.Auth.Rules;
 using NexusTix.Application.Features.Cities;
@@ -39,6 +41,7 @@ namespace NexusTix.Application.Extensions
             services.AddScoped<ITicketBusinessRules, TicketBusinessRules>();
             services.AddScoped<IUserBusinessRules, UserBusinessRules>();
             services.AddScoped<IVenueBusinessRules, VenueBusinessRules>();
+            services.AddScoped<IArtistBusinessRules, ArtistBusinessRules>();
 
             services.AddScoped<ITokenService, TokenService>();
 
@@ -50,6 +53,7 @@ namespace NexusTix.Application.Extensions
             services.AddScoped<IEventTypeService, EventTypeService>();
             services.AddScoped<ITicketService, TicketService>();
             services.AddScoped<IVenueService, VenueService>();
+            services.AddScoped<IArtistService, ArtistService>();
             services.AddScoped<IDashboardService, DashboardService>();
 
             return services;
