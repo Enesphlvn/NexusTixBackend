@@ -14,4 +14,5 @@ public record EventListResponse
     public string VenueName { get; init; } = string.Empty;
     public string DistrictName { get; init; } = string.Empty;
     public string CityName { get; init; } = string.Empty;
+    public IEnumerable<string> ArtistNames { get; init; } = [];
 }

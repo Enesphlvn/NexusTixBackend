@@ -26,7 +26,8 @@ namespace NexusTix.Application.Features.Events
                 .ForMember(dest => dest.VenueName, opt => opt.MapFrom(src => src.Venue.Name))
                 .ForMember(dest => dest.DistrictName, opt => opt.MapFrom(src => src.Venue.District.Name))
                 .ForMember(dest => dest.CityName, opt => opt.MapFrom(src => src.Venue.District.City.Name))
-                .ForMember(dest => dest.EventTypeName, opt => opt.MapFrom(src => src.EventType.Name));
+                .ForMember(dest => dest.EventTypeName, opt => opt.MapFrom(src => src.EventType.Name))
+                .ForMember(dest => dest.ArtistNames, opt => opt.MapFrom(src => src.Artists.Select(x => x.Name)));
         }
     }
 }
