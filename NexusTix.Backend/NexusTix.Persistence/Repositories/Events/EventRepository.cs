@@ -57,11 +57,12 @@ namespace NexusTix.Persistence.Repositories.Events
                 .AsNoTracking().FirstOrDefaultAsync(x => x.Id == eventId);
         }
 
-        public async Task<IEnumerable<Event>> GetFilteredEventsAsync(int? cityId, int? districtId, int? eventTypeId, DateTimeOffset? date)
+        public async Task<IEnumerable<Event>> GetFilteredEventsAsync(int? cityId, int? districtId, int? eventTypeId, int? artistId, DateTimeOffset? date)
         {
             var query = _context.Events
                 .Include(x => x.EventType)
-                .Include(x => x.Venue).ThenInclude(x => x.District).ThenInclude(x => x.City).AsNoTracking();
+                .Include(x => x.Venue).ThenInclude(x => x.District).ThenInclude(x => x.City)
+                .Include(x => x.Artists).AsNoTracking();
 
             if (cityId.HasValue)
             {
@@ -76,6 +77,11 @@ namespace NexusTix.Persistence.Repositories.Events
             if (eventTypeId.HasValue)
             {
                 query = query.Where(x => x.EventTypeId == eventTypeId.Value);
+            }
+
+            if (artistId.HasValue)
+            {
+                query = query.Where(x => x.Artists.Any(a => a.Id == artistId.Value));
             }
 
             if (date.HasValue)
