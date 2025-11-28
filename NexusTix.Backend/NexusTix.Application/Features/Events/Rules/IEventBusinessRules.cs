@@ -10,6 +10,7 @@ namespace NexusTix.Application.Features.Events.Rules
         Task CheckIfVenueExists(int venueId);
         Task CheckIfUserExists(int userId);
         Task CheckIfCityExists(int cityId);
+        Task CheckIfArtistExists(int artistId);
         Task CheckIfVenueIsAvailableOnDateCreating(int venueId, DateTimeOffset date);
         Task CheckIfVenueIsAvailableOnDateUpdating(int eventId, int venueId, DateTimeOffset date);
         Task CheckIfEventNameExistsWhenCreating(string eventName);
