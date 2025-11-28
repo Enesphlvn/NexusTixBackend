@@ -72,24 +72,78 @@ namespace NexusTix.Persistence.Seed
 
             if (dbEvents.Any() && dbArtists.Any())
             {
-                Artist? GetArtist(string name) => dbArtists.FirstOrDefault(a => a.Name == name);
-
-                foreach (var ev in dbEvents)
+                void Link(string eventName, string artistName)
                 {
-                    if (!ev.Artists.Any())
+                    var ev = dbEvents.FirstOrDefault(e => e.Name == eventName);
+                    var art = dbArtists.FirstOrDefault(a => a.Name == artistName);
+
+                    if (ev != null && art != null && !ev.Artists.Contains(art))
                     {
-                        if (ev.Name.Contains("Büyük Ev Ablukada")) ev.Artists.Add(GetArtist("Büyük Ev Ablukada")!);
-                        else if (ev.Name.Contains("Teoman")) ev.Artists.Add(GetArtist("Teoman")!);
-                        else if (ev.Name.Contains("Duman")) ev.Artists.Add(GetArtist("Duman")!);
-                        else if (ev.Name.Contains("Fazıl Say")) ev.Artists.Add(GetArtist("Fazıl Say")!);
-                        else if (ev.Name.Contains("Genco") || ev.Description!.Contains("Genco")) ev.Artists.Add(GetArtist("Genco Erkal")!);
-                        else if (ev.Name.Contains("Cem Yılmaz")) ev.Artists.Add(GetArtist("Cem Yılmaz")!);
-                        else if (ev.Name.Contains("Sertab")) ev.Artists.Add(GetArtist("Sertab Erener")!);
-                        else if (ev.Name.Contains("Athena")) ev.Artists.Add(GetArtist("Athena")!);
-                        else if (ev.Name.Contains("Haluk Levent")) ev.Artists.Add(GetArtist("Haluk Levent")!);
-                        else if (ev.Name.Contains("Hayko")) ev.Artists.Add(GetArtist("Hayko Cepkin")!);
+                        ev.Artists.Add(art);
                     }
                 }
+
+                // İstanbul
+                Link("Büyük Ev Ablukada Konseri", "Büyük Ev Ablukada");
+                Link("Cyrano de Bergerac", "Bülent Emin Yarar");
+                Link("Duman Konseri", "Duman");
+                Link("Bağımsız Filmler Festivali - Açılış", "Nuri Bilge Ceylan");
+                Link("La Traviata Operası", "Fazıl Say");
+                Link("Teoman Akustik", "Teoman");
+                Link("Karagöz ve Hacivat Tiyatro Oyunu", "Genco Erkal");
+                Link("Yıldız Tilbe", "Yıldız Tilbe");
+
+                // Ankara
+                Link("Hamlet Oyunu", "Haluk Bilginer");
+                Link("Geleceğin Teknolojileri Zirvesi", "İlber Ortaylı");
+                Link("ODTÜ Caz Günleri", "Madrigal");
+
+                // İzmir
+                Link("Zengin Mutfağı - İzmir Turnesi", "Şener Şen");
+                Link("Athena Konseri", "Athena");
+                Link("Fazıl Say Resitali", "Fazıl Say");
+
+                // Bursa
+                Link("Bir Delinin Hatıra Defteri", "Genco Erkal");
+                Link("Hasan Can Kaya - Stand Up", "Hasan Can Kaya");
+
+                // Antalya
+                Link("Kenan Doğulu Yaz Konseri", "Kenan Doğulu");
+
+                // Adana
+                Link("Hayko Cepkin Konseri", "Hayko Cepkin");
+                Link("Cimri", "Haluk Bilginer");
+
+                // Konya
+                Link("Mevlana Celaleddin Rumi - Çağrı", "Genco Erkal");
+
+                // Gaziantep
+                Link("Zengin Mutfağı", "Şener Şen");
+                Link("Haluk Levent - Halk Konseri", "Haluk Levent");
+
+                // Eskişehir
+                Link("Cem Yılmaz - Diamond Elite Platinum Plus", "Cem Yılmaz");
+                Link("Kuğu Gölü Balesi", "Fazıl Say");
+
+                // Mersin
+                Link("Carmen", "Sertab Erener");
+                Link("Mersin Senfoni Orkestrası", "Fazıl Say");
+
+                // Trabzon
+                Link("Volkan Konak - Kuzeyin Oğlu", "Volkan Konak");
+                Link("Karadeniz Güldürüsü", "Cem Yılmaz");
+
+                // Kayseri
+                Link("Anadolu Basketbol Turnuvası Finali", "Athena");
+                Link("Mustafa Ceceli Konseri", "Mustafa Ceceli");
+
+                // Kocaeli
+                Link("Madrigal Konseri", "Madrigal");
+                Link("İkinci Bahar", "Türkan Şoray");
+
+                // Muğla
+                Link("Sertab Erener - Yaz Konserleri", "Sertab Erener");
+                Link("Ata Demirer Gazinosu", "Ata Demirer");
 
                 await context.SaveChangesAsync();
             }
@@ -1942,9 +1996,10 @@ namespace NexusTix.Persistence.Seed
         {
             return
             [
+                // MÜZİSYENLER
                 new Artist
                 {
-                    Name = "Sagopa",
+                    Name = "Sagopa Kajmer",
                     Bio = "Türk rap müziği sanatçısı.",
                     ImageUrl = "/images/artists/sagopa.jpg"
                 },
@@ -1980,18 +2035,6 @@ namespace NexusTix.Persistence.Seed
                 },
                 new Artist
                 {
-                    Name = "Genco Erkal",
-                    Bio = "Tiyatro sanatçısı.",
-                    ImageUrl = "/images/artists/genco-erkal.jpg"
-                },
-                new Artist
-                {
-                    Name = "Cem Yılmaz",
-                    Bio = "Komedyen.",
-                    ImageUrl = "/images/artists/cem-yilmaz.jpg"
-                },
-                new Artist
-                {
                     Name = "Sertab Erener",
                     Bio = "Türk pop müziği sanatçısı.",
                     ImageUrl = "/images/artists/sertab-erener.jpg"
@@ -2013,6 +2056,106 @@ namespace NexusTix.Persistence.Seed
                     Name = "Hayko Cepkin",
                     Bio = "Alternatif metal sanatçısı.",
                     ImageUrl = "/images/artists/hayko-cepkin.jpg"
+                },
+                new Artist
+                {
+                    Name = "Kenan Doğulu",
+                    Bio = "Türk pop müziği sanatçısı.",
+                    ImageUrl = "/images/artists/kenan-dogulu.jpg"
+                },
+                new Artist
+                {
+                    Name = "Madrigal",
+                    Bio = "Alternatif rock grubu.",
+                    ImageUrl = "/images/artists/madrigal.jpg"
+                },
+                new Artist
+                {
+                    Name = "Yıldız Tilbe",
+                    Bio = "Türk şarkıcı ve besteci.",
+                    ImageUrl = "/images/artists/yildiz-tilbe.jpg"
+                },
+                new Artist
+                {
+                    Name = "Mustafa Ceceli",
+                    Bio = "Türk şarkıcı.",
+                    ImageUrl = "/images/artists/mustafa-ceceli.jpg"
+                },
+                new Artist
+                {
+                    Name = "Volkan Konak",
+                    Bio = "Kuzeyin Oğlu.",
+                    ImageUrl = "/images/artists/volkan-konak.jpg"
+                },
+
+                // TİYATRO - KOMEDİ
+                new Artist
+                {
+                    Name = "Genco Erkal",
+                    Bio = "Tiyatro sanatçısı.",
+                    ImageUrl = "/images/artists/genco-erkal.jpg"
+                },
+                new Artist
+                {
+                    Name = "Cem Yılmaz",
+                    Bio = "Komedyen.",
+                    ImageUrl = "/images/artists/cem-yilmaz.jpg"
+                },
+                new Artist
+                {
+                    Name = "Şener Şen",
+                    Bio = "Usta oyuncu.",
+                    ImageUrl = "/images/artists/sener-sen.jpg"
+                },
+                new Artist
+                {
+                    Name = "Haluk Bilginer",
+                    Bio = "Uluslararası ödüllü oyuncu.",
+                    ImageUrl = "/images/artists/haluk-bilginer.jpg"
+                },
+                new Artist
+                {
+                    Name = "Bülent Emin Yarar",
+                    Bio = "Tiyatro oyuncusu.",
+                    ImageUrl = "/images/artists/bulent-emin-yarar.jpg"
+                },
+                new Artist
+                {
+                    Name = "Ata Demirer",
+                    Bio = "Komedyen ve oyuncu.",
+                    ImageUrl = "/images/artists/ata-demirer.jpg"
+                },
+                new Artist
+                {
+                    Name = "Hasan Can Kaya",
+                    Bio = "Stand-up komedyeni.",
+                    ImageUrl = "/images/artists/hasan-can-kaya.jpg"
+                },
+                new Artist
+                {
+                    Name = "Türkan Şoray",
+                    Bio = "Sinemanın Sultanı.",
+                    ImageUrl = "/images/artists/turkan-soray.jpg"
+                },
+
+                // KONFERANS
+                new Artist
+                {
+                    Name = "Teknoloji Uzmanları",
+                    Bio = "Sektör liderleri.",
+                    ImageUrl = "/images/artists/tech-speakers.jpg"
+                },
+                new Artist
+                {
+                    Name = "İlber Ortaylı",
+                    Bio = "Türk tarihçi, akademisyen ve yazar.",
+                    ImageUrl = "/images/artists/ilber-ortayli.jpg"
+                },
+                new Artist
+                {
+                    Name = "Nuri Bilge Ceylan",
+                    Bio = "Türk yönetmen, senarist ve fotoğrafçı.",
+                    ImageUrl = "/images/artists/nuri-bilge-ceylan.jpg"
                 }
             ];
         }

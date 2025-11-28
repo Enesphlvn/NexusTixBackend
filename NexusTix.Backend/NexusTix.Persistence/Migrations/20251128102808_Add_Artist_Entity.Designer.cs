@@ -12,7 +12,7 @@ using NexusTix.Persistence.Context;
 namespace NexusTix.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251127165248_Add_Artist_Entity")]
+    [Migration("20251128102808_Add_Artist_Entity")]
     partial class Add_Artist_Entity
     {
         /// <inheritdoc />
