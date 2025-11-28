@@ -40,7 +40,7 @@ namespace NexusTix.Persistence.Repositories.Events
             return await _context.Events
                 .Include(x => x.EventType)
                 .Include(x => x.Venue).ThenInclude(x => x.District).ThenInclude(x => x.City)
-                .AsNoTracking().ToListAsync();
+                .Include(x => x.Artists).AsNoTracking().ToListAsync();
         }
 
         public async Task<IEnumerable<Event>> GetEventsWithHighestSalesAsync(int numberOfEvents)
@@ -54,7 +54,7 @@ namespace NexusTix.Persistence.Repositories.Events
             return await _context.Events
                 .Include(x => x.EventType)
                 .Include(x => x.Venue).ThenInclude(x => x.District).ThenInclude(x => x.City)
-                .AsNoTracking().FirstOrDefaultAsync(x => x.Id == eventId);
+                .Include(x => x.Artists).AsNoTracking().FirstOrDefaultAsync(x => x.Id == eventId);
         }
 
         public async Task<IEnumerable<Event>> GetFilteredEventsAsync(int? cityId, int? districtId, int? eventTypeId, int? artistId, DateTimeOffset? date)
