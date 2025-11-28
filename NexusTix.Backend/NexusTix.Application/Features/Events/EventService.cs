@@ -103,7 +103,7 @@ namespace NexusTix.Application.Features.Events
             {
                 await _eventRules.CheckIfEventExists(id);
 
-                var newEvent = await _unitOfWork.Events.GetByIdAsync(id);
+                var newEvent = await _unitOfWork.Events.GetByIdWithArtistsAsync(id);
 
                 var eventAsDto = _mapper.Map<EventResponse>(newEvent);
 

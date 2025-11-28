@@ -13,7 +13,8 @@ namespace NexusTix.Application.Features.Events
             CreateMap<CreateEventRequest, Event>();
             CreateMap<UpdateEventRequest, Event>();
 
-            CreateMap<Event, EventResponse>();
+            CreateMap<Event, EventResponse>()
+                .ForMember(dest => dest.ArtistIds, opt => opt.MapFrom(src => src.Artists.Select(a => a.Id))); ;
             CreateMap<Event, EventByEventTypeResponse>();
             CreateMap<Event, EventByVenueResponse>();
             CreateMap<Event, EventByUserTicketsResponse>();
