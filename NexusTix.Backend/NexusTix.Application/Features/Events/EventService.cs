@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using NexusTix.Application.Features.Events.Create;
 using NexusTix.Application.Features.Events.Responses;
 using NexusTix.Application.Features.Events.Rules;
@@ -33,6 +34,13 @@ namespace NexusTix.Application.Features.Events
                 await _eventRules.CheckIfVenueIsAvailableOnDateCreating(request.VenueId, request.Date);
 
                 var newEvent = _mapper.Map<Event>(request);
+
+                if (request.ArtistIds != null && request.ArtistIds.Any())
+                {
+                    var artists = await _unitOfWork.Artists.Where(a => request.ArtistIds.Contains(a.Id)).ToListAsync();
+
+                    newEvent.Artists = artists;
+                }
 
                 await _unitOfWork.Events.AddAsync(newEvent);
                 await _unitOfWork.SaveChangesAsync();

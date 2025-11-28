@@ -32,6 +32,11 @@ namespace NexusTix.Application.Features.Events.Create
 
             RuleFor(x => x.Capacity)
                 .GreaterThan(0).WithMessage("Etkinlik kapasitesi sıfırdan büyük olmalıdır.");
+
+            RuleFor(x => x.ArtistIds)
+            .NotNull().WithMessage("Sanatçı listesi boş olamaz (En azından boş bir liste gönderilmelidir).")
+            .Must(ids => ids == null || ids.Distinct().Count() == ids.Count())
+            .WithMessage("Aynı sanatçı birden fazla kez seçilemez.");
         }
     }
 }
