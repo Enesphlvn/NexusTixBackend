@@ -61,9 +61,9 @@ namespace NexusTix.WebAPI.Controllers
 
         [HttpGet("filter")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetFilteredEvents([FromQuery] int? cityId, [FromQuery] int? eventTypeId, [FromQuery] int? districtId, [FromQuery] DateTimeOffset? date)
+        public async Task<IActionResult> GetFilteredEvents([FromQuery] int? cityId, [FromQuery] int? eventTypeId, [FromQuery] int? districtId, [FromQuery] int? artistId, [FromQuery] DateTimeOffset? date)
         {
-            return CreateActionResult(await _eventService.GetFilteredEventsAsync(cityId, districtId, eventTypeId, date));
+            return CreateActionResult(await _eventService.GetFilteredEventsAsync(cityId, districtId, eventTypeId, artistId, date));
         }
 
         [HttpGet("{eventTypeId:int}/eventtype")]
