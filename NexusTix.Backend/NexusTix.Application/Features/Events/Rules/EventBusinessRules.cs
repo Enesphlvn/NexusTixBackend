@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using NexusTix.Application.Common.BaseRules;
-using NexusTix.Domain.Entities;
+﻿using NexusTix.Application.Common.BaseRules;
 using NexusTix.Domain.Exceptions;
 using NexusTix.Persistence.Repositories;
 using System.Net;
@@ -132,6 +130,18 @@ namespace NexusTix.Application.Features.Events.Rules
             if (!exists)
             {
                 throw new BusinessException($"ID'si '{venueId}' olan mekan bulunamadı.", HttpStatusCode.BadRequest);
+            }
+        }
+
+        public async Task CheckIfVenueHasEnoughCapacity(int venueId, int eventCapacity)
+        {
+            var venue = await _unitOfWork.Venues.GetByIdAsync(venueId);
+
+            if (venue == null) throw new BusinessException("Mekan bulunamadı.", HttpStatusCode.NotFound);
+
+            if (eventCapacity > venue.Capacity)
+            {
+                throw new BusinessException($"Etkinlik kapasitesi '{eventCapacity}', seçilen mekanın kapasitesini '{venue.Capacity}' aşamaz.", HttpStatusCode.BadRequest);
             }
         }
 

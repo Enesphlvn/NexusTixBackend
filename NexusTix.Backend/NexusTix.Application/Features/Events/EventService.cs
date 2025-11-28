@@ -32,12 +32,18 @@ namespace NexusTix.Application.Features.Events
                 await _eventRules.CheckIfEventTypeExists(request.EventTypeId);
                 await _eventRules.CheckIfVenueExists(request.VenueId);
                 await _eventRules.CheckIfVenueIsAvailableOnDateCreating(request.VenueId, request.Date);
+                await _eventRules.CheckIfVenueHasEnoughCapacity(request.VenueId, request.Capacity);
 
                 var newEvent = _mapper.Map<Event>(request);
 
                 if (request.ArtistIds != null && request.ArtistIds.Any())
                 {
-                    var artists = await _unitOfWork.Artists.Where(a => request.ArtistIds.Contains(a.Id)).ToListAsync();
+                    var artists = await _unitOfWork.Artists.GetArtistsByIdsAsync(request.ArtistIds);
+
+                    if (artists.Count != request.ArtistIds.Count())
+                    {
+                        throw new BusinessException("Seçilen sanatçılardan bazıları bulunamadı.", HttpStatusCode.BadRequest);
+                    }
 
                     newEvent.Artists = artists;
                 }
@@ -349,10 +355,26 @@ namespace NexusTix.Application.Features.Events
                 await _eventRules.CheckIfEventTypeExists(request.EventTypeId);
                 await _eventRules.CheckIfVenueExists(request.VenueId);
                 await _eventRules.CheckIfVenueIsAvailableOnDateUpdating(request.Id, request.VenueId, request.Date);
+                await _eventRules.CheckIfVenueHasEnoughCapacity(request.VenueId, request.Capacity);
 
-                var newEvent = await _unitOfWork.Events.GetByIdAsync(request.Id);
+                var newEvent = await _unitOfWork.Events.GetByIdWithArtistsAsync(request.Id);
 
                 _mapper.Map(request, newEvent);
+
+                if (request.ArtistIds != null)
+                {
+                    newEvent!.Artists.Clear();
+
+                    if (request.ArtistIds.Any())
+                    {
+                        var newArtists = await _unitOfWork.Artists.GetArtistsByIdsAsync(request.ArtistIds);
+
+                        foreach (var artist in newArtists)
+                        {
+                            newEvent.Artists.Add(artist);
+                        }
+                    }
+                }
 
                 _unitOfWork.Events.Update(newEvent!);
                 await _unitOfWork.SaveChangesAsync();

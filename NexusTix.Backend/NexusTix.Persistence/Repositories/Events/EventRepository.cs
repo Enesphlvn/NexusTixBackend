@@ -98,9 +98,9 @@ namespace NexusTix.Persistence.Repositories.Events
             return await query.ToListAsync();
         }
 
-        public async Task<Event> GetByIdWithArtistsAsync(int eventId)
+        public async Task<Event?> GetByIdWithArtistsAsync(int eventId)
         {
-            
+            return await _context.Events.Include(x => x.Artists).FirstOrDefaultAsync(x => x.Id == eventId);
         }
     }
 }

@@ -19,5 +19,6 @@ namespace NexusTix.Application.Features.Events.Rules
         void CheckIfPriceRangeIsValid(decimal minPrice, decimal maxPrice);
         void CheckIfNumberOfEventsIsValid(int numberOfEvents);
         Task CheckIfEventHasNoTickets(int eventId);
+        Task CheckIfVenueHasEnoughCapacity(int venueId, int eventCapacity);
     }
 }

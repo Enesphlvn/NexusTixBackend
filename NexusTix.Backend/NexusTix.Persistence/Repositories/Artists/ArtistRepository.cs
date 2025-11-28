@@ -11,6 +11,11 @@ namespace NexusTix.Persistence.Repositories.Artists
 
         }
 
+        public async Task<List<Artist>> GetArtistsByIdsAsync(IEnumerable<int> ids)
+        {
+            return await _context.Artists.Where(a => ids.Contains(a.Id)).ToListAsync();
+        }
+
         public async Task<IEnumerable<Artist>> GetArtistsWithEventsAsync()
         {
             return await _context.Artists
