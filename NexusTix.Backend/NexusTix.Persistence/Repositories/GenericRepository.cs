@@ -36,7 +36,7 @@ namespace NexusTix.Persistence.Repositories
             _dbSet.Remove(entity);
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public virtual async Task<IEnumerable<T>> GetAllAsync()
         {
             return await _dbSet.AsNoTracking().ToListAsync();
         }

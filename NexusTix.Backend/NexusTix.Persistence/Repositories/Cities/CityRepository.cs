@@ -10,6 +10,11 @@ namespace NexusTix.Persistence.Repositories.Cities
         {
         }
 
+        public override async Task<IEnumerable<City>> GetAllAsync()
+        {
+            return await _context.Cities.OrderBy(x => x.Name).AsNoTracking().ToListAsync();
+        }
+
         public async Task<IEnumerable<City>> GetCitiesAggregateAsync()
         {
             return await _context.Cities

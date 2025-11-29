@@ -11,6 +11,11 @@ namespace NexusTix.Persistence.Repositories.Artists
 
         }
 
+        public override async Task<IEnumerable<Artist>> GetAllAsync()
+        {
+            return await _context.Artists.OrderBy(x => x.Name).AsNoTracking().ToListAsync();
+        }
+
         public async Task<List<Artist>> GetArtistsByIdsAsync(IEnumerable<int> ids)
         {
             return await _context.Artists.Where(a => ids.Contains(a.Id)).ToListAsync();

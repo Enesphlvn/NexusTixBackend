@@ -10,6 +10,11 @@ namespace NexusTix.Persistence.Repositories.Districts
         {
         }
 
+        public override async Task<IEnumerable<District>> GetAllAsync()
+        {
+            return await _context.Districts.OrderBy(x => x.Name).AsNoTracking().ToListAsync();
+        }
+
         public async Task<District?> GetDistrictAggregateAsync(int id)
         {
             return await _context.Districts

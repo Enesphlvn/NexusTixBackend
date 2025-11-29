@@ -10,6 +10,11 @@ namespace NexusTix.Persistence.Repositories.EventTypes
         {
         }
 
+        public override async Task<IEnumerable<EventType>> GetAllAsync()
+        {
+            return await _context.EventTypes.OrderBy(x => x.Name).AsNoTracking().ToListAsync();
+        }
+
         public async Task<EventType?> GetEventTypeAggregateAsync(int id)
         {
             return await _context.EventTypes
