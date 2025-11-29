@@ -102,5 +102,15 @@ namespace NexusTix.Persistence.Repositories.Events
         {
             return await _context.Events.Include(x => x.Artists).FirstOrDefaultAsync(x => x.Id == eventId);
         }
+
+        public async Task<IEnumerable<Event>> GetAllEventsForAdminAsync()
+        {
+            return await _context.Events
+                .Include(x => x.EventType)
+                .Include(x => x.Venue).ThenInclude(x => x.District).ThenInclude(x => x.City)
+                .Include(x => x.Artists)
+                .IgnoreQueryFilters()
+                .OrderByDescending(x => x.Id).AsNoTracking().ToListAsync();
+        }
     }
 }

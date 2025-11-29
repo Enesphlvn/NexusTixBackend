@@ -244,7 +244,7 @@ namespace NexusTix.Application.Features.Events
         {
             try
             {
-                var events = await _unitOfWork.Events.GetFilteredEventsAsync(null, null, null, null, null);
+                var events = await _unitOfWork.Events.GetAllEventsForAdminAsync();
 
                 var eventsAsDto = _mapper.Map<IEnumerable<EventAdminResponse>>(events);
 
