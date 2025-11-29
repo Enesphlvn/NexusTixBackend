@@ -104,7 +104,7 @@ namespace NexusTix.Persistence.Repositories.Events
         }
 
         public async Task<IEnumerable<Event>> GetAllEventsForAdminAsync()
-        {
+        { 
             return await _context.Events
                 .Include(x => x.EventType)
                 .Include(x => x.Venue).ThenInclude(x => x.District).ThenInclude(x => x.City)

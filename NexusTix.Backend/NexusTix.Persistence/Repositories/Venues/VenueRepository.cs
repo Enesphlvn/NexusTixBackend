@@ -22,7 +22,8 @@ namespace NexusTix.Persistence.Repositories.Venues
         public async Task<Venue?> GetVenueForAdminAsync(int id)
         {
             return await _context.Venues
-            .Include(v => v.District).ThenInclude(x => x.City).AsNoTracking().FirstOrDefaultAsync(v => v.Id == id);
+            .Include(v => v.District).ThenInclude(x => x.City)
+            .IgnoreQueryFilters().OrderByDescending(x => x.Id).AsNoTracking().FirstOrDefaultAsync(v => v.Id == id);
         }
 
         public async Task<IEnumerable<Venue>> GetVenuesAggregateAsync()

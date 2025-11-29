@@ -12,5 +12,8 @@ public record EventAdminResponse
     public string EventTypeName { get; init; } = string.Empty;
     public int VenueId { get; init; }
     public string VenueName { get; init; } = string.Empty;
+    public bool IsActive { get; init; }
+    public DateTimeOffset Created { get; init; }
+    public DateTimeOffset? Updated { get; init; }
     public IEnumerable<string> ArtistNames { get; set; } = [];
 }
