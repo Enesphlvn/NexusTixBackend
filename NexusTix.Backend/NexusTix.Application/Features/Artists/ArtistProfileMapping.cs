@@ -15,6 +15,7 @@ namespace NexusTix.Application.Features.Artists
 
             CreateMap<Artist, ArtistResponse>();
             CreateMap<Artist, ArtistWithEventsResponse>();
+            CreateMap<Artist, ArtistAdminResponse>();
         }
     }
 }
