@@ -48,5 +48,10 @@ namespace NexusTix.Persistence.Repositories.Artists
             return await _context.Artists
                 .Include(x => x.Events).ThenInclude(x => x.Venue).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
+
+        public async Task<Artist?> GetByIdIncludingPassiveAsync(int id)
+        {
+            return await _context.Artists.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == id);
+        }
     }
 }

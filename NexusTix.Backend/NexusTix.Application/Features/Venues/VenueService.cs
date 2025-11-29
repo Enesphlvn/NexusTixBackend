@@ -216,10 +216,21 @@ namespace NexusTix.Application.Features.Venues
         {
             try
             {
-                await _venueRules.CheckIfVenueExists(id);
-                await _venueRules.CheckIfVenueHasActiveEvents(id);
+                var newVenue = await _unitOfWork.Venues.GetByIdIncludingPassiveAsync(id);
 
-                await _unitOfWork.Venues.PassiveAsync(id);
+                if (newVenue == null)
+                {
+                    return ServiceResult.Fail("Mekan bulunamadı.", HttpStatusCode.NotFound);
+                }
+
+                if (newVenue.IsActive)
+                {
+                    await _venueRules.CheckIfVenueHasActiveEvents(id);
+                }
+
+                newVenue.IsActive = !newVenue.IsActive;
+
+                _unitOfWork.Venues.Update(newVenue);
                 await _unitOfWork.SaveChangesAsync();
 
                 return ServiceResult.Success(HttpStatusCode.NoContent);

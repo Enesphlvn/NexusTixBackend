@@ -189,10 +189,22 @@ namespace NexusTix.Application.Features.Artists
         {
             try
             {
-                await _artistRules.CheckIfArtistExists(id);
-                await _artistRules.CheckIfArtistHasActiveFutureEvents(id);
+                var newArtist = await _unitOfWork.Artists.GetByIdIncludingPassiveAsync(id);
 
-                await _unitOfWork.Artists.PassiveAsync(id);
+                if (newArtist == null)
+                {
+                    return ServiceResult.Fail("Sanatçı bulunamadı.", HttpStatusCode.NotFound);
+                }
+
+                if (newArtist.IsActive)
+                {
+                    await _artistRules.CheckIfArtistHasActiveFutureEvents(id);
+                }
+
+                newArtist.IsActive = !newArtist.IsActive;
+
+                _unitOfWork.Artists.Update(newArtist);
+
                 await _unitOfWork.SaveChangesAsync();
 
                 return ServiceResult.Success(HttpStatusCode.NoContent);

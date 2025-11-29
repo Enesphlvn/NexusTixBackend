@@ -332,10 +332,21 @@ namespace NexusTix.Application.Features.Events
         {
             try
             {
-                await _eventRules.CheckIfEventExists(id);
-                await _eventRules.CheckIfEventHasNoTickets(id);
+                var newEvent = await _unitOfWork.Events.GetByIdIncludingPassiveAsync(id);
 
-                await _unitOfWork.Events.PassiveAsync(id);
+                if (newEvent == null)
+                {
+                    return ServiceResult.Fail("Etkinlik bulunamadı.", HttpStatusCode.NotFound);
+                }
+
+                if (newEvent.IsActive)
+                {
+                    await _eventRules.CheckIfEventHasNoTickets(id);
+                }
+
+                newEvent.IsActive = !newEvent.IsActive;
+
+                _unitOfWork.Events.Update(newEvent);
                 await _unitOfWork.SaveChangesAsync();
 
                 return ServiceResult.Success(HttpStatusCode.NoContent);

@@ -51,5 +51,10 @@ namespace NexusTix.Persistence.Repositories.Venues
             .Include(v => v.District).ThenInclude(x => x.City)
             .AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
+
+        public async Task<Venue?> GetByIdIncludingPassiveAsync(int id)
+        {
+            return await _context.Venues.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == id);
+        }
     }
 }

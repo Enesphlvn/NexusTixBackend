@@ -112,5 +112,10 @@ namespace NexusTix.Persistence.Repositories.Events
                 .IgnoreQueryFilters()
                 .OrderByDescending(x => x.Id).AsNoTracking().ToListAsync();
         }
+
+        public async Task<Event?> GetByIdIncludingPassiveAsync(int id)
+        {
+            return await _context.Events.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == id);
+        }
     }
 }
