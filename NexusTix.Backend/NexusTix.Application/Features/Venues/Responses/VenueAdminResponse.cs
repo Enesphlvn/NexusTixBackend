@@ -9,4 +9,7 @@ public record VenueAdminResponse
     public double Longitude { get; init; }
     public int DistrictId { get; init; }
     public int CityId { get; init; }
+    public bool IsActive { get; init; }
+    public DateTimeOffset Created { get; init; }
+    public DateTimeOffset? Updated { get; init; }
 }
