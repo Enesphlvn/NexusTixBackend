@@ -240,7 +240,7 @@ namespace NexusTix.Application.Features.Events
             }
         }
 
-        public async Task<ServiceResult<IEnumerable<EventAdminResponse>>> GetEventsForAdminAsync()
+        public async Task<ServiceResult<IEnumerable<EventAdminResponse>>> GetAllEventsForAdminAsync()
         {
             try
             {

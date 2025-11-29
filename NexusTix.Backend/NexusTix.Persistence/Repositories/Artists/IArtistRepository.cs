@@ -7,5 +7,7 @@ namespace NexusTix.Persistence.Repositories.Artists
         Task<Artist?> GetArtistWithEventsAsync(int id);
         Task<IEnumerable<Artist>> GetArtistsWithEventsAsync();
         Task<List<Artist>> GetArtistsByIdsAsync(IEnumerable<int> ids);
+        Task<IEnumerable<Artist>> GetAllArtistsForAdminAsync();
+        Task<Artist?> GetArtistForAdminAsync(int id);
     }
 }

@@ -9,5 +9,6 @@ namespace NexusTix.Persistence.Repositories.Venues
         Task<Venue?> GetVenueAggregateAsync(int id);
         Task<IEnumerable<Venue>> GetVenuesAggregateAsync();
         Task<Venue?> GetVenueForAdminAsync(int id);
+        Task<IEnumerable<Venue>> GetAllVenuesForAdminAsync();
     }
 }

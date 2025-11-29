@@ -19,11 +19,11 @@ namespace NexusTix.Persistence.Repositories.Venues
                 .AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<Venue?> GetVenueForAdminAsync(int id)
+        public async Task<IEnumerable<Venue>> GetAllVenuesForAdminAsync()
         {
             return await _context.Venues
             .Include(v => v.District).ThenInclude(x => x.City)
-            .IgnoreQueryFilters().OrderByDescending(x => x.Id).AsNoTracking().FirstOrDefaultAsync(v => v.Id == id);
+            .IgnoreQueryFilters().OrderByDescending(x => x.Id).AsNoTracking().ToListAsync();
         }
 
         public async Task<IEnumerable<Venue>> GetVenuesAggregateAsync()
@@ -43,6 +43,13 @@ namespace NexusTix.Persistence.Repositories.Venues
         public async Task<Venue?> GetVenueWithEventsAsync(int id)
         {
             return await _context.Venues.Include(x => x.Events).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<Venue?> GetVenueForAdminAsync(int id)
+        {
+            return await _context.Venues
+            .Include(v => v.District).ThenInclude(x => x.City)
+            .AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
     }
 }

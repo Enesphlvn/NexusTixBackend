@@ -19,7 +19,7 @@ namespace NexusTix.Application.Features.Events
         Task<ServiceResult<IEnumerable<EventResponse>>> GetEventsByPriceRangeAsync(decimal minPrice, decimal maxPrice);
         Task<ServiceResult<IEnumerable<EventByUserTicketsResponse>>> GetEventsWithHighestSalesAsync(int numberOfEvents);
         Task<ServiceResult<IEnumerable<EventListResponse>>> GetFilteredEventsAsync(int? cityId, int? districtId, int? eventTypeId, int? artistId, DateTimeOffset? date);
-        Task<ServiceResult<IEnumerable<EventAdminResponse>>> GetEventsForAdminAsync();
+        Task<ServiceResult<IEnumerable<EventAdminResponse>>> GetAllEventsForAdminAsync();
 
         Task<ServiceResult<EventResponse>> CreateAsync(CreateEventRequest request);
         Task<ServiceResult> UpdateAsync(UpdateEventRequest request);

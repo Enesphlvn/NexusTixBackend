@@ -3,6 +3,7 @@ using NexusTix.Application.Features.Artists.Create;
 using NexusTix.Application.Features.Artists.Responses;
 using NexusTix.Application.Features.Artists.Rules;
 using NexusTix.Application.Features.Artists.Update;
+using NexusTix.Application.Features.Venues.Responses;
 using NexusTix.Domain.Entities;
 using NexusTix.Domain.Exceptions;
 using NexusTix.Persistence.Repositories;
@@ -77,6 +78,40 @@ namespace NexusTix.Application.Features.Artists
             catch (Exception ex)
             {
                 return ServiceResult<IEnumerable<ArtistResponse>>.Fail($"Bir hata oluştu: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
+        }
+
+        public async Task<ServiceResult<IEnumerable<ArtistAdminResponse>>> GetAllArtistsForAdminAsync()
+        {
+            try
+            {
+                var artists = await _unitOfWork.Artists.GetAllArtistsForAdminAsync();
+
+                var artistsAsDto = _mapper.Map<IEnumerable<ArtistAdminResponse>>(artists);
+
+                return ServiceResult<IEnumerable<ArtistAdminResponse>>.Success(artistsAsDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<ArtistAdminResponse>>.Fail($"Bir hata oluştu: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
+        }
+
+        public async Task<ServiceResult<ArtistAdminResponse>> GetArtistForAdminAsync(int id)
+        {
+            try
+            {
+                await _artistRules.CheckIfArtistExists(id);
+
+                var artist = await _unitOfWork.Artists.GetArtistForAdminAsync(id);
+
+                var artistAsDto = _mapper.Map<ArtistAdminResponse>(artist);
+
+                return ServiceResult<ArtistAdminResponse>.Success(artistAsDto);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult<ArtistAdminResponse>.Fail(ex.Message, ex.StatusCode);
             }
         }
 

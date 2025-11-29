@@ -16,7 +16,7 @@ namespace NexusTix.WebAPI.Controllers
         {
             _eventService = eventService;
         }
-
+         
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> GetAllEvents()
@@ -40,9 +40,9 @@ namespace NexusTix.WebAPI.Controllers
 
         [HttpGet("admin-list")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetEventsForAdmin()
+        public async Task<IActionResult> GetAllEventsForAdmin()
         {
-            return CreateActionResult(await _eventService.GetEventsForAdminAsync());
+            return CreateActionResult(await _eventService.GetAllEventsForAdminAsync());
         }
 
         [HttpGet("{id:int}/aggregate")]

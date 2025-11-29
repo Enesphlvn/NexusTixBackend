@@ -38,6 +38,13 @@ namespace NexusTix.WebAPI.Controllers
             return CreateActionResult(await _venueService.GetByIdAsync(id));
         }
 
+        [HttpGet("admin-list")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllVenuesForAdmin()
+        {
+            return CreateActionResult(await _venueService.GetAllVenuesForAdminAsync());
+        }
+
         [HttpGet("{id:int}/admin-edit")]
         [Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> GetVenueForAdmin(int id)

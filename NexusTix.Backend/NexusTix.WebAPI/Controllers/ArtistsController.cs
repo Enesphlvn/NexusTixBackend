@@ -38,6 +38,20 @@ namespace NexusTix.WebAPI.Controllers
             return CreateActionResult(await _artistService.GetByIdAsync(id));
         }
 
+        [HttpGet("admin-list")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllArtistsForAdmin()
+        {
+            return CreateActionResult(await _artistService.GetAllArtistsForAdminAsync());
+        }
+
+        [HttpGet("{id:int}/admin-edit")]
+        [Authorize(Roles = "Admin, Manager")]
+        public async Task<IActionResult> GetArtistForAdmin(int id)
+        {
+            return CreateActionResult(await _artistService.GetArtistForAdminAsync(id));
+        }
+
         [HttpGet("{id:int}/events")]
         [AllowAnonymous]
         public async Task<IActionResult> GetArtistWithEvents(int id)

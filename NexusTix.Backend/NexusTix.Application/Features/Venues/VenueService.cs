@@ -78,6 +78,22 @@ namespace NexusTix.Application.Features.Venues
             }
         }
 
+        public async Task<ServiceResult<IEnumerable<VenueAdminResponse>>> GetAllVenuesForAdminAsync()
+        {
+            try
+            {
+                var venues = await _unitOfWork.Venues.GetAllVenuesForAdminAsync();
+
+                var venuesAsDto = _mapper.Map<IEnumerable<VenueAdminResponse>>(venues);
+
+                return ServiceResult<IEnumerable<VenueAdminResponse>>.Success(venuesAsDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<VenueAdminResponse>>.Fail($"Bir hata oluştu: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
+        }
+
         public async Task<ServiceResult<VenueResponse>> GetByIdAsync(int id)
         {
             try

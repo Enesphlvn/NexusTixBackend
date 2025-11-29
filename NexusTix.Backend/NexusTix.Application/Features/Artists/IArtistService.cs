@@ -1,6 +1,7 @@
 ﻿using NexusTix.Application.Features.Artists.Create;
 using NexusTix.Application.Features.Artists.Responses;
 using NexusTix.Application.Features.Artists.Update;
+using NexusTix.Domain.Entities;
 
 namespace NexusTix.Application.Features.Artists
 {
@@ -12,6 +13,8 @@ namespace NexusTix.Application.Features.Artists
 
         Task<ServiceResult<ArtistWithEventsResponse>> GetArtistWithEventsAsync(int id);
         Task<ServiceResult<IEnumerable<ArtistWithEventsResponse>>> GetArtistsWithEventsAsync();
+        Task<ServiceResult<IEnumerable<ArtistAdminResponse>>> GetAllArtistsForAdminAsync();
+        Task<ServiceResult<ArtistAdminResponse>> GetArtistForAdminAsync(int id);
 
         Task<ServiceResult<ArtistResponse>> CreateAsync(CreateArtistRequest request);
         Task<ServiceResult> UpdateAsync(UpdateArtistRequest request);
