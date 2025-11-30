@@ -20,7 +20,9 @@ namespace NexusTix.Application.Features.Users.Update
                 .MaximumLength(100).WithMessage("Soyad 100 karakterden uzun olamaz.");
 
             RuleFor(x => x.PhoneNumber)
-                .Matches(@"^\+?[0-9]{7,15}$").WithMessage("Geçerli bir telefon numarası formatı giriniz.")
+                .NotEmpty().WithMessage("Telefon numarası boş bırakılamaz.")
+                .Matches(@"^05\d{9}$")
+                .WithMessage("Telefon numarası '05' ile başlamalı ve 11 haneli olmalıdır. (Örn: 05xxxxxxxxx)")
                 .When(x => !string.IsNullOrEmpty(x.PhoneNumber));
         }
     }
