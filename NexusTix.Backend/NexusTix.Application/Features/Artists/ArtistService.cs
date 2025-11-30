@@ -122,14 +122,16 @@ namespace NexusTix.Application.Features.Artists
         {
             try
             {
+                await _artistRules.CheckIfEventTypeExists(eventTypeId);
+
                 var artists = await _unitOfWork.Artists.GetArtistsByEventTypeAsync(eventTypeId);
                 var artistsAsDto = _mapper.Map<IEnumerable<ArtistResponse>>(artists);
 
                 return ServiceResult<IEnumerable<ArtistResponse>>.Success(artistsAsDto);
             }
-            catch (Exception ex)
+            catch (BusinessException ex)
             {
-                return ServiceResult<IEnumerable<ArtistResponse>>.Fail(ex.Message);
+                return ServiceResult<IEnumerable<ArtistResponse>>.Fail(ex.Message, ex.StatusCode);
             }
         }
 

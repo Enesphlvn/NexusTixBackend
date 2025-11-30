@@ -14,12 +14,12 @@ namespace NexusTix.Application.Features.Artists.Rules
             _unitOfWork = unitOfWork;
         }
 
-        public async Task CheckIfArtistExists(int id)
+        public async Task CheckIfArtistExists(int artistId)
         {
-            var exists = await _unitOfWork.Artists.AnyAsync(id);
+            var exists = await _unitOfWork.Artists.AnyAsync(artistId);
             if (!exists)
             {
-                throw new BusinessException($"ID'si '{id}' olan sanatçı bulunamadı.", HttpStatusCode.NotFound);
+                throw new BusinessException($"ID'si '{artistId}' olan sanatçı bulunamadı.", HttpStatusCode.NotFound);
             }
         }
 
@@ -51,6 +51,15 @@ namespace NexusTix.Application.Features.Artists.Rules
             if (exists)
             {
                 throw new BusinessException($"Sanatçı adı: '{artistId}'. Bu isimde başka bir sanatçı mevcut.", HttpStatusCode.Conflict);
+            }
+        }
+
+        public async Task CheckIfEventTypeExists(int eventTypeId)
+        {
+            var exists = await _unitOfWork.EventTypes.AnyAsync(eventTypeId);
+            if (!exists)
+            {
+                throw new BusinessException($"ID'si '{eventTypeId}' olan etkinlik türü bulunamadı.", HttpStatusCode.NotFound);
             }
         }
     }

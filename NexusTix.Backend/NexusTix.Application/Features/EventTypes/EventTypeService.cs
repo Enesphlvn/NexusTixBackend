@@ -134,14 +134,16 @@ namespace NexusTix.Application.Features.EventTypes
         {
             try
             {
+                await _eventTypeRules.CheckIfArtistExists(artistId);
+
                 var eventTypes = await _unitOfWork.EventTypes.GetEventTypesByArtistAsync(artistId);
                 var eventTypesAsDto = _mapper.Map<IEnumerable<EventTypeResponse>>(eventTypes);
 
                 return ServiceResult<IEnumerable<EventTypeResponse>>.Success(eventTypesAsDto);
             }
-            catch (Exception ex)
+            catch (BusinessException ex)
             {
-                return ServiceResult<IEnumerable<EventTypeResponse>>.Fail(ex.Message);
+                return ServiceResult<IEnumerable<EventTypeResponse>>.Fail(ex.Message, ex.StatusCode);
             }
         }
 

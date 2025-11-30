@@ -14,6 +14,15 @@ namespace NexusTix.Application.Features.EventTypes.Rules
             _unitOfWork = unitOfWork;
         }
 
+        public async Task CheckIfArtistExists(int artistId)
+        {
+            var exists = await _unitOfWork.Artists.AnyAsync(artistId);
+            if (!exists)
+            {
+                throw new BusinessException($"ID'si '{artistId}' olan sanatçı bulunamadı.", HttpStatusCode.NotFound);
+            }
+        }
+
         public async Task CheckIfEventTypeExists(int eventTypeId)
         {
             var exists = await _unitOfWork.EventTypes.AnyAsync(x => x.Id == eventTypeId);

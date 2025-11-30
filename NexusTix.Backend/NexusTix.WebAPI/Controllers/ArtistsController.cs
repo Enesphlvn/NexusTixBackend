@@ -66,7 +66,7 @@ namespace NexusTix.WebAPI.Controllers
             return CreateActionResult(await _artistService.GetArtistsWithEventsAsync());
         }
 
-        [HttpGet("by-type/{eventTypeId}")]
+        [HttpGet("by-eventtype/{eventTypeId}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetArtistsByEventType(int eventTypeId)
         {
