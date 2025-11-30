@@ -14,6 +14,7 @@ namespace NexusTix.Application.Features.EventTypes
         Task<ServiceResult<IEnumerable<EventTypeWithEventsResponse>>> GetEventTypesWithEventsAsync();
         Task<ServiceResult<EventTypeAggregateResponse>> GetEventTypeAggregateAsync(int id);
         Task<ServiceResult<IEnumerable<EventTypeAggregateResponse>>> GetEventTypesAggregateAsync();
+        Task<ServiceResult<IEnumerable<EventTypeResponse>>> GetEventTypesByArtistAsync(int artistId);
 
         Task<ServiceResult<EventTypeResponse>> CreateAsync(CreateEventTypeRequest request);
         Task<ServiceResult> UpdateAsync(UpdateEventTypeRequest request);

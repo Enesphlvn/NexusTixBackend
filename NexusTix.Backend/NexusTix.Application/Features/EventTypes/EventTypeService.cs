@@ -130,6 +130,21 @@ namespace NexusTix.Application.Features.EventTypes
             }
         }
 
+        public async Task<ServiceResult<IEnumerable<EventTypeResponse>>> GetEventTypesByArtistAsync(int artistId)
+        {
+            try
+            {
+                var eventTypes = await _unitOfWork.EventTypes.GetEventTypesByArtistAsync(artistId);
+                var eventTypesAsDto = _mapper.Map<IEnumerable<EventTypeResponse>>(eventTypes);
+
+                return ServiceResult<IEnumerable<EventTypeResponse>>.Success(eventTypesAsDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<EventTypeResponse>>.Fail(ex.Message);
+            }
+        }
+
         public async Task<ServiceResult<IEnumerable<EventTypeWithEventsResponse>>> GetEventTypesWithEventsAsync()
         {
             try
