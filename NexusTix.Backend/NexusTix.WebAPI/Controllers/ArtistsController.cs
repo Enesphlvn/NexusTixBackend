@@ -66,6 +66,13 @@ namespace NexusTix.WebAPI.Controllers
             return CreateActionResult(await _artistService.GetArtistsWithEventsAsync());
         }
 
+        [HttpGet("by-type/{eventTypeId}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetArtistsByEventType(int eventTypeId)
+        {
+            return CreateActionResult(await _artistService.GetArtistsByEventTypeAsync(eventTypeId));
+        }
+
         [HttpPost]
         [Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> Create([FromBody] CreateArtistRequest request)
