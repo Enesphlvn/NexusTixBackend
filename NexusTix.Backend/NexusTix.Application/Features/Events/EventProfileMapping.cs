@@ -14,7 +14,7 @@ namespace NexusTix.Application.Features.Events
             CreateMap<UpdateEventRequest, Event>();
 
             CreateMap<Event, EventResponse>()
-                .ForMember(dest => dest.ArtistIds, opt => opt.MapFrom(src => src.Artists.Select(a => a.Id))); ;
+                .ForMember(dest => dest.ArtistIds, opt => opt.MapFrom(src => src.Artists.Select(a => a.Id)));
             CreateMap<Event, EventByEventTypeResponse>();
             CreateMap<Event, EventByVenueResponse>();
             CreateMap<Event, EventByUserTicketsResponse>();
@@ -24,7 +24,8 @@ namespace NexusTix.Application.Features.Events
             CreateMap<Event, EventAdminResponse>()
                 .ForMember(dest => dest.EventTypeName, opt => opt.MapFrom(src => src.EventType.Name))
                 .ForMember(dest => dest.VenueName, opt => opt.MapFrom(src => src.Venue.Name))
-                .ForMember(dest => dest.ArtistNames, opt => opt.MapFrom(src => src.Artists.Select(a => a.Name)));
+                .ForMember(dest => dest.ArtistNames, opt => opt.MapFrom(src => src.Artists.Select(a => a.Name)))
+                .ForMember(dest => dest.ArtistIds, opt => opt.MapFrom(src => src.Artists.Select(a => a.Id)));
             CreateMap<Event, EventListResponse>()
                 .ForMember(dest => dest.VenueName, opt => opt.MapFrom(src => src.Venue.Name))
                 .ForMember(dest => dest.DistrictName, opt => opt.MapFrom(src => src.Venue.District.Name))

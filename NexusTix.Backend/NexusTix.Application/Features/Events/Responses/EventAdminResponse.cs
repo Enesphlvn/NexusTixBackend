@@ -15,5 +15,6 @@ public record EventAdminResponse
     public bool IsActive { get; init; }
     public DateTimeOffset Created { get; init; }
     public DateTimeOffset? Updated { get; init; }
-    public IEnumerable<string> ArtistNames { get; set; } = [];
+    public IEnumerable<string> ArtistNames { get; init; } = [];
+    public IEnumerable<int> ArtistIds { get; init; } = [];
 }
