@@ -32,6 +32,13 @@ namespace NexusTix.Persistence.Repositories.Artists
             .AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
 
+        public async Task<IEnumerable<Artist>> GetArtistsByEventTypeAsync(int eventTypeId)
+        {
+            return await _context.Artists
+            .Where(a => a.Events.Any(e => e.EventTypeId == eventTypeId))
+            .OrderBy(a => a.Name).AsNoTracking().ToListAsync();
+        }
+
         public async Task<List<Artist>> GetArtistsByIdsAsync(IEnumerable<int> ids)
         {
             return await _context.Artists.Where(a => ids.Contains(a.Id)).ToListAsync();
