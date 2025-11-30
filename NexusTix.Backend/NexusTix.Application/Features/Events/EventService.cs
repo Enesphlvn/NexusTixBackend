@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using NexusTix.Application.Features.Artists.Responses;
 using NexusTix.Application.Features.Events.Create;
 using NexusTix.Application.Features.Events.Responses;
 using NexusTix.Application.Features.Events.Rules;
@@ -395,6 +396,24 @@ namespace NexusTix.Application.Features.Events
             catch (BusinessException ex)
             {
                 return ServiceResult.Fail(ex.Message, ex.StatusCode);
+            }
+        }
+
+        public async Task<ServiceResult<EventAdminResponse>> GetEventForAdminAsync(int id)
+        {
+            try
+            {
+                await _eventRules.CheckIfEventExists(id);
+
+                var eventEntity = await _unitOfWork.Events.GetEventForAdminAsync(id);
+
+                var eventAsDto = _mapper.Map<EventAdminResponse>(eventEntity);
+
+                return ServiceResult<EventAdminResponse>.Success(eventAsDto);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResult<EventAdminResponse>.Fail(ex.Message, ex.StatusCode);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using NexusTix.Application.Features.Events.Create;
+﻿using NexusTix.Application.Features.Artists.Responses;
+using NexusTix.Application.Features.Events.Create;
 using NexusTix.Application.Features.Events.Responses;
 using NexusTix.Application.Features.Events.Update;
 
@@ -20,6 +21,7 @@ namespace NexusTix.Application.Features.Events
         Task<ServiceResult<IEnumerable<EventByUserTicketsResponse>>> GetEventsWithHighestSalesAsync(int numberOfEvents);
         Task<ServiceResult<IEnumerable<EventListResponse>>> GetFilteredEventsAsync(int? cityId, int? districtId, int? eventTypeId, int? artistId, DateTimeOffset? date);
         Task<ServiceResult<IEnumerable<EventAdminResponse>>> GetAllEventsForAdminAsync();
+        Task<ServiceResult<EventAdminResponse>> GetEventForAdminAsync(int id);
 
         Task<ServiceResult<EventResponse>> CreateAsync(CreateEventRequest request);
         Task<ServiceResult> UpdateAsync(UpdateEventRequest request);

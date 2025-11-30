@@ -104,7 +104,7 @@ namespace NexusTix.Persistence.Repositories.Events
         }
 
         public async Task<IEnumerable<Event>> GetAllEventsForAdminAsync()
-        { 
+        {
             return await _context.Events
                 .Include(x => x.EventType)
                 .Include(x => x.Venue).ThenInclude(x => x.District).ThenInclude(x => x.City)
@@ -116,6 +116,16 @@ namespace NexusTix.Persistence.Repositories.Events
         public async Task<Event?> GetByIdIncludingPassiveAsync(int id)
         {
             return await _context.Events.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<Event?> GetEventForAdminAsync(int id)
+        {
+            return await _context.Events
+            .Include(x => x.EventType)
+            .Include(x => x.Venue).ThenInclude(x => x.District).ThenInclude(x => x.City)
+            .Include(x => x.Artists)
+            .IgnoreQueryFilters()
+            .OrderByDescending(x => x.Id).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
     }
 }

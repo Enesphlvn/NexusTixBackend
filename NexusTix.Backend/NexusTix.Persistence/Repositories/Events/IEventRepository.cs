@@ -15,6 +15,7 @@ namespace NexusTix.Persistence.Repositories.Events
         Task<Event?> GetByIdWithArtistsAsync(int eventId);
         Task<IEnumerable<Event>> GetFilteredEventsAsync(int? cityId, int? districtId, int? eventTypeId, int? artistId, DateTimeOffset? date);
         Task<IEnumerable<Event>> GetAllEventsForAdminAsync();
+        Task<Event?> GetEventForAdminAsync(int id);
         Task<Event?> GetByIdIncludingPassiveAsync(int id);
     }
 }
