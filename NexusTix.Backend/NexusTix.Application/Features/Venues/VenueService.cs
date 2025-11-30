@@ -151,17 +151,20 @@ namespace NexusTix.Application.Features.Venues
         {
             try
             {
-                await _venueRules.CheckIfVenueExists(id);
-
                 var venue = await _unitOfWork.Venues.GetVenueForAdminAsync(id);
+
+                if (venue == null)
+                {
+                    return ServiceResult<VenueAdminResponse>.Fail("Mekan bulunamadı.", HttpStatusCode.NotFound);
+                }
 
                 var venueAsDto = _mapper.Map<VenueAdminResponse>(venue);
 
                 return ServiceResult<VenueAdminResponse>.Success(venueAsDto);
             }
-            catch (BusinessException ex)
+            catch (Exception ex)
             {
-                return ServiceResult<VenueAdminResponse>.Fail(ex.Message, ex.StatusCode);
+                return ServiceResult<VenueAdminResponse>.Fail(ex.Message, HttpStatusCode.InternalServerError);
             }
         }
 
@@ -245,11 +248,15 @@ namespace NexusTix.Application.Features.Venues
         {
             try
             {
+                var venue = await _unitOfWork.Venues.GetByIdIncludingPassiveAsync(request.Id);
+
+                if (venue == null)
+                {
+                    return ServiceResult.Fail("Mekan bulunamadı.", HttpStatusCode.NotFound);
+                }
+
                 await _venueRules.CheckIfVenueNameExistsWhenUpdating(request.Id, request.Name);
                 await _venueRules.CheckIfDistrictExists(request.DistrictId);
-                await _venueRules.CheckIfVenueExists(request.Id);
-
-                var venue = await _unitOfWork.Venues.GetByIdAsync(request.Id);
 
                 _mapper.Map(request, venue);
 

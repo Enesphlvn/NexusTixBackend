@@ -3,7 +3,7 @@ using NexusTix.Domain.Entities;
 using NexusTix.Persistence.Context;
 
 namespace NexusTix.Persistence.Repositories.Venues
-{
+{ 
     public class VenueRepository : GenericRepository<Venue, int>, IVenueRepository
     {
         public VenueRepository(AppDbContext context) : base(context)
@@ -49,7 +49,7 @@ namespace NexusTix.Persistence.Repositories.Venues
         {
             return await _context.Venues
             .Include(v => v.District).ThenInclude(x => x.City)
-            .AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            .IgnoreQueryFilters().AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<Venue?> GetByIdIncludingPassiveAsync(int id)

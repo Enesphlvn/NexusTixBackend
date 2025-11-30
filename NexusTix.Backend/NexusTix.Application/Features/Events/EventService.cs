@@ -17,7 +17,7 @@ namespace NexusTix.Application.Features.Events
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IEventBusinessRules _eventRules;
-
+         
         public EventService(IUnitOfWork unitOfWork, IMapper mapper, IEventBusinessRules eventRules)
         {
             _unitOfWork = unitOfWork;
