@@ -15,6 +15,7 @@ namespace NexusTix.Application.Features.Artists
         Task<ServiceResult<IEnumerable<ArtistWithEventsResponse>>> GetArtistsWithEventsAsync();
         Task<ServiceResult<IEnumerable<ArtistAdminResponse>>> GetAllArtistsForAdminAsync();
         Task<ServiceResult<ArtistAdminResponse>> GetArtistForAdminAsync(int id);
+        Task<ServiceResult<IEnumerable<ArtistResponse>>> GetArtistsByEventTypeAsync(int eventTypeId);
 
         Task<ServiceResult<ArtistResponse>> CreateAsync(CreateArtistRequest request);
         Task<ServiceResult> UpdateAsync(UpdateArtistRequest request);
