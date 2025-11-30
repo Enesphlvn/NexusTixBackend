@@ -29,6 +29,13 @@ namespace NexusTix.Persistence.Repositories.EventTypes
                 .Include(x => x.Events).ThenInclude(x => x.Tickets).ThenInclude(x => x.User).AsNoTracking().ToListAsync();
         }
 
+        public async Task<IEnumerable<EventType>> GetEventTypesByArtistAsync(int artistId)
+        {
+            return await _context.EventTypes
+            .Where(et => et.Events.Any(e => e.Artists.Any(a => a.Id == artistId)))
+            .OrderBy(et => et.Name).AsNoTracking().ToListAsync();
+        }
+
         public async Task<IEnumerable<EventType>> GetEventTypesWithEventsAsync()
         {
             return await _context.EventTypes.Include(x => x.Events).AsNoTracking().ToListAsync();
