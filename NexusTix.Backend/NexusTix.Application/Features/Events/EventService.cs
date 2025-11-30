@@ -102,17 +102,20 @@ namespace NexusTix.Application.Features.Events
         {
             try
             {
-                await _eventRules.CheckIfEventExists(id);
-
                 var newEvent = await _unitOfWork.Events.GetByIdWithArtistsAsync(id);
+
+                if (newEvent == null || !newEvent.IsActive)
+                {
+                    return ServiceResult<EventResponse>.Fail("Etkinlik bulunamadı.", HttpStatusCode.NotFound);
+                }
 
                 var eventAsDto = _mapper.Map<EventResponse>(newEvent);
 
                 return ServiceResult<EventResponse>.Success(eventAsDto);
             }
-            catch (BusinessException ex)
+            catch (Exception ex)
             {
-                return ServiceResult<EventResponse>.Fail(ex.Message, ex.StatusCode);
+                return ServiceResult<EventResponse>.Fail(ex.Message, HttpStatusCode.InternalServerError);
             }
         }
 
@@ -280,28 +283,12 @@ namespace NexusTix.Application.Features.Events
         {
             try
             {
-                if (cityId.HasValue && cityId > 0)
-                {
-                    await _eventRules.CheckIfCityExists(cityId!.Value);
-                }
-
-                if (districtId.HasValue && districtId > 0)
-                {
-                    await _eventRules.CheckIfDistrictExists(districtId!.Value);
-                }
-
-                if (eventTypeId.HasValue && eventTypeId > 0)
-                {
-                    await _eventRules.CheckIfEventTypeExists(eventTypeId!.Value);
-                }
-
-                if (artistId.HasValue && artistId > 0)
-                {
-                    await _eventRules.CheckIfArtistExists(artistId!.Value);
-                }
+                if (cityId.HasValue && cityId > 0) await _eventRules.CheckIfCityExists(cityId.Value);
+                if (districtId.HasValue && districtId > 0) await _eventRules.CheckIfDistrictExists(districtId.Value);
+                if (eventTypeId.HasValue && eventTypeId > 0) await _eventRules.CheckIfEventTypeExists(eventTypeId.Value);
+                if (artistId.HasValue && artistId > 0) await _eventRules.CheckIfArtistExists(artistId.Value);
 
                 var events = await _unitOfWork.Events.GetFilteredEventsAsync(cityId, districtId, eventTypeId, artistId, date);
-
                 var eventsAsDto = _mapper.Map<IEnumerable<EventListResponse>>(events);
 
                 return ServiceResult<IEnumerable<EventListResponse>>.Success(eventsAsDto);
@@ -362,14 +349,18 @@ namespace NexusTix.Application.Features.Events
         {
             try
             {
-                await _eventRules.CheckIfEventExists(request.Id);
+                var newEvent = await _unitOfWork.Events.GetByIdWithArtistsAsync(request.Id);
+
+                if (newEvent == null)
+                {
+                    return ServiceResult.Fail("Etkinlik bulunamadı.", HttpStatusCode.NotFound);
+                }
+
                 await _eventRules.CheckIfEventNameExistsWhenUpdating(request.Id, request.Name);
                 await _eventRules.CheckIfEventTypeExists(request.EventTypeId);
                 await _eventRules.CheckIfVenueExists(request.VenueId);
                 await _eventRules.CheckIfVenueIsAvailableOnDateUpdating(request.Id, request.VenueId, request.Date);
                 await _eventRules.CheckIfVenueHasEnoughCapacity(request.VenueId, request.Capacity);
-
-                var newEvent = await _unitOfWork.Events.GetByIdWithArtistsAsync(request.Id);
 
                 _mapper.Map(request, newEvent);
 
@@ -403,17 +394,20 @@ namespace NexusTix.Application.Features.Events
         {
             try
             {
-                await _eventRules.CheckIfEventExists(id);
+                var newEvent = await _unitOfWork.Events.GetEventForAdminAsync(id);
 
-                var eventEntity = await _unitOfWork.Events.GetEventForAdminAsync(id);
+                if (newEvent == null)
+                {
+                    return ServiceResult<EventAdminResponse>.Fail("Etkinlik bulunamadı.", HttpStatusCode.NotFound);
+                }
 
-                var eventAsDto = _mapper.Map<EventAdminResponse>(eventEntity);
+                var eventAsDto = _mapper.Map<EventAdminResponse>(newEvent);
 
                 return ServiceResult<EventAdminResponse>.Success(eventAsDto);
             }
-            catch (BusinessException ex)
+            catch (Exception ex)
             {
-                return ServiceResult<EventAdminResponse>.Fail(ex.Message, ex.StatusCode);
+                return ServiceResult<EventAdminResponse>.Fail(ex.Message, HttpStatusCode.InternalServerError);
             }
         }
     }

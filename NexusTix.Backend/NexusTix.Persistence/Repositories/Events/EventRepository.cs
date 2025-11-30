@@ -100,7 +100,9 @@ namespace NexusTix.Persistence.Repositories.Events
 
         public async Task<Event?> GetByIdWithArtistsAsync(int eventId)
         {
-            return await _context.Events.Include(x => x.Artists).FirstOrDefaultAsync(x => x.Id == eventId);
+            return await _context.Events
+                .Include(x => x.Artists)
+                .IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == eventId);
         }
 
         public async Task<IEnumerable<Event>> GetAllEventsForAdminAsync()
