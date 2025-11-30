@@ -3,7 +3,7 @@ using NexusTix.Domain.Entities;
 using NexusTix.Persistence.Context;
 
 namespace NexusTix.Persistence.Repositories.Events
-{ 
+{
     public class EventRepository : GenericRepository<Event, int>, IEventRepository
     {
         public EventRepository(AppDbContext context) : base(context)
@@ -128,6 +128,17 @@ namespace NexusTix.Persistence.Repositories.Events
             .Include(x => x.Artists)
             .IgnoreQueryFilters()
             .AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<IEnumerable<Event>> GetAllEventsForCheckInAsync()
+        {
+            return await _context.Events
+            .Include(x => x.EventType)
+            .Include(x => x.Venue).ThenInclude(x => x.District).ThenInclude(x => x.City)
+            .Include(x => x.Artists)
+            .IgnoreQueryFilters()
+            .Where(x => x.Date >= DateTimeOffset.UtcNow.AddHours(-24))
+            .OrderBy(x => x.Date).AsNoTracking().ToListAsync();
         }
     }
 }

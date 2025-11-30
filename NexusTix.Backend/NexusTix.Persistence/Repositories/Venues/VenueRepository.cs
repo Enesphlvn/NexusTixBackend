@@ -3,7 +3,7 @@ using NexusTix.Domain.Entities;
 using NexusTix.Persistence.Context;
 
 namespace NexusTix.Persistence.Repositories.Venues
-{ 
+{  
     public class VenueRepository : GenericRepository<Venue, int>, IVenueRepository
     {
         public VenueRepository(AppDbContext context) : base(context)

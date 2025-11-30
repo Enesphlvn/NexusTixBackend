@@ -29,7 +29,7 @@ namespace NexusTix.Persistence.Repositories.Artists
             return await _context.Artists
             .Include(x => x.Events).ThenInclude(x => x.Venue)
             .IgnoreQueryFilters()
-            .OrderByDescending(x => x.Id).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            .AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<List<Artist>> GetArtistsByIdsAsync(IEnumerable<int> ids)

@@ -52,6 +52,13 @@ namespace NexusTix.WebAPI.Controllers
             return CreateActionResult(await _eventService.GetEventForAdminAsync(id));
         }
 
+        [HttpGet("checkin-list")]
+        [Authorize(Roles = "Admin, Manager")]
+        public async Task<IActionResult> GetEventsForCheckIn()
+        {
+            return CreateActionResult(await _eventService.GetAllEventsForCheckInAsync());
+        }
+
         [HttpGet("{id:int}/aggregate")]
         [AllowAnonymous]
         public async Task<IActionResult> GetEventAggregate(int id)

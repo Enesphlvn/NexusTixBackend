@@ -101,9 +101,12 @@ namespace NexusTix.Application.Features.Artists
         {
             try
             {
-                await _artistRules.CheckIfArtistExists(id);
-
                 var artist = await _unitOfWork.Artists.GetArtistForAdminAsync(id);
+
+                if (artist == null)
+                {
+                    return ServiceResult<ArtistAdminResponse>.Fail("Sanatçı bulunamadı.", HttpStatusCode.NotFound);
+                }
 
                 var artistAsDto = _mapper.Map<ArtistAdminResponse>(artist);
 
@@ -219,10 +222,14 @@ namespace NexusTix.Application.Features.Artists
         {
             try
             {
-                await _artistRules.CheckIfArtistExists(request.Id);
                 await _artistRules.CheckIfArtistNameExistsWhenUpdating(request.Id, request.Name);
 
-                var artist = await _unitOfWork.Artists.GetByIdAsync(request.Id);
+                var artist = await _unitOfWork.Artists.GetByIdIncludingPassiveAsync(request.Id);
+
+                if (artist == null)
+                {
+                    return ServiceResult.Fail("Sanatçı bulunamadı.", HttpStatusCode.NotFound);
+                }
 
                 _mapper.Map(request, artist);
 

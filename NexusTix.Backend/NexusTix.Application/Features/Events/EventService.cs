@@ -410,5 +410,20 @@ namespace NexusTix.Application.Features.Events
                 return ServiceResult<EventAdminResponse>.Fail(ex.Message, HttpStatusCode.InternalServerError);
             }
         }
+
+        public async Task<ServiceResult<IEnumerable<EventListResponse>>> GetAllEventsForCheckInAsync()
+        {
+            try
+            {
+                var events = await _unitOfWork.Events.GetAllEventsForCheckInAsync();
+                var eventsAsDto = _mapper.Map<IEnumerable<EventListResponse>>(events);
+
+                return ServiceResult<IEnumerable<EventListResponse>>.Success(eventsAsDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<IEnumerable<EventListResponse>>.Fail($"Bir hata oluştu: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
+        }
     }
 }

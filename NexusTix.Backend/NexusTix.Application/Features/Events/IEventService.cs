@@ -21,6 +21,7 @@ namespace NexusTix.Application.Features.Events
         Task<ServiceResult<IEnumerable<EventByUserTicketsResponse>>> GetEventsWithHighestSalesAsync(int numberOfEvents);
         Task<ServiceResult<IEnumerable<EventListResponse>>> GetFilteredEventsAsync(int? cityId, int? districtId, int? eventTypeId, int? artistId, DateTimeOffset? date);
         Task<ServiceResult<IEnumerable<EventAdminResponse>>> GetAllEventsForAdminAsync();
+        Task<ServiceResult<IEnumerable<EventListResponse>>> GetAllEventsForCheckInAsync();
         Task<ServiceResult<EventAdminResponse>> GetEventForAdminAsync(int id);
 
         Task<ServiceResult<EventResponse>> CreateAsync(CreateEventRequest request);
